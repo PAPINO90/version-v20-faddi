@@ -1,0 +1,66 @@
+# Schéma d'intégration backend pour la notification FADIDI
+
+Ce schéma explique les parties backend à utiliser/modifier pour terminer l'intégration et envoyer de vraies notifications (email/SMS) lors de l'ajout d'un produit ou d'une promotion.
+
+---
+
+## 1. Entité Subscriber (abonné)
+- Fichier : `src/subscribers/subscribers.entity.ts`
+- Champs : id, email, phone, dateAbonnement
+
+## 2. Service d'abonnement
+- Fichier : `src/subscribers/subscribers.service.ts`
+- Fonctions :
+  - `createSubscriber(email, phone)` : ajoute un abonné
+  - `getAllSubscribers()` : récupère tous les abonnés
+
+## 3. Contrôleur d'abonnement
+- Fichier : `src/subscribers/subscribers.controller.ts`
+- Route POST `/api/subscribers` : reçoit les demandes d'abonnement du frontend
+
+## 4. Notification (à compléter)
+- Fichier : `src/subscribers/subscribers.notify.ts`
+- Fonction à utiliser :
+  - `sendNotification(subscriber, message)`
+    - Utiliser nodemailer pour l'email
+    - (Optionnel) Intégrer un service SMS (Twilio, Orange, etc.)
+- À appeler dans :
+  - `products.controller.ts` (lors de la création d'un produit)
+  - `promotions.controller.ts` (lors de la création d'une promotion)
+
+## 5. Configuration SMTP
+- Fichier : `.env` ou `src/subscribers/subscribers.notify.ts`
+- Variables à renseigner :
+  - SMTP_HOST
+  - SMTP_PORT
+  - SMTP_USER
+  - SMTP_PASS
+
+## 6. Exemple d'appel
+```typescript
+// Dans products.controller.ts
+const subscribers = await this.subscribersService.getAllSubscribers();
+for (const sub of subscribers) {
+  await this.subscribersNotify.sendNotification(sub, 'Nouveau produit disponible !');
+}
+```
+
+---
+
+## Résumé du flux
+1. Le frontend envoie l'abonnement (email/téléphone) à l'API.
+2. Le backend enregistre l'abonné.
+3. Lorsqu'un produit/promotion est créé, le backend récupère tous les abonnés.
+4. Il envoie une notification à chaque abonné (email/SMS).
+
+---
+
+## À compléter pour l'intégration finale
+- Renseigner les variables SMTP dans `.env`.
+- Tester l'envoi d'email avec nodemailer.
+- (Optionnel) Ajouter l'envoi SMS.
+- S'assurer que la fonction `sendNotification` est appelée lors de chaque création de produit/promotion.
+
+---
+
+Ce schéma permet à un développeur backend de terminer l'intégration des notifications réelles dans FADIDI.

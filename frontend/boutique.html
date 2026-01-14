@@ -1,0 +1,2791 @@
+
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="googlebot" content="noindex, nofollow">
+    <meta name="bingbot" content="noindex, nofollow">
+
+    <title>Boutique FADIDI</title> 
+    <link rel="stylesheet" href="assets/css/boutique.css">
+    <link rel="stylesheet" href="assets/css/fadidi-categories.css">
+    <link rel="stylesheet" href="assets/css/new-cart.css">
+    <link rel="stylesheet" href="assets/css/header-banners.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    
+    <script src="assets/js/api-config.js"></script>
+    <script src="assets/js/image-manager.js"></script>
+    <script src="assets/js/image-diagnostic.js"></script>
+    <script src="assets/js/promotion-cart-sync.js"></script>
+    <script src="assets/js/new-cart.js" defer></script>
+    <script src="assets/js/boutique-simplified.js" defer></script>
+    <script src="assets/js/fadidi-product-manager.js" defer></script>
+    <script src="assets/js/diagnostic-duplication.js" defer></script>
+    <script src="assets/js/fadidi-solution-finale.js" defer></script>
+    <script src="assets/js/fadidi-category-system.js" defer></script>
+    <script src="assets/js/header-banner-system.js" defer></script>
+   
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-XXXXXXXXX-X">
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+    <script src="assets/js/boutique.js"></script>
+
+    <script>
+     window.dataLayer = window.dataLayer || [];
+     function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'UA-XXXXXXXXX-X');
+   </script>
+
+
+  
+
+    <style>
+
+
+/* ========== NOUVELLE GRILLE MODERNE PRODUITS FADIDI ========== */
+.fadidi-modern-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    justify-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.menu-category-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
+}
+.menu-category-cover {
+    width: 32px;
+    height: 32px;
+    object-fit: cover;
+    border-radius: 6px;
+    margin-right: 8px;
+    background: #eee;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+.fadidi-product-card {
+    background:transparent;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.16);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+    max-width: 260px;
+    width: 100%;
+    position: relative;
+}
+.fadidi-product-card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 8px 32px rgba(255,128,0,0.18);
+}
+.fadidi-card-img-container {
+    width: 100%;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 160px;
+}
+.fadidi-card-img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 16px 16px 0 0;
+    cursor: pointer;
+    transition: box-shadow 0.2s;
+}
+.fadidi-card-body {
+    padding: 14px 12px 12px 12px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.fadidi-card-title {
+    font-size: 1.1em;
+    color: #ffd000;
+    font-weight: bold;
+    margin-bottom: 7px;
+    text-align: center;
+}
+.fadidi-card-desc {
+    color: #ccc;
+    font-size: 0.95em;
+    margin-bottom: 9px;
+    text-align: center;
+}
+.fadidi-card-price {
+    color: #ff8000;
+    font-size: 1.05em;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: center;
+}
+.fadidi-card-btn {
+    background: #ff8c00;
+    color: #232323;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 0;
+    width: 88%;
+    font-size: 0.9em;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.fadidi-card-btn:hover {
+    background: #00b333;
+    color: #fff;
+}
+.cart-notification {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    background-color: #4CAF50;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 4px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    z-index: 1000;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: all 0.3s ease;
+}
+.cart-notification.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* =========================
+   RECHERCHE & HIGHLIGHT
+   ========================= */
+.search-highlight {
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+    transform: scale(1.03);
+    transition: all 0.3s ease-in-out;
+    z-index: 1;
+    border: 2px solid #ffd700;
+}
+
+.same-name-highlight {
+    transition: all 0.5s ease-in-out;
+    position: relative;
+}
+
+/* =========================
+   RESPONSIVE PRODUITS BOUTIQUE
+   ========================= */
+@media (max-width: 1200px) {
+  .product-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    justify-items: center;
+  }
+  .product-item {
+    min-width: 10;
+    max-width: 25vw;
+    margin: 0 auto;
+    padding: 10px 0;
+   
+  }
+  .product-item img {
+    width: 90px;
+    height: 90px;
+    margin-bottom: 8px;
+  }
+}
+
+@media (max-width: 900px) {
+  .product-list {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+  .product-item img {
+    width: 80px;
+    height: 80px;
+  }
+}
+
+@media (max-width: 600px) {
+  .product-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+    justify-items: center;
+  }
+  .product-item {
+    min-width: 90px;
+    max-width: 130px;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 6px 0;
+  }
+  .product-item img {
+    width: 80px;
+    height: 80px;
+  }
+
+  /* Décaler le header vers le bas pour éviter que le menu ne cache le titre */
+  header {
+    padding-top: 60px;
+  }
+}
+
+.search-results-message {
+    background-color: #292929;
+    padding: 10px 15px;
+    margin: 10px 0;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    border-left: 4px solid #4CAF50;
+    color: #fff;
+    font-weight: bold;
+    animation: slideDown 0.3s ease-out;
+}
+
+.search-results-message.no-results {
+    border-left-color: #ff6b6b;
+    background-color: #3d2929;
+}
+
+@keyframes slideDown {
+    0% { 
+        opacity: 0; 
+        transform: translateY(-10px); 
+    }
+    100% { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+/* Amélioration de l'apparence des produits masqués */
+.fadidi-product-card[style*="display: none"], 
+.product-item[style*="display: none"] {
+    transition: all 0.3s ease;
+}
+
+/* Style pour les produits trouvés */
+.search-highlight {
+    box-shadow: 0 0 15px rgba(255, 140, 0, 0.8) !important;
+    transform: scale(1.02) !important;
+    transition: all 0.3s ease-in-out !important;
+    z-index: 2 !important;
+    border: 2px solid #ff8c00 !important;
+}
+
+/* Animation pour les produits qui apparaissent */
+.fadidi-product-card, .product-item {
+    transition: all 0.3s ease;
+}
+
+.search-results-message.redirect-message {
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+}
+
+.same-name-info {
+    animation: fadeInScale 0.5s ease-out;
+}
+
+@keyframes fadeInScale {
+    0% { 
+        opacity: 0; 
+        transform: translate(-50%, -50%) scale(0.8);
+    }
+    100% { 
+        opacity: 1; 
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+/* =========================
+   GRILLE PRODUITS
+   ========================= */
+.product-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    justify-content: center;
+}
+.product-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #fff;
+}
+.product-item img {
+    object-fit: contain;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+
+/* =====================================
+   SLIDESHOW FADIDI CASE EN BAS VITRINE
+   ===================================== */
+.fadidi-slideshow {
+    position: relative;
+    max-width: 420px;
+    margin: 30px auto 20px auto;
+    background: transparent;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px transparent;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 220px;
+}
+.slideshow-content {
+    flex: 1;
+    text-align: center;
+    padding: 18px 0;
+}
+.slideshow-btn {
+    background: none;
+    border: none;
+    font-size: 2em;
+    color: #ffb300;
+    cursor: pointer;
+    padding: 0 12px;
+    /* Vendor prefixes for user-select */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    transition: color 0.2s;
+}
+.slideshow-btn:hover {
+    color: #ff8000;
+}
+.fadidi-slide-img {
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+.fadidi-slide-title {
+    font-weight: bold;
+    font-size: 1.1em;
+    margin-bottom: 6px;
+}
+.fadidi-slide-price {
+    color: #ff8000;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* =========================
+   ANIMATIONS
+   ========================= */
+@keyframes fadeInText {
+    0% { opacity: 0.7; transform: scale(1);}
+    100% { opacity: 1; transform: scale(1.05);}
+}
+@keyframes bounceAnim {
+    0% { transform: translateY(0);}
+    100% { transform: translateY(-15px);}
+}
+@keyframes arrowBlink {
+    0%, 100% { opacity: 1; transform: translateY(0);}
+    50% { opacity: 0.2; transform: translateY(-8px);}
+}
+
+
+  /* ==================== ASSISTANT IA FADIDI ==================== */
+            #chatbot-container {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                width: 300px;
+                background: #1e1e1e;
+                color: white;
+                border-radius: 10px;
+                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+                display: none;
+                flex-direction: column;
+                z-index: 1000;
+            }
+            #chatbot-header {
+                background: #ff8c00;
+                padding: 10px;
+                border-radius: 10px 10px 0 0;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            #chatbot-header h3 {
+                margin: 0;
+                font-size: 16px;
+            }
+            #chatbot-header button {
+                background: none;
+                border: none;
+                color: white;
+                font-size: 16px;
+                cursor: pointer;
+            }
+            #chatbot-messages {
+                padding: 10px;
+                height: 300px;
+                overflow-y: auto;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+            .message {
+                padding: 10px;
+                border-radius: 5px;
+                max-width: 80%;
+            }
+            .bot-message {
+                background: #333;
+                color: white;
+                align-self: flex-start;
+            }
+            .user-message {
+                background: #ff8c00;
+                color: white;
+                align-self: flex-end;
+            }
+            #chatbot-input-container {
+                display: flex;
+                padding: 10px;
+                gap: 10px;
+                border-top: 1px solid #333;
+            }
+            #chatbot-input {
+                flex: 1;
+                padding: 10px;
+                border: none;
+                border-radius: 5px;
+                background: #292929;
+                color: white;
+            }
+            #chatbot-send {
+                background: #ff8c00;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 5px;
+                cursor: pointer;
+                color: white;
+                font-size: 14px;
+            }
+            #chatbot-toggle {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: #ff8c00;
+                color: white;
+                border: none;
+                border-radius: 50%;
+                width: 50px;
+                height: 50px;
+                font-size: 24px;
+                cursor: pointer;
+                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+                z-index: 1000;
+            }
+            #chatbot-welcome-message {
+                position: fixed;
+                bottom: 80px;
+                right: 80px;
+                background: #ff8c00;
+                color: white;
+                padding: 10px 15px;
+                border-radius: 10px;
+                font-size: 14px;
+                font-weight: bold;
+                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+                z-index: 1000;
+                opacity: 0;
+                animation: fadeInOut 5s ease-in-out;
+            }
+            @keyframes fadeInOut {
+                0% { opacity: 0; transform: translateY(20px);}
+                10%, 90% { opacity: 1; transform: translateY(0);}
+                100% { opacity: 0; transform: translateY(20px);}
+            }
+
+
+                        .carousel-item {
+                min-width: 220px;
+                margin-right: 16px;
+            }
+            
+                        /* ...existing code... */
+          
+            
+       /* ...AJOUT AU PANIER NEW... */
+        .product-item button,
+        .add-to-cart {
+         
+            color: #201f1f !important;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .product-item button:hover,
+        .add-to-cart:hover {
+            background-color: #00b333 !important;
+        }
+        /* Icône panier ajoutée automatiquement aux boutons 'Ajouter au panier' */
+        .fadidi-card-btn::after,
+        .add-to-cart::after,
+        .product-item button::after {
+            /* FontAwesome shopping-cart glyph */
+            content: "\f07a";
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900; /* solid */
+            margin-left: 8px;
+            display: inline-block;
+            vertical-align: middle;
+            font-size: 0.95em;
+            color: #232323;
+        }
+        /* Optionnel: icône à gauche si on ajoute la classe .icon-left */
+        .fadidi-card-btn.icon-left::before,
+        .add-to-cart.icon-left::before,
+        .product-item button.icon-left::before {
+            content: "\f07a";
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            margin-right: 8px;
+            display: inline-block;
+            vertical-align: middle;
+            color: #232323;
+        }
+        /* ...existing code... */
+
+
+
+ /* AFFICHAGE MODERNE Responsive grid pour éviter le débordement sur mobile/tablette */
+.fadidi-modern-grid {
+  width: 100%;
+  box-sizing: border-box;
+}
+.fadidi-product-card {
+  width: 100%;
+  box-sizing: border-box;
+  max-width: 100%;
+}
+@media (max-width: 900px) {
+  .fadidi-modern-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+@media (max-width: 600px) {
+    .fadidi-modern-grid,
+    #fadidi-products-list.fadidi-modern-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        padding-left: 2vw;
+        padding-right: 2vw;
+        box-sizing: border-box;
+        justify-items: center;
+        justify-content: center;
+    }
+    .fadidi-product-card {
+        max-width: 95vw;
+        min-width: 160px;
+        border-radius: 18px;
+        box-sizing: border-box;
+    }
+    .fadidi-card-img-container img {
+        border-radius: 18px 18px 0 0;
+    }
+    .fadidi-card-title {
+        font-size: 1.18em;
+    }
+    .fadidi-card-desc {
+        font-size: 1.05em;
+    }
+}
+/* Amélioration responsive pour la section PRODUITS FADIDI OFFICIELS */
+#fadidi-products-list.fadidi-modern-grid {
+  align-items: stretch;
+}
+#fadidi-products-list .fadidi-product-card {
+  height: 100%;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+@media (max-width: 900px) {
+  #fadidi-products-list.fadidi-modern-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+@media (max-width: 900px) {
+  #fadidi-products-list.fadidi-modern-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+
+  #rotation-message {
+    display: none;
+    background: #ff8c00;
+    color: #fff;
+    text-align: center;
+    font-size: 1em;
+    font-weight: bold;
+    padding: 10px 8px 8px 8px;
+    border-radius: 0 0 16px 16px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    z-index: 10000;
+    box-shadow: 0 2px 12px #0005;
+}
+@media (max-width: 900px) and (orientation: portrait) {
+    #rotation-message {
+        display: block;
+    }
+}
+
+
+/* Couleur orange FADIDI pour les icônes du menu principal */
+#menu-links i.fa {
+    color: #ff8c00 !important;
+}
+
+/* Titre de fallback masqué par défaut */
+#fallback-title {
+    display: none;
+}
+
+
+/* Animations pour la bannière dynamique */
+.banner-anim-fade {
+    animation: bannerFadeIn 1.2s;
+}
+@keyframes bannerFadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+.banner-anim-slide {
+    animation: bannerSlideIn 1s cubic-bezier(.4,1.4,.6,1);
+}
+@keyframes bannerSlideIn {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.banner-anim-bounce {
+    animation: bannerBounceIn 1s;
+}
+@keyframes bannerBounceIn {
+    0% { transform: scale(0.8); opacity: 0.5; }
+    60% { transform: scale(1.1); opacity: 1; }
+    80% { transform: scale(0.95); }
+    100% { transform: scale(1); }
+}
+
+/* =======================================
+   STYLES VITRINE AVEC SECTIONS
+   ======================================= */
+.vitrine-section {
+    margin-bottom: 40px;
+    padding: 20px 5px;
+    width: 100%;
+    max-width: 100vw;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.vitrine-section-title {
+    color: #ff8c00;
+    font-size: 1.5em;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+    padding: 10px;
+    background: linear-gradient(135deg, rgba(255, 140, 0, 0.1), rgba(255, 140, 0, 0.05));
+    border-radius: 10px;
+    border: 2px solid rgba(255, 140, 0, 0.2);
+}
+
+/* =======================================
+   STYLES PROMOTIONS PAR CATÉGORIE - DESIGN CERCLE
+   ======================================= */
+.promotion-categories-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 30px;
+    padding: 20px 5px;
+    justify-items: center;
+    width: 100%;
+    max-width: 100vw;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    margin: 0;
+}
+
+.promotion-category-card {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    box-shadow: 
+        0 15px 35px rgba(0,0,0,0.3),
+        0 5px 15px rgba(0,0,0,0.2),
+        inset 0 -5px 15px rgba(0,0,0,0.1),
+        inset 0 5px 15px rgba(255,255,255,0.1);
+    border: none;
+}
+
+.promotion-category-card:hover {
+    transform: scale(1.1) translateY(-5px);
+    box-shadow: 
+        0 20px 45px rgba(255, 140, 0, 0.15),
+        0 10px 25px rgba(0,0,0,0.3),
+        inset 0 -8px 20px rgba(0,0,0,0.15),
+        inset 0 8px 20px rgba(255,255,255,0.15);
+}
+
+/* Image de fond circulaire */
+.promotion-category-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 1;
+}
+
+
+
+/* Effet de reflet en bas pour renforcer l'aspect 3D */
+.promotion-category-card::after {
+    content: '';
+    position: absolute;
+    bottom: -50%;
+    left: 20%;
+    width: 60%;
+    height: 20%;
+    background: radial-gradient(ellipse, 
+        rgba(0,0,0,0.3) 0%, 
+        rgba(0,0,0,0.1) 50%, 
+        transparent 70%);
+    border-radius: 50%;
+    z-index: 0;
+    transition: all 0.4s ease;
+    filter: blur(3px);
+}
+
+.promotion-category-card:hover::after {
+    transform: scale(1.2);
+    opacity: 0.6;
+}
+
+/* Overlay pour le texte */
+.promotion-category-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 100%);
+    z-index: 2;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.promotion-category-card:hover .promotion-category-overlay {
+    opacity: 1;
+}
+
+/* Contenu du texte */
+.promotion-category-content {
+    position: relative;
+    z-index: 3;
+    text-align: center;
+    padding: 10px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+}
+
+.promotion-category-card:hover .promotion-category-content {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.promotion-category-icon {
+    font-size: 1.8em;
+    margin-bottom: 5px;
+    display: block;
+    color: #ff8c00;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+}
+
+.promotion-category-title {
+    font-size: 0.9em;
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 3px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    line-height: 1.2;
+}
+
+.promotion-category-count {
+    color: #ff8c00;
+    font-weight: bold;
+    font-size: 0.8em;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+}
+
+
+
+
+
+/* Animation d'apparition pour les cercles */
+.promotion-category-card {
+    animation: fadeInUp 0.6s ease-out;
+    animation-fill-mode: both;
+}
+
+.promotion-category-card:nth-child(1) { animation-delay: 0.1s; }
+.promotion-category-card:nth-child(2) { animation-delay: 0.2s; }
+.promotion-category-card:nth-child(3) { animation-delay: 0.3s; }
+.promotion-category-card:nth-child(4) { animation-delay: 0.4s; }
+.promotion-category-card:nth-child(5) { animation-delay: 0.5s; }
+.promotion-category-card:nth-child(6) { animation-delay: 0.6s; }
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(30px) scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.loading-message {
+    text-align: center;
+    color: #ccc;
+    font-size: 1.1em;
+    padding: 40px;
+}
+
+.loading-message i {
+    color: #ff8c00;
+    margin-right: 10px;
+}
+
+.no-promotions-message {
+    text-align: center;
+    color: #888;
+    font-size: 1.1em;
+    padding: 40px;
+    background: #2a2a2a;
+    border-radius: 10px;
+    margin: 20px 0;
+}
+
+/* Responsive pour les cercles de promotions */
+@media (max-width: 1024px) {
+    .promotion-categories-container {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        padding: 15px 2px;
+        width: 100%;
+        max-width: 100vw;
+        box-sizing: border-box;
+        justify-content: space-evenly;
+    }
+    
+    .promotion-category-card {
+        width: min(140px, 30vw);
+        height: min(140px, 30vw);
+        max-width: 140px;
+        max-height: 140px;
+    }
+    
+
+    
+    .promotion-category-icon {
+        font-size: 1.4em;
+    }
+    
+    .promotion-category-title {
+        font-size: 0.8em;
+    }
+}
+
+@media (max-width: 768px) {
+    .promotion-categories-container {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        padding: 15px 2px;
+        margin: 0;
+        width: 100%;
+        max-width: 100vw;
+        justify-items: center;
+        justify-content: space-evenly;
+    }
+    
+    .promotion-category-card {
+        width: min(110px, 30vw);
+        height: min(110px, 30vw);
+        max-width: 110px;
+        max-height: 110px;
+    }
+    
+
+    
+    .promotion-category-icon {
+        font-size: 1.3em;
+    }
+    
+    .promotion-category-title {
+        font-size: 0.75em;
+        line-height: 1.1;
+    }
+    
+    .promotion-category-count {
+        font-size: 0.65em;
+    }
+}
+
+@media (max-width: 480px) {
+    .promotion-categories-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+        padding: 10px 2px;
+        margin: 0;
+        width: 100%;
+        max-width: 100vw;
+        justify-items: center;
+        justify-content: space-evenly;
+    }
+    
+    .promotion-category-card {
+        width: min(120px, 45vw);
+        height: min(120px, 45vw);
+        max-width: 120px;
+        max-height: 120px;
+    }
+    
+
+    
+    .promotion-category-icon {
+        font-size: 1.2em;
+    }
+    
+    .promotion-category-title {
+        font-size: 0.7em;
+        line-height: 1.0;
+    }
+    
+    .promotion-category-count {
+        font-size: 0.6em;
+    }
+}
+
+@media (max-width: 360px) {
+    .promotion-categories-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 5px;
+        padding: 8px 3px;
+        max-width: 98vw;
+    }
+    
+    .promotion-category-card {
+        width: min(90px, 38vw);
+        height: min(90px, 38vw);
+        max-width: 90px;
+        max-height: 90px;
+    }
+    
+    .promotion-count-badge {
+        width: 20px;
+        height: 20px;
+        font-size: 0.55em;
+    }
+    
+    .promotion-category-icon {
+        font-size: 1.1em;
+    }
+    
+    .promotion-category-title {
+        font-size: 0.65em;
+    }
+    
+    .promotion-category-count {
+        font-size: 0.55em;
+    }
+}
+
+/* Lisibilité renforcée pour la bannière dynamique */
+.dynamic-banner {
+    font-weight: bold;
+    text-shadow: 1px 1px 2px #0008, 0 2px 8px #0004;
+    letter-spacing: 0.5px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    filter: none;
+    padding: 8px 0;
+    line-height: 1.1;
+    word-break: break-word;
+    background: none;
+    border-radius: 0;
+    margin: 0 auto;
+    text-align: center;
+    width: 100%;
+    max-width: 100vw;
+    box-sizing: border-box;
+    z-index: 10;
+}
+
+/* =======================================
+   COMPTEUR DE PROMOTIONS TEMPS RÉEL
+   ======================================= */
+.promotion-countdown {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: auto;
+    margin-right: 0;
+    background: transparent;
+    color: #ff8c00;
+    padding: 6px 10px;
+    border-radius: 15px;
+    font-size: 0.75em;
+    font-weight: bold;
+    box-shadow: none;
+    animation: countdownPulse 2s infinite;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+#countdown-text {
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.5px;
+}
+
+/* Animations pour le compteur */
+@keyframes countdownPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+}
+
+/* États du compteur selon le temps restant */
+.promotion-countdown.urgent {
+    color: #ff4444;
+    font-weight: 900;
+    animation: urgentBlink 1s infinite;
+}
+
+.promotion-countdown.warning {
+    color: #ff8800;
+    font-weight: 800;
+}
+
+.promotion-countdown.normal {
+    color: #ff8c00;
+    font-weight: bold;
+}
+
+@keyframes urgentBlink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+/* Responsive pour le compteur */
+@media (max-width: 768px) {
+    .promotion-countdown {
+        margin-left: 5px;
+        padding: 4px 8px;
+        font-size: 0.65em;
+        gap: 4px;
+        border-radius: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .promotion-countdown {
+        margin-left: 3px;
+        padding: 3px 6px;
+        font-size: 0.6em;
+        gap: 4px;
+        border-radius: 15px;
+    }
+    
+    .promotion-countdown i {
+        font-size: 1em;
+    }
+}
+
+</style>
+</head>
+<body>
+
+ 
+ <div id="rotation-message">Pour une meilleure expérience, faites pivoter votre appareil en mode paysage .</div>
+ 
+<!-- =========================
+     HEADER & MENU
+     ========================= -->
+<header>
+    <div class="menu">
+        <button id="menuButton">☰ Menu</button>
+    <div id="menuContent" class="menu-content">
+            <ul id="menu-links">
+                <li class="menu-category-item"><a href="index.html"><i class="fa fa-home" aria-hidden="true"></i> Accueil</a></li>
+                <li class="menu-category-item"><a href="promotion.html"><i class="fa fa-tags" aria-hidden="true"></i> Promotion</a></li>
+                <li class="menu-category-item"><a href="haut-game.html"><i class="fa fa-gem" aria-hidden="true"></i> haut de gamme</a></li>
+               
+            </ul>
+            <ul id="menu-categories"></ul>
+        </div>
+    </div>
+    <!-- Bannières Header (remplace le titre principal) -->
+    <div id="header-banners-container"></div>
+    
+    <!-- Titre de fallback si pas de bannières -->
+    <h1 id="fallback-title">DALAL AK DIAM</h1>
+    
+    <section id="publicite" class="publicite">
+        <div class="publicite-content">
+            <div id="dynamic-banner" class="dynamic-banner"></div>
+        </div>
+    </section>
+</header>
+
+<!-- =========================
+     NAVBAR
+     ========================= -->
+<nav class="navbar">
+ <div class="logo fadidi-logo-3d">
+  <img src="assets/images/logos/fadidinew.png" alt="FADIDI" />
+  <span class="logo-text"></span>
+</div>
+
+    <div class="cart-info" onclick="openCart()">
+        🛒 Panier : <span id="cart-count">(0)</span> produit(s)
+    </div>
+    <div class="search-bar">
+        <i class="" id="search-icon"></i>
+        <div>🔍</div>
+        <input type="text" id="search-input" placeholder="Tapez ici votre recherche" />
+        <button id="search-button" onclick="searchProduct()">🔍</button>
+    </div>
+    <div class="tracking-link"><a href="suivi-commande.html">
+        <span class="icon">🚚</span> Suivi de commande</a>
+    </div>
+</nav>
+
+
+<!-- =========================
+     ACCORDION PRODUITS FADIDI OFFICIELS
+     ========================= -->
+<!-- ACCORDION      PRODUITS FADIDI OFFICIELS -->
+<div class="accordion-item">
+    <button class="accordion-header" onclick="toggleAccordion(this)">
+        PRODUITS FADIDI OFFICIELS
+        <span class="accordion-click-hint">⬅ Cliquez ici</span>
+    </button>
+    <div class="accordion-content">
+        <section>
+            <div class="fadidi-modern-grid" id="fadidi-products-list">
+                <!-- Les produits FADIDI seront insérés ici -->
+            </div>
+        </section>
+    </div>
+</div>
+
+<!-- =========================
+     CATÉGORIES FADIDI OFFICIELLES
+     ========================= -->
+<div class="accordion-item">
+    <button class="accordion-header" onclick="toggleAccordion(this)">
+        CATÉGORIES FADIDI
+    <span class="arrow-blink"><i class="fas fa-th-large"></i></span>
+            <span id="categories-count" class="filter-info-text">  <span class="accordion-click-hint">⬅ Cliquez ici</span>
+    </button>
+    <div class="accordion-content">
+        <section>
+            <div id="categories-grid" class="categories-container">
+                <!-- Les catégories seront insérées ici -->
+            </div>
+            
+            <!-- Boutons de contrôle -->
+            <div class="products-filter-controls">
+                <button onclick="showAllProducts()" class="filter-btn active" id="all-products-btn">
+                    Tous les produits
+                </button>
+                <button onclick="clearCategoryFilter()" class="filter-btn hidden" id="clear-filter-btn">
+                    Effacer le filtre
+                </button>
+                <span id="category-filter-info" class="filter-info-text hidden"></span>
+            </div>
+        </section>
+    </div>
+</div>
+
+<!-- =========================
+     PRODUITS FILTRÉS PAR CATÉGORIE
+     ========================= -->
+<div class="accordion-item" id="filtered-products-section">
+    <button class="accordion-header filtered-header-centered" onclick="toggleAccordion(this)">
+        <span id="filtered-section-title">PRODUITS DE LA CATÉGORIE</span>
+        <span class="arrow-blink">⬅ Voir les produits</span>
+    </button>
+    <div class="accordion-content">
+        <section>
+            <div id="filtered-products-grid" class="fadidi-modern-grid">
+                <!-- Les produits filtrés seront affichés ici -->
+            </div>
+            <div class="products-filter-controls">
+                <button onclick="backToAllCategories()" class="filter-btn">
+                    ← Retour aux catégories
+                </button>
+            </div>
+        </section>
+    </div>
+</div>
+
+<!-- =========================
+     ACCORDION VITRINE
+     ========================= -->
+<!-- ACCORDION      DEBUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUT-->
+<div class="accordion">
+    <div class="accordion-item">
+        <button class="accordion-header" onclick="toggleAccordion(this)">
+            🏷️ VITRINE
+            <span id="promotion-countdown" class="promotion-countdown">
+                <span id="countdown-text">Chargement...</span>
+            </span>
+        </button>
+        <div class="accordion-content">
+            <section>
+                <!-- Section promotions par catégorie -->
+                <div class="vitrine-section">
+                    <div id="promotion-categories-container" class="promotion-categories-container">
+                        <div class="loading-message">
+                            <i class="fas fa-spinner fa-spin"></i> Chargement des promotions...
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+   
+    <!-- ==================== ANNONCES DYNAMIQUES SLIDER ==================== -->
+    <div class="announcements-container" id="announcements-slider">
+        <!-- Slider d'annonces spéciales FADIDI -->
+        <!-- Le contenu sera généré par JS -->
+    </div>
+
+
+<!-- =========================
+     DIAPORAMA DE PRODUITS FADIDI
+     ========================= -->
+<!-- Diaporama de produits FADIDI -->
+<div id="fadidi-slideshow" class="fadidi-slideshow">
+    <button class="slideshow-btn prev" onclick="changeSlide(-1)">&#10094;</button>
+    <div class="slideshow-content" id="slideshow-content"></div>
+    <button class="slideshow-btn next" onclick="changeSlide(1)">&#10095;</button>
+</div>
+<!-- ACCORDION      FINNNNNNNNNNNNNNNNNNNNNNNNNN -->
+
+
+
+<!-- =========================
+     IMAGE MODALE POUR AFFICHER LES IMAGE
+     ========================= -->
+<!-- IMAGE MODALE POUR AFFICHER LES IMAGE -->
+<div id="imageModal" class="modal" onclick="closeImage()">
+    <span class="close">&times;</span>
+    <img class="modal-content" id="modalImg" alt="Image agrandie du produit">
+</div>
+
+<!-- =========================
+     NOUVEAU PANIER FADIDI
+     ========================= -->
+<section id="new-cart">
+    <div class="cart-header">
+        <h2>Mon Panier FADIDI</h2>
+        <button class="close-cart-btn" onclick="closeCart()">×</button>
+    </div>
+    
+    <div id="cart-items-container">
+        <div id="cart-empty-message" class="cart-empty">
+            <i class="fas fa-shopping-cart"></i>
+            <p>Votre panier est vide</p>
+            <p>Ajoutez des produits pour commencer vos achats</p>
+        </div>
+        
+    <div id="cart-items-list">
+            <!-- Les articles du panier seront ajoutés ici dynamiquement -->
+        </div>
+    </div>
+    
+    <div id="cart-summary">
+        <div class="cart-total">
+            <div class="subtotal">
+                <span>Sous-total:</span>
+                <span id="cart-subtotal">0 CFA</span>
+            </div>
+            <div class="total">
+                <span>Total:</span>
+                <span id="cart-total-amount">0 CFA</span>
+            </div>
+        </div>
+        
+        <button id="proceed-checkout" class="checkout-btn" onclick="proceedToCheckout()">
+            Passer la commande
+        </button>
+    </div>
+</section>
+
+<!-- =========================
+     FORMULAIRE DE COMMANDE
+     ========================= -->
+<section id="checkout-form">
+    <div class="checkout-header">
+        <h2>Finaliser votre commande</h2>
+        <button class="back-to-cart-btn" onclick="backToCart()">← Retour au panier</button>
+    </div>
+    
+    <form id="order-form">
+        <div class="checkout-sections">
+            <!-- Informations de livraison -->
+            <div class="checkout-section">
+                <h3>Informations de livraison</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="customer-name">Nom complet *</label>
+                        <input type="text" id="customer-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="customer-phone">Téléphone *</label>
+                        <input type="tel" id="customer-phone" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="customer-email">Email</label>
+                    <input type="email" id="customer-email">
+                </div>
+                <div class="form-group">
+                    <label for="delivery-address">Adresse de livraison *</label>
+                    <textarea id="delivery-address" rows="3" required placeholder="Veuillez indiquer l'adresse complète de livraison"></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="delivery-city">Ville *</label>
+                        <select id="delivery-city" required>
+                            <option value="">Sélectionnez votre ville</option>
+                            <option value="dakar">Dakar</option>
+                            <option value="pikine">Pikine</option>
+                            <option value="guediawaye">Guédiawaye</option>
+                            <option value="thiaroye">Thiaroye</option>
+                            <option value="rufisque">Rufisque</option>
+                            <option value="autre">Autre ville</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="delivery-time">Heure de livraison préférée</label>
+                        <select id="delivery-time">
+                            <option value="">Pas de préférence</option>
+                            <option value="matin">Matin (8h-12h)</option>
+                            <option value="apres-midi">Après-midi (12h-17h)</option>
+                            <option value="soir">Soir (17h-20h)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="delivery-notes">Instructions spéciales</label>
+                    <textarea id="delivery-notes" rows="2" placeholder="Instructions particulières pour la livraison (facultatif)"></textarea>
+                </div>
+            </div>
+            
+            <!-- Méthodes de paiement -->
+            <div class="checkout-section">
+                <h3>Mode de paiement</h3>
+                <div class="payment-methods">
+                    <div class="payment-method" data-method="wave">
+                        <input type="radio" id="payment-wave" name="payment-method" value="wave">
+                        <label for="payment-wave">
+                            <img src="assets/images/paiement/wave.png" alt="Wave" class="payment-logo">
+                            <span>Wave</span>
+                        </label>
+                    </div>
+                    
+                    <div class="payment-method" data-method="orange">
+                        <input type="radio" id="payment-orange" name="payment-method" value="orange">
+                        <label for="payment-orange">
+                            <img src="assets/images/paiement/orange.png" alt="Orange Money" class="payment-logo">
+                            <span>Orange Money</span>
+                        </label>
+                    </div>
+                    
+                    <div class="payment-method" data-method="card">
+                        <input type="radio" id="payment-card" name="payment-method" value="card">
+                        <label for="payment-card">
+                            <img src="assets/images/paiement/bank.png" alt="Carte Bancaire" class="payment-logo">
+                            <span>Carte Bancaire</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Formulaires de paiement spécifiques -->
+                <div id="wave-payment-form" class="payment-form-details">
+                    <div class="form-group">
+                        <label for="wave-phone">Numéro Wave *</label>
+                        <input type="tel" id="wave-phone" placeholder="Ex: 77 123 45 67">
+                        <div class="payment-info">
+                            <p>💡 Vous recevrez une notification Wave pour confirmer le paiement</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="orange-payment-form" class="payment-form-details">
+                    <div class="form-group">
+                        <label for="orange-phone">Numéro Orange Money *</label>
+                        <input type="tel" id="orange-phone" placeholder="Ex: 77 123 45 67">
+                        <div class="payment-info">
+                            <p>💡 Vous recevrez un SMS pour confirmer le paiement</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="card-payment-form" class="payment-form-details">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="card-number">Numéro de carte *</label>
+                            <input type="text" id="card-number" placeholder="1234 5678 9012 3456">
+                        </div>
+                        <div class="form-group">
+                            <label for="card-expiry">Date d'expiration *</label>
+                            <input type="text" id="card-expiry" placeholder="MM/AA">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="card-cvv">Code CVV *</label>
+                        <input type="text" id="card-cvv" placeholder="123" maxlength="4">
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Résumé de commande -->
+        <div class="order-summary">
+            <h3>Résumé de votre commande</h3>
+            <div id="checkout-items-summary">
+                <!-- Articles seront listés ici -->
+            </div>
+            <div class="order-totals">
+                <div class="total-line">
+                    <span>Sous-total:</span>
+                    <span id="checkout-subtotal">0 CFA</span>
+                </div>
+                <div class="total-line total">
+                    <span>Total à payer:</span>
+                    <span id="checkout-total">0 CFA</span>
+                </div>
+            </div>
+        </div>
+        
+        <button type="submit" class="place-order-btn" id="place-order-btn">
+            <span class="btn-text">Confirmer ma commande</span>
+            <span class="btn-loading">
+                <i class="fas fa-spinner fa-spin"></i> Traitement en cours...
+            </span>
+        </button>
+    </form>
+</section>
+
+<!-- =========================
+     CONFIRMATION DE COMMANDE
+     ========================= -->
+<section id="order-confirmation">
+    <div class="confirmation-content">
+        <div class="success-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <h2>Commande confirmée !</h2>
+        <div class="order-details">
+            <p>Merci pour votre commande. Nous avons bien reçu votre demande.</p>
+            <div class="confirmation-info">
+                <div class="info-item">
+                    <strong>Numéro de commande:</strong>
+                    <span id="confirmed-order-id">-</span>
+                </div>
+                <div class="info-item">
+                    <strong>Total payé:</strong>
+                    <span id="confirmed-total">-</span>
+                </div>
+                <div class="info-item">
+                    <strong>Méthode de paiement:</strong>
+                    <span id="confirmed-payment-method">-</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="next-steps">
+            <h3>Prochaines étapes</h3>
+            <ul>
+                <li>📱 Vous recevrez une confirmation par SMS</li>
+                <li>📦 Votre commande sera préparée dans les 24h</li>
+                <li>🚚 Livraison estimée sous 2-3 jours ouvrés</li>
+            </ul>
+        </div>
+        
+        <div class="confirmation-actions">
+            <button id="track-order-btn" class="track-order-btn" onclick="goToOrderTracking()">
+                <i class="fas fa-truck"></i> Suivre ma commande
+            </button>
+            <button class="continue-shopping-btn" onclick="continueShopping()">
+                Continuer mes achats
+            </button>
+        </div>
+    </div>
+</section>
+
+
+    
+<!-- =========================
+     FOOTER
+     ========================= -->
+<footer>
+    <p>&copy; 2025 FADIDI - Tous droits réservés.</p>
+</footer>     
+
+<script>
+// Bannière dynamique depuis l'API (annonce type 'banner' ou pageCible 'boutique')
+async function loadDynamicBanner() {
+    try {
+        const res = await fetch('http://localhost:3000/api/annonces');
+        if (!res.ok) throw new Error('API indisponible');
+        const annonces = await res.json();
+        const banner = annonces.find(a => a.active && (a.type === 'banner' || a.pageCible === 'boutique'));
+        const bannerDiv = document.getElementById('dynamic-banner');
+        if (banner && bannerDiv) {
+            // Animation CSS facultative (apparition uniquement)
+            let animClass = '';
+            if (banner.animation) animClass = ' banner-anim-' + banner.animation;
+
+            // Couleur, police, taille (stockées dans description JSON)
+            let color = '#ff9900', font = 'inherit', fontSize = 32, descText = '';
+            if (banner.description && banner.description.startsWith('{')) {
+                try {
+                    const descObj = JSON.parse(banner.description);
+                    if (descObj.color) color = descObj.color;
+                    if (descObj.font) font = descObj.font;
+                    if (descObj.fontSize) fontSize = descObj.fontSize;
+                    if (descObj.text && descObj.text.trim() !== '') {
+                        descText = descObj.text;
+                    } else {
+                        descText = '';
+                    }
+                } catch { descText = ''; }
+            } else if (banner.description && banner.description.trim().startsWith('{') && banner.description.trim().endsWith('}')) {
+                // Masquer tout texte qui ressemble à du JSON
+                descText = '';
+            } else {
+                descText = banner.description || '';
+            }
+
+            // Appliquer la classe d'animation uniquement à l'apparition
+            bannerDiv.className = 'dynamic-banner' + animClass;
+            // Appliquer la couleur comme background si c'est un gradient, sinon comme color
+            if (/^linear-gradient/i.test(color)) {
+                bannerDiv.style.background = color;
+                bannerDiv.style.color = '';
+            } else {
+                bannerDiv.style.background = '';
+                bannerDiv.style.color = color;
+            }
+            bannerDiv.style.fontFamily = font;
+            bannerDiv.style.fontSize = fontSize + 'px';
+            let imgHtml = '';
+            if (Array.isArray(banner.images) && banner.images.length > 0 && banner.images[0].imageBase64) {
+                imgHtml = `<img src="${banner.images[0].imageBase64}" alt="Bannière" style="max-height:60px;max-width:180px;margin-right:10px;vertical-align:middle;">`;
+            }
+            // Le texte reste fixe, aucune animation continue ni JS sur le texte
+            bannerDiv.innerHTML = `${imgHtml}<span>${banner.titre ? banner.titre + ' ' : ''}</span><span>${descText}</span>`;
+
+            // Supprimer toute animation continue ou JS sur le texte (aucun setInterval, aucun scroll)
+        } else if (bannerDiv) {
+            bannerDiv.innerHTML = '';
+        }
+    } catch (e) {
+        const bannerDiv = document.getElementById('dynamic-banner');
+        if (bannerDiv) bannerDiv.innerHTML = '';
+    }
+}
+document.addEventListener('DOMContentLoaded', loadDynamicBanner);
+</script>
+
+
+   <script>
+        // =========================
+        // CONFIGURATION API FADIDI
+        // =========================
+        if (typeof FADIDI_API_URL === 'undefined') {
+            var FADIDI_API_URL = 'http://localhost:3000/api';
+        }
+
+        // =========================
+        // CHARGEMENT PRODUITS DEPUIS API
+        // =========================
+        async function loadProductsFromAPI() {
+            try {
+                const response = await fetch(`${FADIDI_API_URL}/products/published`);
+                if (!response.ok) throw new Error('API non disponible');
+                
+                const products = await response.json();
+                console.log('✅ Produits chargés depuis l\'API:', products.length);
+                
+                // Convertir au format boutique FADIDI
+                const fadidiProducts = products.map(product => ({
+                    id: product.id,
+                    name: product.name,
+                    description: product.description,
+                    price: product.price,
+                    image: product.images?.[0] ? `http://localhost:3000/uploads/${product.images[0]}` : 'http://localhost:3000/uploads/placeholder.jpg',
+                    status: 'published',
+                    category: product.category?.name || null,
+                    category_id: product.category?.id || null,
+                    createdAt: product.createdAt
+                }));
+                
+                // Sauvegarder dans localStorage pour compatibilité
+                localStorage.setItem('fadidiProducts', JSON.stringify(fadidiProducts));
+                
+                // Forcer le rechargement des produits
+                forceReloadProducts();
+                
+                return true;
+            } catch (error) {
+                console.warn('⚠️ API non disponible, utilisation du localStorage:', error.message);
+                loadAndDisplayFadidiProducts(); // Fallback vers localStorage
+                return false;
+            }
+        }
+        
+        // =========================
+        // FONCTION POUR FORCER LE RECHARGEMENT DEPUIS L'API
+        // =========================
+        window.forceReloadFromAPI = async function() {
+            console.log('🔄 Rechargement forcé des produits depuis l\'API...');
+            localStorage.removeItem('fadidiProducts'); // Vider le cache
+            const result = await loadProductsFromAPI();
+            if (result) {
+                console.log('✅ Produits rechargés depuis l\'API avec succès !');
+                alert('Produits rechargés depuis l\'API ! Les images devraient maintenant s\'afficher correctement.');
+            } else {
+                console.log('❌ Échec du rechargement depuis l\'API');
+                alert('Erreur lors du rechargement depuis l\'API');
+            }
+        };
+
+            // =========================
+            // AFFICHAGE PRODUITS FADIDI (Version améliorée avec gestion d'images)
+            // =========================
+            function loadAndDisplayFadidiProducts() {
+                const fadidiProducts = JSON.parse(localStorage.getItem('fadidiProducts') || '[]');
+                
+                if (!fadidiProducts.length) {
+                    console.log('⚠️ Aucun produit à afficher');
+                    return;
+                }
+                
+                // Réparer les URLs d'images avant affichage
+                const productsWithSecureImages = fadidiProducts.map(product => {
+                    if (product.images && Array.isArray(product.images)) {
+                        product.secureImageUrl = buildSecureImageUrl(product.images);
+                    } else if (product.image) {
+                        product.secureImageUrl = buildSecureImageUrl([product.image]);
+                    } else {
+                        product.secureImageUrl = 'assets/images/1-.png';
+                    }
+                    return product;
+                });
+                
+                // Utiliser le gestionnaire de produits pour éviter les doublons
+                if (window.fadidiProductManager) {
+                    window.fadidiProductManager.displayProducts(productsWithSecureImages, 'fadidi-products-list');
+                } else {
+                    // Fallback si le gestionnaire n'est pas encore chargé
+                    displayProductsFallback(productsWithSecureImages);
+                }
+            }
+            
+            // Fonction de fallback pour affichage des produits
+            function displayProductsFallback(products) {
+                const container = document.getElementById('fadidi-products-list');
+                if (!container) return;
+                
+                container.innerHTML = products.map(product => `
+                    <div class="fadidi-product-card">
+                        <div class="fadidi-card-img-container">
+                            <img src="${product.secureImageUrl}" 
+                                 alt="${product.name}" 
+                                 onclick="openImage(this)"
+                                 onerror="handleImageError(this, '${product.name}')"
+                                 data-original-src="${product.secureImageUrl}" />
+                        </div>
+                        <div class="fadidi-card-body">
+                            <h3 class="fadidi-card-title">${product.name || 'Produit FADIDI'}</h3>
+                            <p class="fadidi-card-desc">${product.description || ''}</p>
+                            <div class="fadidi-card-price">${Number(product.price).toLocaleString('fr-FR')} CFA</div>
+                            <button class="fadidi-card-btn" onclick="addToCart('${product.name.replace(/'/g, "\\'")}', ${product.price}, '${product.secureImageUrl}', '${product.id}')">Ajouter au panier</button>
+                        </div>
+                    </div>
+                `).join('');
+                
+                // Réparer les images après insertion dans le DOM
+                setTimeout(() => {
+                    if (window.fadidiImageManager) {
+                        window.fadidiImageManager.repairImagesInContainer(container);
+                    }
+                }, 500);
+            }
+            
+            // Fonction pour construire une URL d'image sécurisée
+            function buildSecureImageUrl(images) {
+                if (!images || !Array.isArray(images) || images.length === 0) {
+                    return 'assets/images/1-.png';
+                }
+                
+                const imageFile = images[0];
+                
+                // Si c'est déjà une URL complète
+                if (imageFile.startsWith('http')) {
+                    return imageFile;
+                }
+                
+                // Construire l'URL depuis le serveur
+                const cleanFileName = imageFile.replace(/^\/+/, '').replace(/^uploads\//, '');
+                return `${FADIDI_API_URL.replace('/api', '')}/uploads/${cleanFileName}`;
+            }
+            
+            // Fonction pour gérer les erreurs d'images
+            function handleImageError(imgElement, productName = '') {
+                console.warn(`Erreur de chargement d'image pour: ${productName}`);
+                
+                // Essayer de recharger une fois avec l'URL originale
+                const originalSrc = imgElement.getAttribute('data-original-src');
+                if (originalSrc && imgElement.src !== originalSrc && !imgElement.hasAttribute('data-retry-attempted')) {
+                    imgElement.setAttribute('data-retry-attempted', 'true');
+                    imgElement.src = originalSrc;
+                    return;
+                }
+                
+                // Si ça échoue encore, utiliser l'image par défaut
+                imgElement.src = 'assets/images/1-.png';
+                imgElement.style.border = '2px dashed #ff8c00';
+                imgElement.style.opacity = '0.8';
+                imgElement.title = `Image non disponible pour: ${productName}`;
+            }            // =========================
+            // FONCTION POUR FORCER LE RECHARGEMENT
+            // =========================
+            function forceReloadProducts() {
+                if (window.fadidiProductManager) {
+                    window.fadidiProductManager.reloadFromAPI();
+                } else {
+                    // Fallback
+                    const fadidiSection = document.getElementById('fadidi-products-list');
+                    if (fadidiSection) {
+                        fadidiSection.innerHTML = '';
+                    }
+                    loadAndDisplayFadidiProducts();
+                }
+            }
+
+            // =========================
+            // FONCTION POUR ALLER AU SUIVI DE COMMANDE
+            // =========================
+            function goToOrderTracking() {
+                // Récupérer le téléphone du dernier formulaire rempli
+                const phoneInput = document.getElementById('customer-phone');
+                const phone = phoneInput ? phoneInput.value : '';
+                
+                if (phone) {
+                    // Rediriger vers le suivi avec le téléphone en paramètre
+                    window.location.href = `suivi-commande.html?phone=${encodeURIComponent(phone)}`;
+                } else {
+                    // Si pas de téléphone, aller à la page de suivi normale
+                    window.location.href = 'suivi-commande.html';
+                }
+            }
+            // =========================
+            // RECHERCHE DE PRODUITS PAR NOM - VERSION AMÉLIORÉE
+            // =========================
+            function searchProduct() {
+                const searchInput = document.getElementById('search-input').value.toLowerCase().trim();
+                
+                // Si la recherche est vide, afficher tous les produits
+                if (!searchInput) {
+                    showAllProducts();
+                    return;
+                }
+                
+                // Réinitialiser les résultats précédents
+                resetSearchResults();
+                
+                // NOUVELLE LOGIQUE : Recherche focalisée sur les noms de produits
+                let foundProducts = [];
+                let hiddenProducts = [];
+                
+                // Récupérer tous les produits dans tous les conteneurs
+                const productItems = Array.from(document.querySelectorAll('.product-item'));
+                const fadidiCards = Array.from(document.querySelectorAll('.fadidi-product-card'));
+                const allProductElements = productItems.concat(fadidiCards);
+                
+                // Ouvrir automatiquement tous les accordéons pour permettre la recherche
+                openAllAccordions();
+                
+                allProductElements.forEach(item => {
+                    // Extraire le nom du produit selon le type de carte
+                    let productName = '';
+                    if (item.classList.contains('fadidi-product-card')) {
+                        productName = item.querySelector('.fadidi-card-title')?.textContent.toLowerCase() || '';
+                    } else {
+                        productName = item.querySelector('span:first-of-type, h3')?.textContent.toLowerCase() || '';
+                    }
+                    
+                    // Vérifier si le nom du produit contient le terme recherché
+                    if (productName.includes(searchInput)) {
+                        foundProducts.push(item);
+                        // Rendre visible et mettre en évidence
+                        item.style.display = 'block';
+                        item.classList.add('search-highlight');
+                        // Assurer que la section parent est visible
+                        ensureParentSectionVisible(item);
+                    } else {
+                        hiddenProducts.push(item);
+                        // Masquer le produit qui ne correspond pas
+                        item.style.display = 'none';
+                        item.classList.remove('search-highlight');
+                    }
+                });
+                
+                // Afficher le résultat de la recherche
+                if (foundProducts.length === 0) {
+                    showNoResultsMessage(searchInput);
+                    // Réafficher tous les produits si aucun résultat
+                    showAllProducts();
+                } else {
+                    showSearchResultsMessage(searchInput, foundProducts.length);
+                    
+                    // Faire défiler jusqu'au premier produit trouvé
+                    if (foundProducts.length > 0) {
+                        foundProducts[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }
+            }
+            
+            // Fonction pour afficher tous les produits
+            function showAllProducts() {
+                const allProducts = document.querySelectorAll('.product-item, .fadidi-product-card');
+                allProducts.forEach(product => {
+                    product.style.display = 'block';
+                    product.classList.remove('search-highlight');
+                });
+                
+                // Supprimer le message de recherche
+                const existingMessage = document.getElementById('search-results-message');
+                if (existingMessage) {
+                    existingMessage.remove();
+                }
+            }
+            
+            // Fonction pour ouvrir automatiquement tous les accordéons
+            function openAllAccordions() {
+                const accordionContents = document.querySelectorAll('.accordion-content');
+                accordionContents.forEach(content => {
+                    content.style.display = 'block';
+                });
+            }
+            
+            // Fonction pour s'assurer que la section parent est visible
+            function ensureParentSectionVisible(productElement) {
+                // Vérifier l'accordéon parent
+                let accordionContent = productElement.closest('.accordion-content');
+                if (accordionContent) {
+                    accordionContent.style.display = 'block';
+                    accordionContent.style.maxHeight = 'none';
+                    
+                    // Activer le header de l'accordéon
+                    const accordionHeader = accordionContent.previousElementSibling;
+                    if (accordionHeader && accordionHeader.classList.contains('accordion-header')) {
+                        accordionHeader.classList.add('active');
+                    }
+                }
+                
+                // Vérifier les sections cachées
+                let parentSection = productElement.closest('section');
+                if (parentSection && getComputedStyle(parentSection).display === 'none') {
+                    parentSection.style.display = 'block';
+                }
+            }
+            
+            // Fonction pour afficher le message de résultats de recherche
+            function showSearchResultsMessage(searchTerm, count) {
+                // Supprimer le message existant
+                const existingMessage = document.getElementById('search-results-message');
+                if (existingMessage) {
+                    existingMessage.remove();
+                }
+                
+                const messageContainer = document.createElement('div');
+                messageContainer.id = 'search-results-message';
+                messageContainer.className = 'search-results-message';
+                messageContainer.innerHTML = `
+                    <p>🎯 <strong>${count}</strong> produit${count > 1 ? 's' : ''} trouvé${count > 1 ? 's' : ''} pour "<strong>${searchTerm}</strong>"</p>
+                    <button onclick="clearSearch()" style="background: #ff8c00; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; margin-left: 10px;">
+                        Afficher tous les produits
+                    </button>
+                `;
+                
+                // Insérer après la barre de recherche
+                const searchBar = document.querySelector('.search-bar');
+                if (searchBar && searchBar.parentNode) {
+                    searchBar.parentNode.insertBefore(messageContainer, searchBar.nextSibling);
+                }
+            }
+            
+            // Fonction pour effacer la recherche
+            function clearSearch() {
+                const searchInput = document.getElementById('search-input');
+                if (searchInput) {
+                    searchInput.value = '';
+                }
+                showAllProducts();
+            }
+            
+            // Fonction pour réinitialiser les résultats de recherche précédents
+            function resetSearchResults() {
+                // Réinitialiser l'affichage de tous les produits
+                const allProducts = document.querySelectorAll('.product-item, .fadidi-product-card');
+                allProducts.forEach(product => {
+                    product.classList.remove('search-highlight', 'same-name-highlight');
+                    product.style.border = '';
+                    product.style.boxShadow = '';
+                    product.style.transform = '';
+                    product.style.zIndex = '';
+                    product.style.display = 'block'; // S'assurer que tous les produits sont visibles
+                });
+                
+                // Réinitialiser les sections
+                const allSections = document.querySelectorAll('section');
+                allSections.forEach(section => {
+                    section.classList.remove('search-highlight');
+                });
+                
+                // Réinitialiser les éléments du menu
+                const allMenuItems = document.querySelectorAll('#menuContent a');
+                allMenuItems.forEach(item => {
+                    item.classList.remove('search-highlight');
+                });
+                
+                // Réinitialiser les accordéons
+                const accordionHeaders = document.querySelectorAll('.accordion-header');
+                accordionHeaders.forEach(header => {
+                    header.classList.remove('search-highlight');
+                    header.style.background = '';
+                    header.style.color = '';
+                });
+                
+                // Supprimer le message de résultats s'il existe
+                const existingMessage = document.getElementById('search-results-message');
+                if (existingMessage) {
+                    existingMessage.remove();
+                }
+                
+                // Supprimer les messages d'information s'ils existent
+                const infoMessages = document.querySelectorAll('.same-name-info');
+                infoMessages.forEach(msg => msg.remove());
+            }
+            // Fonction pour afficher un message lorsqu'aucun résultat n'est trouvé
+            function showNoResultsMessage(searchTerm) {
+                const messageContainer = document.createElement('div');
+                messageContainer.id = 'search-results-message';
+                messageContainer.className = 'search-results-message no-results';
+                messageContainer.innerHTML = `
+                    <p>Aucun résultat trouvé pour "<strong>${searchTerm}</strong>"</p>
+                    <p>Essayez avec d'autres mots-clés ou parcourez nos catégories.</p>
+                `;
+                // Insérer le message après la barre de recherche
+                const searchBar = document.querySelector('.search-bar');
+                searchBar.parentNode.insertBefore(messageContainer, searchBar.nextSibling);
+            }
+            // Fonction pour afficher un résumé des résultats de recherche
+            function showSearchSummary(searchTerm, productsCount, sectionsCount, menuItemsCount) {
+                const messageContainer = document.createElement('div');
+                messageContainer.id = 'search-results-message';
+                messageContainer.className = 'search-results-message';
+                let resultsText = `Résultats pour "<strong>${searchTerm}</strong>" : `;
+                let details = [];
+                if (productsCount > 0) {
+                    details.push(`${productsCount} produit${productsCount > 1 ? 's' : ''}`);
+                }
+                if (sectionsCount > 0) {
+                    details.push(`${sectionsCount} catégorie${sectionsCount > 1 ? 's' : ''}`);
+                }
+                if (menuItemsCount > 0) {
+                    details.push(`${menuItemsCount} élément${menuItemsCount > 1 ? 's' : ''} de menu`);
+                }
+                resultsText += details.join(', ');
+                messageContainer.innerHTML = `<p>${resultsText}</p>`;
+                // Insérer le message après la barre de recherche
+                const searchBar = document.querySelector('.search-bar');
+                searchBar.parentNode.insertBefore(messageContainer, searchBar.nextSibling);
+            }
+            
+            // Nouvelle fonction pour afficher un résumé avancé avec redirection
+            function showAdvancedSearchSummary(searchTerm, productsCount, sectionsCount, menuItemsCount, sameNameCount) {
+                const messageContainer = document.createElement('div');
+                messageContainer.id = 'search-results-message';
+                messageContainer.className = 'search-results-message';
+                let resultsText = `Résultats pour "<strong>${searchTerm}</strong>" : `;
+                let details = [];
+                
+                if (productsCount > 0) {
+                    details.push(`${productsCount} produit${productsCount > 1 ? 's' : ''}`);
+                }
+                if (sectionsCount > 0) {
+                    details.push(`${sectionsCount} catégorie${sectionsCount > 1 ? 's' : ''}`);
+                }
+                if (menuItemsCount > 0) {
+                    details.push(`${menuItemsCount} élément${menuItemsCount > 1 ? 's' : ''} de menu`);
+                }
+                if (sameNameCount > 0) {
+                    details.push(`${sameNameCount} produit${sameNameCount > 1 ? 's' : ''} similaire${sameNameCount > 1 ? 's' : ''}`);
+                }
+                
+                resultsText += details.join(', ');
+                messageContainer.innerHTML = `<p>${resultsText}</p>`;
+                
+                // Insérer le message après la barre de recherche
+                const searchBar = document.querySelector('.search-bar');
+                searchBar.parentNode.insertBefore(messageContainer, searchBar.nextSibling);
+            }
+            
+            // Fonction pour afficher un message de redirection
+            function showRedirectMessage(searchTerm, targetPage) {
+                const messageContainer = document.createElement('div');
+                messageContainer.id = 'search-results-message';
+                messageContainer.className = 'search-results-message redirect-message';
+                messageContainer.style.background = '#4CAF50';
+                messageContainer.style.color = 'white';
+                messageContainer.style.border = '2px solid #45a049';
+                
+                const pageNames = {
+                    'promotion.html': 'Promotions',
+                    'haut-game.html': 'Haut de Gamme',
+                    'index.html': 'Accueil',
+                    'suivi-commande.html': 'Suivi de Commande',
+                    'vendeur-register.html': 'Espace Vendeur'
+                };
+                
+                const pageName = pageNames[targetPage] || targetPage;
+                messageContainer.innerHTML = `
+                    <p>🎯 Recherche détectée pour "<strong>${searchTerm}</strong>"</p>
+                    <p>Redirection vers la page <strong>${pageName}</strong> dans 2 secondes...</p>
+                    <div style="margin-top: 10px;">
+                        <button onclick="window.location.href='${targetPage}'" style="background: white; color: #4CAF50; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; margin-right: 10px;">Y aller maintenant</button>
+                        <button onclick="this.parentElement.parentElement.remove()" style="background: transparent; color: white; border: 1px solid white; padding: 8px 16px; border-radius: 4px; cursor: pointer;">Annuler</button>
+                    </div>
+                `;
+                
+                // Insérer le message après la barre de recherche
+                const searchBar = document.querySelector('.search-bar');
+                searchBar.parentNode.insertBefore(messageContainer, searchBar.nextSibling);
+            }
+            
+            // Fonction pour mettre en évidence les produits du même nom
+            function showSameNameProducts(sameNameProducts) {
+                sameNameProducts.forEach(product => {
+                    product.classList.add('same-name-highlight');
+                    product.style.border = '3px solid #00ff00';
+                    product.style.boxShadow = '0 0 20px rgba(0, 255, 0, 0.5)';
+                    product.style.transform = 'scale(1.05)';
+                    product.style.zIndex = '10';
+                });
+                
+                // Créer un message informatif pour les produits similaires
+                const infoMessage = document.createElement('div');
+                infoMessage.className = 'same-name-info';
+                infoMessage.style.position = 'fixed';
+                infoMessage.style.top = '50%';
+                infoMessage.style.left = '50%';
+                infoMessage.style.transform = 'translate(-50%, -50%)';
+                infoMessage.style.background = 'rgba(0, 0, 0, 0.9)';
+                infoMessage.style.color = 'white';
+                infoMessage.style.padding = '20px';
+                infoMessage.style.borderRadius = '10px';
+                infoMessage.style.zIndex = '9999';
+                infoMessage.style.maxWidth = '400px';
+                infoMessage.style.textAlign = 'center';
+                
+                infoMessage.innerHTML = `
+                    <h3>✨ Produits similaires trouvés !</h3>
+                    <p>Nous avons trouvé ${sameNameProducts.length} produits correspondant à votre recherche.</p>
+                    <p>Ils sont maintenant mis en évidence avec un contour orange.</p>
+                    <button onclick="this.parentElement.remove()" style="background: #ff8c00; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 10px;">OK, compris !</button>
+                `;
+                
+                document.body.appendChild(infoMessage);
+                
+                // Supprimer automatiquement après 5 secondes
+                setTimeout(() => {
+                    if (infoMessage.parentElement) {
+                        infoMessage.remove();
+                    }
+                }, 5000);
+            }
+            
+            // Fonction pour ouvrir automatiquement la section parent d'un produit trouvé
+            function openParentSection(productElement) {
+                // Rechercher l'accordéon parent
+                let accordionContent = productElement.closest('.accordion-content');
+                if (accordionContent) {
+                    // Ouvrir l'accordéon
+                    accordionContent.style.display = 'block';
+                    accordionContent.style.maxHeight = 'none';
+                    
+                    // Trouver et activer le header de l'accordéon
+                    const accordionHeader = accordionContent.previousElementSibling;
+                    if (accordionHeader && accordionHeader.classList.contains('accordion-header')) {
+                        accordionHeader.classList.add('active');
+                        // Ajouter un effet visuel pour montrer que la section s'est ouverte
+                        accordionHeader.style.background = '#ff8c00';
+                        accordionHeader.style.color = 'white';
+                        setTimeout(() => {
+                            accordionHeader.style.background = '';
+                            accordionHeader.style.color = '';
+                        }, 3000);
+                    }
+                }
+                
+                // Rechercher les sections cachées (display: none)
+                let parentSection = productElement.closest('section');
+                if (parentSection && getComputedStyle(parentSection).display === 'none') {
+                    parentSection.style.display = 'block';
+                }
+                
+                // Rechercher les divs parents cachés
+                let parentDiv = productElement.closest('div[style*="display: none"], div[style*="display:none"]');
+                if (parentDiv) {
+                    parentDiv.style.display = 'block';
+                }
+                
+                // Vérifier les carrousels ou slideshows
+                let carousel = productElement.closest('.carousel, .slideshow, .fadidi-slideshow');
+                if (carousel) {
+                    carousel.style.display = 'flex';
+                    carousel.style.visibility = 'visible';
+                }
+                
+                // Vérifier les tabs ou onglets
+                let tab = productElement.closest('.tab-content, .tab-pane');
+                if (tab) {
+                    tab.style.display = 'block';
+                    tab.classList.add('active', 'show');
+                }
+            }
+            // Configuration de la recherche en temps réel avec debounce
+            let searchTimeout;
+            const searchInput = document.getElementById('search-input');
+            
+            if (searchInput) {
+                // Recherche en temps réel avec délai
+                searchInput.addEventListener('input', function(event) {
+                    clearTimeout(searchTimeout);
+                    searchTimeout = setTimeout(() => {
+                        searchProduct();
+                    }, 500); // Attendre 500ms après que l'utilisateur arrête de taper
+                });
+                
+                // Recherche immédiate avec la touche Entrée
+                searchInput.addEventListener('keyup', function(event) {
+                    if (event.key === 'Enter') {
+                        clearTimeout(searchTimeout);
+                        searchProduct();
+                    }
+                    // Effacer la recherche avec Escape
+                    if (event.key === 'Escape') {
+                        clearSearchResults();
+                    }
+                });
+                
+                // Focus sur le champ de recherche avec Ctrl+F
+                document.addEventListener('keydown', function(event) {
+                    if (event.ctrlKey && event.key === 'f') {
+                        event.preventDefault();
+                        searchInput.focus();
+                        searchInput.select();
+                    }
+                });
+            }
+            
+          
+            
+            // =========================
+            // RECTIFICATION AFFICHAGE DE GRILLEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+            // =========================
+            function createGridSection(container, section, allProducts) {
+    container.classList.remove('product-list');
+    container.classList.add('fadidi-modern-grid');
+    // Force le mode grille et 3 colonnes
+    container.style.display = 'grid';
+    container.style.gridTemplateColumns = 'repeat(3, 1fr)';
+    container.style.gap = '20px'; // Espace horizontal et vertical minimal
+    container.style.rowGap = '24px'; // Réduit l'espace haut/bas entre les produits
+    container.style.alignItems = 'start';
+    if (!section.products || section.products.length === 0) {
+        container.innerHTML = '<p>Aucun produit dans cette section</p>';
+        return;
+    }
+    // Header sur toute la largeur de la grille
+    let headerHtml = `
+        <div class="section-header" style="grid-column:1/-1;justify-self:center;text-align:center;margin-bottom:10px;">
+            <h2 style="margin:0 0 4px 0;font-size:1.8em;letter-spacing:1px;color:#ff8000;">${section.title || ''}</h2>
+            <p style="margin:0 0 6px 0;color:#ccc;">${section.description || ''}</p>
+        </div>
+    `;
+    // Génère les cartes produits
+    let cardsHtml = section.products.map(productId => {
+        const product = allProducts.find(p => p.id === productId);
+        if (!product) return '';
+        return `
+            <div class="fadidi-product-card" style="margin-bottom:2px;">
+                <div class="fadidi-card-img-container">
+                    <img src="${product.images && product.images.length > 0 ? 'http://localhost:3000/uploads/' + product.images[0] : 'http://localhost:3000/uploads/placeholder.jpg'}" alt="${product.name || 'Produit'}" onclick="openImage(this)" />
+                </div>
+                <div class="fadidi-card-body">
+                    <h3 class="fadidi-card-title">${product.name || 'Produit FADIDI'}</h3>
+                    <p class="fadidi-card-desc">${product.description ? product.description : ''}</p>
+                    <div class="fadidi-card-price">${product.price ? Number(product.price).toLocaleString('fr-FR') + ' CFA' : '23 000 CFA'}</div>
+                    <button class="fadidi-card-btn" onclick="addToCart('${(product.name || 'Produit FADIDI').replace(/'/g, "\\'")}', ${product.price || 23000}, '${product.images && product.images.length > 0 ? 'http://localhost:3000/uploads/' + product.images[0] : 'http://localhost:3000/uploads/placeholder.jpg'}', ${product.id || 'null'})">Ajouter au panier</button>
+                </div>
+            </div>
+        `;
+    }).join('');
+    container.innerHTML = headerHtml + cardsHtml;
+            }
+            
+            // =========================
+            // IMAGE MODALE POUR AFFICHER LES IMAGE
+            // =========================
+            function openImage(imgElement) {
+                var modal = document.getElementById('imageModal');
+                var modalImg = document.getElementById('modalImg');
+                modal.style.display = "block";
+                modalImg.src = imgElement.src;
+            }
+            function closeImage() {
+                document.getElementById('imageModal').style.display = "none";
+            }
+            
+            // =========================
+            // COMPTEUR TEMPS RÉEL DES PROMOTIONS
+            // =========================
+            let promotionsData = [];
+            let countdownInterval = null;
+            
+            function updatePromotionCountdown() {
+                if (!promotionsData.length) {
+                    document.getElementById('countdown-text').textContent = 'Aucune promo';
+                    return;
+                }
+                
+                const now = new Date();
+                let activePromotions = 0;
+                let nearestEnd = null;
+                let furthestEnd = null;
+                
+                // Trouver les promotions qui expirent le plus tôt et le plus tard
+                promotionsData.forEach(promo => {
+                    const endDate = new Date(promo.endDate);
+                    
+                    if (endDate > now) {
+                        activePromotions++;
+                        
+                        // Trouver la promotion qui expire le plus tôt (pour les états d'urgence)
+                        if (!nearestEnd || endDate < nearestEnd) {
+                            nearestEnd = endDate;
+                        }
+                        
+                        // Trouver la promotion qui expire le plus tard (pour l'affichage principal)
+                        if (!furthestEnd || endDate > furthestEnd) {
+                            furthestEnd = endDate;
+                        }
+                    }
+                });
+                
+                if (activePromotions === 0) {
+                    document.getElementById('countdown-text').textContent = 'Promos expirées';
+                    return;
+                }
+                
+                // Calculer le temps restant de la promotion qui dure le plus longtemps
+                const maxTimeLeft = furthestEnd - now;
+                const maxDays = Math.floor(maxTimeLeft / (1000 * 60 * 60 * 24));
+                const maxHours = Math.floor((maxTimeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const maxMinutes = Math.floor((maxTimeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                
+                // Calculer le temps restant de la promotion la plus proche pour les états d'urgence
+                const minTimeLeft = nearestEnd - now;
+                const minDays = Math.floor(minTimeLeft / (1000 * 60 * 60 * 24));
+                const minHours = Math.floor((minTimeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minMinutes = Math.floor((minTimeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                
+                // Formater l'affichage avec le temps restant maximal
+                let countdownText = '';
+                const countdownElement = document.getElementById('promotion-countdown');
+                
+                // Afficher le temps restant de la promotion qui dure le plus longtemps
+                if (maxDays > 0) {
+                    countdownText = `${maxDays}j ${maxHours}h restant`;
+                } else if (maxHours > 0) {
+                    countdownText = `${maxHours}h ${maxMinutes}m restant`;
+                } else if (maxMinutes > 0) {
+                    countdownText = `${maxMinutes}m restant`;
+                } else {
+                    countdownText = `Promos se terminent bientôt`;
+                }
+                
+                // Déterminer l'état basé sur le temps restant de la promotion la plus proche
+                if (minDays > 0) {
+                    countdownElement.className = 'promotion-countdown normal';
+                } else if (minHours > 0) {
+                    countdownElement.className = minHours < 2 ? 'promotion-countdown warning' : 'promotion-countdown normal';
+                } else if (minMinutes > 0) {
+                    countdownElement.className = minMinutes < 10 ? 'promotion-countdown urgent' : 'promotion-countdown warning';
+                } else {
+                    countdownElement.className = 'promotion-countdown urgent';
+                }
+                
+                // Ajouter l'heure actuelle
+                const currentTime = now.toLocaleTimeString('fr-FR', { 
+                    hour: '2-digit', 
+                    minute: '2-digit',
+                    second: '2-digit'
+                });
+                
+                document.getElementById('countdown-text').textContent = 
+                    `${countdownText} - ${currentTime}`;
+            }
+            
+            // Fonction pour actualiser les données des promotions
+            async function refreshPromotionsData() {
+                try {
+                    const response = await fetch(`${FADIDI_API_URL}/promotions?status=active`);
+                    if (response.ok) {
+                        const promotions = await response.json();
+                        promotionsData = promotions;
+                        console.log('🔄 Données promotions actualisées:', promotions.length);
+                    }
+                } catch (error) {
+                    console.warn('⚠️ Erreur actualisation promotions:', error);
+                }
+            }
+
+            function startPromotionCountdown() {
+                // Mettre à jour immédiatement
+                updatePromotionCountdown();
+                
+                // Mettre à jour toutes les secondes
+                if (countdownInterval) {
+                    clearInterval(countdownInterval);
+                }
+                countdownInterval = setInterval(updatePromotionCountdown, 1000);
+                
+                // Actualiser les données des promotions toutes les 5 minutes
+                setInterval(refreshPromotionsData, 5 * 60 * 1000);
+            }
+
+            // =========================
+            // GESTION DES PROMOTIONS PAR CATÉGORIE
+            // =========================
+            async function loadPromotionCategories() {
+                const container = document.getElementById('promotion-categories-container');
+                if (!container) return;
+                
+                try {
+                    const response = await fetch(`${FADIDI_API_URL}/promotions?status=active`);
+                    if (!response.ok) throw new Error('API non disponible');
+                    
+                    const promotions = await response.json();
+                    console.log('✅ Promotions chargées:', promotions.length);
+                    
+                    // Sauvegarder les données des promotions pour le compteur
+                    promotionsData = promotions;
+                    
+                    // Filtrer les promotions actives et non expirées
+                    const now = new Date();
+                    const activePromotions = promotions.filter(p => {
+                        const endDate = new Date(p.endDate);
+                        return endDate >= now;
+                    });
+                    
+                    // Grouper par catégorie
+                    const promotionsByCategory = {};
+                    activePromotions.forEach(promo => {
+                        const category = promo.category?.name || 'Général';
+                        if (!promotionsByCategory[category]) {
+                            promotionsByCategory[category] = [];
+                        }
+                        promotionsByCategory[category].push(promo);
+                    });
+                    
+                    // Générer les cartes de catégories
+                    if (Object.keys(promotionsByCategory).length === 0) {
+                        container.innerHTML = `
+                            <div class="no-promotions-message">
+                                <i class="fas fa-tags" style="font-size: 2em; color: #888; margin-bottom: 10px;"></i>
+                                <p>Aucune promotion active pour le moment</p>
+                                <p>Revenez bientôt pour découvrir nos offres spéciales !</p>
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    let categoriesHTML = '';
+                    Object.entries(promotionsByCategory).forEach(([category, promos]) => {
+                        const categoryIcon = getCategoryIcon(category);
+                        // Prendre la première image de promotion comme image de fond
+                        const backgroundImage = getPromotionImageUrl(promos[0]?.image) || 'assets/images/1-.png';
+                        
+                        categoriesHTML += `
+                            <div class="promotion-category-card" onclick="goToPromotionCategory('${category}')">
+                                <!-- Image de fond circulaire -->
+                                <div class="promotion-category-image" style="background-image: url('${backgroundImage}')"></div>
+                                
+                                <!-- Overlay sombre au survol -->
+                                <div class="promotion-category-overlay"></div>
+                                
+                                <!-- Contenu texte (visible au survol) -->
+                                <div class="promotion-category-content">
+                                    <div class="promotion-category-icon">${categoryIcon}</div>
+                                    <div class="promotion-category-title">${category}</div>
+                                    <div class="promotion-category-count">
+                                        ${promos.length} promotion${promos.length > 1 ? 's' : ''}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    container.innerHTML = categoriesHTML;
+                    
+                    // Démarrer le compteur temps réel
+                    startPromotionCountdown();
+                    
+                } catch (error) {
+                    console.warn('⚠️ Erreur lors du chargement des promotions:', error);
+                    container.innerHTML = `
+                        <div class="no-promotions-message">
+                            <i class="fas fa-exclamation-triangle" style="font-size: 2em; color: #ff6b6b; margin-bottom: 10px;"></i>
+                            <p>Erreur lors du chargement des promotions</p>
+                            <button onclick="loadPromotionCategories()" style="background: #ff8c00; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; margin-top: 10px;">
+                                Réessayer
+                            </button>
+                        </div>
+                    `;
+                }
+            }
+            
+            function getCategoryIcon(category) {
+                const icons = {
+                    'Téléphones': '📱',
+                    'Électroménager': '🏠',
+                    'TVs & Audios': '📺',
+                    'Mode': '👗',
+                    'Basket': '👟',
+                    'Maison': '🏡',
+                    'Électronique': '💻',
+                    'Ordinateurs': '💻',
+                    'Accessoires': '🎧',
+                    'Beauté': '💄',
+                    'Sport': '⚽',
+                    'Général': '🏷️'
+                };
+                return icons[category] || '🏷️';
+            }
+            
+            function getPromotionImageUrl(imageUrl) {
+                if (!imageUrl) return 'assets/images/1-.png';
+                if (imageUrl.startsWith('http')) return imageUrl;
+                if (imageUrl.startsWith('/uploads')) {
+                    return `${FADIDI_API_URL.replace('/api', '')}${imageUrl}`;
+                }
+                return `${FADIDI_API_URL.replace('/api', '')}/uploads/${imageUrl}`;
+            }
+            
+            // Fonction pour rediriger vers la page promotion avec une catégorie spécifique
+            function goToPromotionCategory(category) {
+                console.log(`🏷️ Redirection vers la catégorie: ${category}`);
+                const encodedCategory = encodeURIComponent(category);
+                window.location.href = `promotion.html?category=${encodedCategory}`;
+            }
+            
+            // =========================
+            // INITIALISATION AU CHARGEMENT DE LA PAGE
+            // =========================
+            document.addEventListener('DOMContentLoaded', function() {
+                console.log('🚀 Initialisation de la boutique FADIDI');
+                
+                // Charger les produits depuis l'API
+                loadProductsFromAPI().then(success => {
+                    if (success) {
+                        console.log('✅ Produits chargés depuis l\'API');
+                    } else {
+                        console.log('⚠️ Utilisation du localStorage en fallback');
+                    }
+                });
+                
+                // Charger les promotions par catégorie
+                loadPromotionCategories();
+                
+                // Vérifier si on doit ouvrir le panier (venant depuis promotion.html)
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.get('openCart') === '1') {
+                    console.log('📦 Ouverture automatique du panier depuis promotion.html');
+                    setTimeout(() => {
+                        if (window.fadidiCart && typeof window.fadidiCart.openCart === 'function') {
+                            window.fadidiCart.openCart();
+                        } else if (typeof openCart === 'function') {
+                            openCart();
+                        }
+                        
+                        // Nettoyer l'URL
+                        const newUrl = window.location.pathname;
+                        window.history.replaceState({}, '', newUrl);
+                    }, 1000); // Attendre que le système de panier soit initialisé
+                }
+            });
+            
+          
+// ===============================
+//MEU SURVOL
+//===============================
+    
+    // Affichage du menu au survol
+    const menuButton = document.getElementById('menuButton');
+    const menuContent = document.getElementById('menuContent');
+    if (menuButton && menuContent) {
+        menuButton.addEventListener('mouseenter', () => {
+            menuContent.style.display = 'block';
+        });
+        menuButton.addEventListener('mouseleave', () => {
+            setTimeout(() => {
+                if (!menuContent.matches(':hover')) menuContent.style.display = 'none';
+            }, 150);
+        });
+        menuContent.addEventListener('mouseleave', () => {
+            menuContent.style.display = 'none';
+        });
+        menuContent.addEventListener('mouseenter', () => {
+            menuContent.style.display = 'block';
+        });
+    }
+
+
+
+
+    
+// ==================== SLIDER ANNONCES SPÉCIALES (depuis API) ====================
+document.addEventListener('DOMContentLoaded', function() {
+    loadFadidiSpecialSliderAPI('boutique');
+});
+
+function getAnnouncementTypeText(type) {
+    switch (type) {
+        case 'promotion': return 'Promotion';
+        case 'nouveau produit': return 'Nouveau produit';
+        case 'evenement': return 'Événement';
+        case 'information': return 'Information';
+        default: return 'Annonce';
+    }
+}
+function getAnnonceImageSrc(image) {
+    if (!image) return 'https://via.placeholder.com/1200x400?text=Annonce';
+    if (image.startsWith('data:image/')) return image;
+    if (image.startsWith('http') || image.startsWith('blob:')) return image;
+    return image;
+}
+
+async function loadFadidiSpecialSliderAPI(pageCible) {
+    try {
+        const res = await fetch('http://localhost:3000/api/annonces');
+        if (!res.ok) throw new Error('Erreur API');
+        const annonces = await res.json();
+    const filtered = annonces.filter(a =>
+        a.active &&
+        a.pageCible === 'boutique' &&
+        (!a.type || a.type !== 'banner') &&
+        Array.isArray(a.images) && a.images.length > 0 && a.images[0].imageBase64
+    );
+    if (!filtered.length) {
+        document.getElementById('announcements-slider').style.display = 'none';
+        return;
+    }
+    let currentAnnonce = 0;
+    let autoSlideTimeout = null;
+    function renderAnnonce(idx) {
+        const annonce = filtered[idx];
+        fetch(`http://localhost:3000/api/annonces/${annonce.id}/increment-vues-index`, { method: 'PATCH' });
+        let images = annonce.images || [];
+        if (!Array.isArray(images) || !images.length) {
+            images = [{ imageBase64: getAnnonceImageSrc(annonce.image) }];
+        }
+        let sliderHTML = `
+            <div class="fadidi-annonce-slider" style="display:flex;align-items:center;justify-content:center;min-height:260px;background:#222;border-radius:18px;box-shadow:0 4px 24px #0006;max-width:900px;margin:32px auto;overflow:hidden;">
+                <div class="annonce-info" style="flex:1;padding:32px 28px 32px 38px;">
+                    <span class="announcement-type" style="display:inline-block;background:#ff8c00;color:#fff;font-size:15px;font-weight:bold;padding:5px 16px;border-radius:12px;margin-bottom:18px;">${getAnnouncementTypeText(annonce.type)}</span>
+                    <h2 style="color:#ffd000;font-size:2.2em;margin:0 0 18px 0;">${annonce.titre || annonce.title || ''}</h2>
+                    <p style="color:#fff;font-size:1.18em;margin:0 0 12px 0;max-width:340px;">${annonce.description || ''}</p>
+                </div>
+                <div class="annonce-images" style="flex:1;display:flex;align-items:center;justify-content:center;position:relative;min-width:320px;min-height:220px;">
+                    <button class="annonce-img-nav" id="annonce-prev" style="position:absolute;left:0;top:50%;transform:translateY(-50%);background:#222b;border:none;color:#ffd000;font-size:2em;padding:0 10px;cursor:pointer;z-index:2;border-radius:8px;">&#10094;</button>
+                    ${images[0].type === 'video' ? `<video id="annonce-img-slider" src="${images[0].imageBase64}" controls autoplay muted playsinline style="max-width:320px;max-height:220px;width:320px;height:220px;border-radius:12px;box-shadow:0 2px 12px #0008;object-fit:cover;background:#000;display:block;margin:auto;"></video>` : `<img id="annonce-img-slider" src="${getAnnonceImageSrc(images[0].imageBase64)}" alt="Image annonce" style="max-width:320px;max-height:220px;border-radius:12px;box-shadow:0 2px 12px #0008;object-fit:cover;cursor:pointer;">`}
+                    <button class="annonce-img-nav" id="annonce-next" style="position:absolute;right:0;top:50%;transform:translateY(-50%);background:#222b;border:none;color:#ffd000;font-size:2em;padding:0 10px;cursor:pointer;z-index:2;border-radius:8px;">&#10095;</button>
+                </div>
+            </div>
+        `;
+        document.getElementById('announcements-slider').innerHTML = sliderHTML;
+        setTimeout(function() {
+            var media = document.getElementById('annonce-img-slider');
+            if (media) {
+                media.addEventListener('click', function() {
+                    fetch(`http://localhost:3000/api/annonces/${annonce.id}/increment-clics-index`, { method: 'PATCH' });
+                    var url = annonce.redirectionUrl ? annonce.redirectionUrl.trim() : '';
+                    if (url) {
+                        if (/^https?:\/\//.test(url)) {
+                            window.open(url, '_blank');
+                        } else {
+                            if (url === 'boutique') url = 'boutique.html';
+                            if (url === 'promotion') url = 'promotion.html';
+                            window.location.href = url;
+                        }
+                    }
+                });
+                // Lecture automatique et gestion du défilement pour les vidéos
+                if (images[0].type === 'video') {
+                    media.currentTime = 0;
+                    // Tentative de lecture automatique avec gestion d'erreur navigateur
+                    const playPromise = media.play();
+                    if (playPromise !== undefined) {
+                        playPromise.catch(function(error) {
+                            // Certains navigateurs bloquent autoplay sans interaction
+                            console.log('Lecture vidéo bloquée :', error);
+                        });
+                    }
+                    if (autoSlideTimeout) clearTimeout(autoSlideTimeout);
+                    media.onended = function() {
+                        currentAnnonce = (currentAnnonce + 1) % filtered.length;
+                        renderAnnonce(currentAnnonce);
+                    };
+                } else {
+                    // Image : défilement automatique après 3s (plus rapide)
+                    if (autoSlideTimeout) clearTimeout(autoSlideTimeout);
+                    autoSlideTimeout = setTimeout(function() {
+                        currentAnnonce = (currentAnnonce + 1) % filtered.length;
+                        renderAnnonce(currentAnnonce);
+                    }, 2500);
+                }
+            }
+        }, 100);
+        document.getElementById('announcements-slider').style.display = 'block';
+        document.getElementById('annonce-prev').onclick = function() {
+            if (autoSlideTimeout) clearTimeout(autoSlideTimeout);
+            currentAnnonce = (currentAnnonce - 1 + filtered.length) % filtered.length;
+            renderAnnonce(currentAnnonce);
+        };
+        document.getElementById('annonce-next').onclick = function() {
+            if (autoSlideTimeout) clearTimeout(autoSlideTimeout);
+            currentAnnonce = (currentAnnonce + 1) % filtered.length;
+            renderAnnonce(currentAnnonce);
+        };
+    }
+    renderAnnonce(currentAnnonce);
+    } catch (err) {
+        document.getElementById('announcements-slider').style.display = 'none';
+    }
+}
+// ==================== SLIDER ANNONCES SPÉCIALES (depuis API) FIN====================
+
+// ==================== INITIALISATION SYSTÈME BANNIÈRES HEADER ====================
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialiser le système de bannières header
+    if (typeof HeaderBannerSystem !== 'undefined') {
+        const bannerSystem = new HeaderBannerSystem('header-banners-container');
+        bannerSystem.init();
+        
+        // Exposer globalement pour le script de test
+        window.reloadHeaderBanners = function() {
+            bannerSystem.init();
+        };
+        
+        console.log('✅ Système de bannières header initialisé');
+    } else {
+        console.warn('⚠️ HeaderBannerSystem non trouvé');
+        // Afficher le titre de fallback
+        const fallbackTitle = document.getElementById('fallback-title');
+        if (fallbackTitle) {
+            fallbackTitle.style.display = 'block';
+        }
+    }
+});
+// ==================== BANNIÈRES HEADER FIN ====================
+
+</script>
+<!-- Script d'intégration API FADIDI -->
+
+<!-- Système de publicités flottantes -->
+<script src="assets/js/floating-ads-display.js?v=2025102-3"></script>
+</body>
+</html>

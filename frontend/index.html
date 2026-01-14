@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fadidi</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+         <link rel="stylesheet" href="assets/css/style.css">
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-XXXXXXXXX-X"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-XXXXXXXXX-X');
+</script>
+
+
+
+</head>
+
+<body>
+    <div id="rotation-message">Pour une meilleure expérience, faites pivoter votre appareil en mode paysage .</div>
+    <!-- Notification d'abonnement -->
+    <div id="subscribe-success" class="subscribe-success">
+    <span class="subscribe-success-title">Abonnement confirmé !</span><br>
+        <span>Vous recevrez une notification par email ou SMS lors de nouveaux produits ou promotions dans la boutique.</span>
+       
+    </div>
+
+    <!-- ==================== HEADER & NAVIGATION ==================== -->
+    <header>
+        <div class="logo-container">
+            <img src="assets/images/logos/fadidi--logo--.png" alt="FADIDI Logo" class="logo" loading="lazy">
+           
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#accueil"><i class="fa fa-home" aria-hidden="true"></i>Accueil</a></li>
+                <li><a href="#contact"><i class="fa fa-envelope" aria-hidden="true"></i>Contact</a></li>
+                <li><a href="#carousel-section-1"><i class="fa fa-shopping-bag" aria-hidden="true"></i>Produits</a></li>
+            </ul>
+        </nav>
+        <div class="subscribe-container">
+            <a href="#" class="subscribe-icon" id="subscribe-button" title="S'abonner">
+                <i class="fas fa-bell"></i>
+            </a>
+      
+        </div>
+    </header>
+        <!-- ==================== FORMULAIRE ABONNEMENT ==================== -->
+        <div id="subscribe-form-container" class="subscribe-form-container">
+            <div class="subscribe-form">
+                <h2>S'abonner à la boutique</h2>
+                <p>Recevez des notifications par e-mail ou SMS pour les nouveaux produits et promotions.</p>
+                <form id="subscribe-form">
+                    <input type="email" id="subscribe-email" placeholder="Entrez votre email" required>
+                    <input type="text" id="subscribe-phone" placeholder="Entrez votre numéro de téléphone (facultatif)">
+                    <button type="submit" class="subscribe-submit-btn">S'abonner</button>
+                </form>
+                <button id="close-subscribe-form" class="close-btn">✖</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ================BANNIERE PUBLICITAIRE INITIALWIDGET ================= -->
+                     <div id="widgets-initial"></div>
+
+    <!-- ==================== ANNONCES DYNAMIQUES ==================== -->
+    <div class="announcements-container" id="announcements-slider">
+        <!-- Slider d'annonces spéciales FADIDI -->
+        <!-- Le contenu sera généré par JS -->
+    </div>
+
+    <!-- ==================== ACCUEIL ==================== -->
+    <section id="accueil">
+        <p>Rejoignez notre communauté et commencez à échanger, FADIDI l'exellence au service de vos besoins!.</p>
+    </section>
+
+    <!-- ==================== ANIMATION LETTRES ==================== -->
+    <div id="animated-text-container">
+        <!-- ...lettres animées... -->
+        <span class="letter">D</span>
+        <span class="letter">é</span>
+        <span class="letter">c</span>
+        <span class="letter">o</span>
+        <span class="letter">u</span>
+        <span class="letter">v</span>
+        <span class="letter">r</span>
+        <span class="letter">e</span>
+        <span class="letter">z</span>
+        <span class="letter">&nbsp;</span>
+        <span class="letter">e</span>
+        <span class="letter">t</span>
+        <span class="letter">&nbsp;</span>
+        <span class="letter">a</span>
+        <span class="letter">c</span>
+        <span class="letter">h</span>
+        <span class="letter">e</span>
+        <span class="letter">t</span>
+        <span class="letter">e</span>
+        <span class="letter">z</span>
+        <span class="letter">&nbsp;</span>
+        <span class="letter">l</span>
+        <span class="letter">e</span>
+        <span class="letter">s</span>
+        <span class="letter">&nbsp;</span>
+        <span class="letter">m</span>
+        <span class="letter">e</span>
+        <span class="letter">i</span>
+        <span class="letter">l</span>
+        <span class="letter">l</span>
+        <span class="letter">e</span>
+        <span class="letter">u</span>
+        <span class="letter">r</span>
+        <span class="letter">s</span>
+        <span class="letter">&nbsp;</span>
+        <span class="letter">o</span>
+        <span class="letter">f</span>
+        <span class="letter">f</span>
+        <span class="letter">r</span>
+        <span class="letter">e</span>
+        <span class="letter">s</span>
+        <span class="letter">&nbsp;</span>
+        <span class="letter">d</span>
+        <span class="letter">e</span>
+        <span class="letter">&nbsp;</span>
+        <span class="letter">n</span>
+        <span class="letter">o</span>
+        <span class="letter">t</span>
+        <span class="letter">r</span>
+        <span class="letter">e</span>
+        <span class="letter">&nbsp;</span>
+        <span class="letter">b</span>
+        <span class="letter">o</span>
+        <span class="letter">u</span>
+        <span class="letter">t</span>
+        <span class="letter">i</span>
+        <span class="letter">q</span>
+        <span class="letter">u</span>
+        <span class="letter">e</span>
+        <span class="letter">!</span>
+    </div>
+
+    <!-- ==================== CAROUSEL IMAGE ==================== -->
+
+
+    <!-- ==================== BOUTIQUE LINK (cercle bouton animé) ==================== -->
+        
+   
+    <!-- ==================== SECTION CERCLE + LOGO ==================== -->
+    <section id="circle-and-button-section">
+        <div class="circle-button-container">
+            <!-- Le cercle -->
+            <div class="container">
+                <img src="assets/images/Publicationpapino (3).png" alt="Surpasse" class="circle-background-image" loading="lazy">
+                <div class="text-section">
+                   
+                </div>
+            </div>
+            
+            <!-- Le bouton à côté du cercle-->
+<div id="boutique-link">
+                <form action="boutique.html" class="boutique-link-form">
+                    <button type="submit" class="boutique-main-btn">
+                       
+                         <span class="boutique-main-btn-text clignote">Cliquez-ici<br></span>
+                    </button>
+                </form>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== BOUTIQUE LINK (fin) ==================== -->
+    
+
+   
+
+    
+    <!-- ==================== ANNONCES DYNAMIQUES (encore) ==================== -->
+    <div class="announcements-container" id="announcements-slider">
+        <!-- Les annonces seront chargées ici dynamiquement -->
+    </div>
+
+   
+  <!-- Carousel produits dynamiques -->
+                    <section id="carousel-section-1">
+                      <div class="custom-carousel-viewport">
+                        <div class="custom-carousel-track"></div>
+                      </div>
+                    </section>
+    <!-- ==================== PRODUITS PUBLICITAIRES ==================== -->
+   
+ 
+
+
+    <!-- ==================== CONTACT (BOUTONS) ==================== -->
+    <section id="contact">
+        <h2>Contactez-nous</h2>
+        <p> via les plateformes suivantes :</p>
+        <div class="buttons">
+            <a href="tel:+761513072" class="btn call"><i class="fas fa-phone"></i> Appel</a>
+            <a href="https://instagram.com" target="_blank" rel="noopener" class="btn instagram"><i class="fab fa-instagram"></i> Instagram</a>
+            <a href="https://facebook.com" target="_blank" rel="noopener" class="btn facebook"><i class="fab fa-facebook"></i> Facebook</a>
+            <a href="https://wa.me/123456789" target="_blank" rel="noopener" class="btn whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+            <a href="mailto:example@gmail.com" class="btn gmail"><i class="fas fa-envelope"></i> Gmail</a>
+        </div>
+    </section>
+     <!-- ==================== CONTACT INFOS FIN ==================== -->
+
+
+    <!-- ==================== PAIEMENT (VIDE) ==================== -->
+    <section id="paiement">
+        <form id="payment-form"></form>
+    </section>
+
+   
+
+
+    <!-- ==================== VIDEO BACKGROUND ==================== -->
+    <div class="video-background">
+    <video autoplay muted loop webkit-playsinline>
+            <source src="assets/images/Arrière-plan de Rfadidi.mp4" type="video/mp4">
+        </video>
+    </div>
+
+    <!-- ==================== CONTENU PRINCIPAL ==================== -->
+   
+   
+    <!-- ==================== CHATBOT ==================== -->
+    <div id="chatbot-container">
+        <div id="chatbot-header">
+            <h3>FADIDI Assistant</h3>
+            <button id="chatbot-close">✖</button>
+        </div>
+        <div id="chatbot-messages">
+            <div class="message bot-message">Bonjour ! Comment puis-je vous aider aujourd'hui ?</div>
+        </div>
+        <div id="chatbot-input-container">
+            <input type="text" id="chatbot-input" placeholder="Posez votre question...">
+            <button id="chatbot-send">Envoyer</button>
+        </div>
+    </div>
+    <div id="chatbot-welcome-message">
+        👋 Bonjour et bienvenue sur FADIDI ! Je suis votre assistant virtuel, prêt à répondre à toutes vos questions. 😊
+    </div>
+    <button id="chatbot-toggle" class="chatbot-toggle-btn" aria-label="Ouvrir l'assistant virtuel">
+    <span class="chatbot-toggle-icon-span">
+            💬
+        </span>
+    </button>
+
+    <!-- ==================== AVANTAGES ==================== -->
+    <section id="advantages">
+    <h2 class="advantages-title">Pourquoi choisir FADIDI ?</h2>
+        <div class="advantages-container">
+            <div class="advantage">
+                <i class="fas fa-shield-alt"></i>
+                <h3>Sécurité</h3>
+                <p>Des transactions sécurisées pour une tranquillité d'esprit totale.</p>
+            </div>
+            <div class="advantage">
+                <i class="fas fa-tags"></i>
+                <h3>Meilleures Offres</h3>
+                <p>Profitez des meilleures offres sur une large gamme de produits.</p>
+            </div>
+            <div class="advantage">
+                <i class="fas fa-users"></i>
+                <h3>Communauté</h3>
+                <p>Rejoignez une communauté active et fiable.</p>
+            </div>
+        </div>
+    </section>
+
+
+ 
+    <!-- ==================== ANNONCES DYNAMIQUES (fin) ==================== -->
+    <div class="announcements-container" id="announcements-slider">
+        <!-- Les annonces seront chargées ici dynamiquement -->
+    </div>
+
+
+<footer class="footer-centered">
+    <p>&copy; 2025 FADIDI - Tous droits réservés.</p>
+</footer>
+
+
+
+<script>
+
+// ==================== SLIDER ANNONCES SPÉCIALES (depuis API) ====================
+document.addEventListener('DOMContentLoaded', function() {
+    loadFadidiSpecialSliderAPI('index');
+});
+
+function getAnnouncementTypeText(type) {
+    switch (type) {
+        case 'promotion': return 'Promotion';
+        case 'nouveau produit': return 'Nouveau produit';
+        case 'evenement': return 'Événement';
+        case 'information': return 'Information';
+        default: return 'Annonce';
+    }
+}
+function getAnnonceImageSrc(image) {
+    if (!image) return 'https://via.placeholder.com/1200x400?text=Annonce';
+    if (image.startsWith('data:image/')) return image;
+    if (image.startsWith('http') || image.startsWith('blob:')) return image;
+    return image;
+}
+
+async function loadFadidiSpecialSliderAPI(pageCible) {
+    try {
+        const res = await fetch('http://localhost:3000/api/annonces');
+        if (!res.ok) throw new Error('Erreur API');
+        const annonces = await res.json();
+    const filtered = annonces.filter(a => a.active && a.pageCible === 'index' && Array.isArray(a.images) && a.images.length > 0 && a.images[0].imageBase64);
+    if (!filtered.length) {
+        document.getElementById('announcements-slider').style.display = 'none';
+        return;
+    }
+    let currentAnnonce = 0;
+    let autoSlideTimeout = null;
+    function renderAnnonce(idx) {
+        const annonce = filtered[idx];
+        fetch(`http://localhost:3000/api/annonces/${annonce.id}/increment-vues-index`, { method: 'PATCH' });
+        let images = annonce.images || [];
+        if (!Array.isArray(images) || !images.length) {
+            images = [{ imageBase64: getAnnonceImageSrc(annonce.image) }];
+        }
+        let sliderHTML = `
+            <div class="fadidi-annonce-slider" style="display:flex;align-items:center;justify-content:center;min-height:260px;background:#222;border-radius:18px;box-shadow:0 4px 24px #0006;max-width:900px;margin:32px auto;overflow:hidden;">
+                <div class="annonce-info" style="flex:1;padding:32px 28px 32px 38px;">
+                    <span class="announcement-type" style="display:inline-block;background:#ff8c00;color:#fff;font-size:15px;font-weight:bold;padding:5px 16px;border-radius:12px;margin-bottom:18px;">${getAnnouncementTypeText(annonce.type)}</span>
+                    <h2 style="color:#ffd000;font-size:2.2em;margin:0 0 18px 0;">${annonce.titre || annonce.title || ''}</h2>
+                    <p style="color:#fff;font-size:1.18em;margin:0 0 12px 0;max-width:340px;">${annonce.description || ''}</p>
+                </div>
+                <div class="annonce-images" style="flex:1;display:flex;align-items:center;justify-content:center;position:relative;min-width:320px;min-height:220px;">
+                    <button class="annonce-img-nav" id="annonce-prev" style="position:absolute;left:0;top:50%;transform:translateY(-50%);background:#222b;border:none;color:#ffd000;font-size:2em;padding:0 10px;cursor:pointer;z-index:2;border-radius:8px;">&#10094;</button>
+                    ${images[0].type === 'video' ? `<video id="annonce-img-slider" src="${images[0].imageBase64}" controls autoplay muted playsinline style="max-width:320px;max-height:220px;width:320px;height:220px;border-radius:12px;box-shadow:0 2px 12px #0008;object-fit:cover;background:#000;display:block;margin:auto;"></video>` : `<img id="annonce-img-slider" src="${getAnnonceImageSrc(images[0].imageBase64)}" alt="Image annonce" style="max-width:320px;max-height:220px;border-radius:12px;box-shadow:0 2px 12px #0008;object-fit:cover;cursor:pointer;">`}
+                    <button class="annonce-img-nav" id="annonce-next" style="position:absolute;right:0;top:50%;transform:translateY(-50%);background:#222b;border:none;color:#ffd000;font-size:2em;padding:0 10px;cursor:pointer;z-index:2;border-radius:8px;">&#10095;</button>
+                </div>
+            </div>
+        `;
+        document.getElementById('announcements-slider').innerHTML = sliderHTML;
+        setTimeout(function() {
+            var media = document.getElementById('annonce-img-slider');
+            if (media) {
+                media.addEventListener('click', function() {
+                    fetch(`http://localhost:3000/api/annonces/${annonce.id}/increment-clics-index`, { method: 'PATCH' });
+                    var url = annonce.redirectionUrl ? annonce.redirectionUrl.trim() : '';
+                    if (url) {
+                        if (/^https?:\/\//.test(url)) {
+                            window.open(url, '_blank');
+                        } else {
+                            if (url === 'boutique') url = 'boutique.html';
+                            if (url === 'promotion') url = 'promotion.html';
+                            window.location.href = url;
+                        }
+                    }
+                });
+                // Lecture automatique et gestion du défilement pour les vidéos
+                if (images[0].type === 'video') {
+                    media.currentTime = 0;
+                    // Tentative de lecture automatique avec gestion d'erreur navigateur
+                    const playPromise = media.play();
+                    if (playPromise !== undefined) {
+                        playPromise.catch(function(error) {
+                            // Certains navigateurs bloquent autoplay sans interaction
+                            console.log('Lecture vidéo bloquée :', error);
+                        });
+                    }
+                    if (autoSlideTimeout) clearTimeout(autoSlideTimeout);
+                    media.onended = function() {
+                        currentAnnonce = (currentAnnonce + 1) % filtered.length;
+                        renderAnnonce(currentAnnonce);
+                    };
+                } else {
+                    // Image : défilement automatique après 3s (plus rapide)
+                    if (autoSlideTimeout) clearTimeout(autoSlideTimeout);
+                    autoSlideTimeout = setTimeout(function() {
+                        currentAnnonce = (currentAnnonce + 1) % filtered.length;
+                        renderAnnonce(currentAnnonce);
+                    }, 2500);
+                }
+            }
+        }, 100);
+        document.getElementById('announcements-slider').style.display = 'block';
+        document.getElementById('annonce-prev').onclick = function() {
+            if (autoSlideTimeout) clearTimeout(autoSlideTimeout);
+            currentAnnonce = (currentAnnonce - 1 + filtered.length) % filtered.length;
+            renderAnnonce(currentAnnonce);
+        };
+        document.getElementById('annonce-next').onclick = function() {
+            if (autoSlideTimeout) clearTimeout(autoSlideTimeout);
+            currentAnnonce = (currentAnnonce + 1) % filtered.length;
+            renderAnnonce(currentAnnonce);
+        };
+    }
+    renderAnnonce(currentAnnonce);
+    } catch (err) {
+        document.getElementById('announcements-slider').style.display = 'none';
+    }
+}
+
+// Gestion abonnement client (notifications nouveaux produits/promos)
+document.getElementById('subscribe-button').addEventListener('click', function(e) {
+    e.preventDefault();
+    document.getElementById('subscribe-form-container').style.display = 'flex';
+});
+document.getElementById('close-subscribe-form').addEventListener('click', function() {
+    document.getElementById('subscribe-form-container').style.display = 'none';
+});
+document.getElementById('subscribe-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const email = document.getElementById('subscribe-email').value.trim();
+    const phone = document.getElementById('subscribe-phone').value.trim();
+    if (!email && !phone) {
+        var notif = document.getElementById('subscribe-success');
+        notif.innerHTML = '<div style="font-weight:bold;font-size:1.2em;color:#d00;margin-bottom:8px;">Erreur d\'abonnement</div>' +
+            '<div style="margin-bottom:10px;">Veuillez entrer un email ou un numéro de téléphone.</div>' +
+            '<button onclick="document.getElementById(\'subscribe-success\').style.display=\'none\'" style="background:#ff8c00;color:#fff;border:none;border-radius:6px;padding:7px 18px;cursor:pointer;font-weight:bold;">Fermer</button>';
+        notif.style.display = 'block';
+        notif.style.opacity = '1';
+        setTimeout(function(){ notif.style.opacity = '0'; notif.style.display = 'none'; }, 7000);
+        return;
+    }
+    try {
+        const res = await fetch('http://localhost:3000/api/subscribers', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, phone })
+        });
+        if (!res.ok) throw new Error('Erreur API');
+        document.getElementById('subscribe-form-container').style.display = 'none';
+        var notif = document.getElementById('subscribe-success');
+        notif.innerHTML = '<div style="font-weight:bold;font-size:1.2em;color:#00b333;margin-bottom:8px;">Merci pour votre abonnement !</div>' +
+            (email ? '<div>Email : ' + email + '</div>' : '') +
+            (phone ? '<div>Téléphone : ' + phone + '</div>' : '') +
+            '<div style="margin-bottom:10px;">Vous recevrez une notification par email ou SMS lors de nouveaux produits ou promotions dans la boutique.</div>' +
+            '<button onclick="document.getElementById(\'subscribe-success\').style.display=\'none\'" style="background:#ff8c00;color:#fff;border:none;border-radius:6px;padding:7px 18px;cursor:pointer;font-weight:bold;">OK</button>';
+        notif.style.display = 'block';
+        notif.style.opacity = '1';
+        setTimeout(function(){ notif.style.opacity = '0'; notif.style.display = 'none'; }, 7000);
+    } catch (err) {
+        var notif = document.getElementById('subscribe-success');
+        notif.innerHTML = '<div style="font-weight:bold;font-size:1.2em;color:#d00;margin-bottom:8px;">Erreur lors de l\'abonnement.</div>' +
+            '<div style="margin-bottom:10px;">Veuillez réessayer plus tard.</div>' +
+            '<button onclick="document.getElementById(\'subscribe-success\').style.display=\'none\'" style="background:#ff8c00;color:#fff;border:none;border-radius:6px;padding:7px 18px;cursor:pointer;font-weight:bold;">Fermer</button>';
+        notif.style.display = 'block';
+        notif.style.opacity = '1';
+        setTimeout(function(){ notif.style.opacity = '0'; notif.style.display = 'none'; }, 7000);
+    }
+});
+// ...existing code...
+// ...existing code...
+// Injection dynamique des widgets personnalisés (HTML, CSS, JS, Position et Mode)
+document.addEventListener('DOMContentLoaded', function() {
+    const widgets = JSON.parse(localStorage.getItem('fadidiWidgets') || '[]');
+    const page = location.pathname.split('/').pop();
+    widgets.filter(w => w.active && (w.pages === '*' || w.pages.split(',').map(p=>p.trim()).includes(page)))
+        .forEach(widget => {
+            const div = document.createElement('div');
+            div.className = 'custom-widget-container';
+            div.innerHTML = widget.html;
+
+            // Injecter le CSS personnalisé
+            if (widget.css && widget.css.trim()) {
+                const style = document.createElement('style');
+                style.innerHTML = widget.css;
+                document.head.appendChild(style);
+            }
+
+            // Injecter le JS personnalisé
+            if (widget.js && widget.js.trim()) {
+                const script = document.createElement('script');
+                script.innerHTML = widget.js;
+                document.body.appendChild(script);
+            }
+
+            // Gestion de la position initiale
+            if (widget.position === 'initial') {
+                // Ajoute dans le flux à l'endroit voulu (ici dans #widgets-initial s'il existe)
+                const container = document.getElementById('widgets-initial');
+                if (container) {
+                    container.appendChild(div);
+                } else {
+                    // Si pas de conteneur, ajoute avant le carrousel ou à la fin du body
+                    const ref = document.getElementById('carousel-section-1');
+                    if (ref) {
+                        ref.parentNode.insertBefore(div, ref);
+                    } else {
+                        document.body.appendChild(div);
+                    }
+                }
+            }
+            // Mode statique classique
+            else if (widget.mode === 'static') {
+                const ref = document.getElementById('carousel-section-1');
+                if (ref) {
+                    ref.parentNode.insertBefore(div, ref);
+                } else {
+                    document.body.appendChild(div);
+                }
+            }
+            // Mode flottant
+            else {
+                let pos = widget.position || 'bottom-right';
+                div.style.position = 'fixed';
+                div.style.zIndex = 9999;
+                div.style.margin = '0';
+                div.style.maxWidth = '95vw';
+
+                if (pos === 'bottom-right') {
+                    div.style.right = '30px';
+                    div.style.bottom = '30px';
+                } else if (pos === 'bottom-left') {
+                    div.style.left = '30px';
+                    div.style.bottom = '30px';
+                } else if (pos === 'top-right') {
+                    div.style.right = '30px';
+                    div.style.top = '30px';
+                } else if (pos === 'top-left') {
+                    div.style.left = '30px';
+                    div.style.top = '30px';
+                } else if (pos === 'bottom-center') {
+                    div.style.left = '50%';
+                    div.style.bottom = '30px';
+                    div.style.transform = 'translateX(-50%)';
+                } else if (pos === 'center') {
+                    div.style.left = '50%';
+                    div.style.top = '50%';
+                    div.style.transform = 'translate(-50%, -50%)';
+                }
+
+                document.body.appendChild(div);
+            }
+        });
+});    
+
+
+// Fait défiler automatiquement les images du carrousel dans le widget
+setTimeout(function() {
+    const carousel = document.querySelector('.carousel-images');
+    if (!carousel) return;
+    let index = 0;
+    const images = carousel.querySelectorAll('img');
+    const total = images.length;
+    setInterval(() => {
+        index = (index + 1) % total;
+        carousel.style.transform = `translateX(-${index * 100}%)`;
+        carousel.style.transition = 'transform 0.7s';
+    }, 2500);
+    carousel.style.display = 'flex';
+    carousel.style.width = `${total * 100}%`;
+    images.forEach(img => {
+        img.style.width = `${100 / total}%`;
+        img.style.flexShrink = '0';
+    });
+}, 300);
+
+
+
+
+// ==================== PARTIE CLOCHE ====================
+
+// Affiche le formulaire d'abonnement quand on clique sur la cloche
+document.addEventListener('DOMContentLoaded', function() {
+    var subscribeIcon = document.getElementById('subscribe-button');
+    var formContainer = document.getElementById('subscribe-form-container');
+    if (subscribeIcon && formContainer) {
+        subscribeIcon.addEventListener('click', function(e) {
+            e.preventDefault();
+            formContainer.style.display = 'flex';
+        });
+    }
+    var closeBtn = document.getElementById('close-subscribe-form');
+    if (closeBtn && formContainer) {
+        closeBtn.addEventListener('click', function() {
+            formContainer.style.display = 'none';
+        });
+    }
+});
+
+ </script>
+   
+    
+ <script src="assets/js/script.js"></script>
+ 
+ <!-- Système de publicités flottantes -->
+ <script src="assets/js/floating-ads-display.js"></script>
+
+</body>
+
+</html>
+

@@ -1,0 +1,2008 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promotions FADIDI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <!-- Système de panier NestJS API -->
+    <script src="assets/js/nestjs-cart-api.js"></script>
+    <!-- Script de synchronisation promotions-panier (legacy) -->
+    <script src="assets/js/promotion-cart-sync.js"></script>
+    <style>
+        /* Bouton retour à la boutique */
+        .btn-retour-boutique {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: transparent;
+            color: #ff8c00;
+            font-weight: bold;
+            border-radius: 20px;
+            padding: 10px 22px;
+            font-size: 1.1em;
+            box-shadow: 0 2px 12px #ff8c0050;
+            text-decoration: none;
+            transition: background 0.2s, box-shadow 0.2s;
+            animation: bounceAnim 1s infinite alternate;
+            margin-right: 10px;
+        }
+        .btn-retour-boutique span {
+            font-size: 1.3em;
+        }
+        /* Titre du modal image en bas à gauche */
+        .image-modal-title {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            margin: 0;
+            color: #111;
+            background: #ff8c00;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-align: left;
+            padding: 10px 22px 10px 18px;
+            border-radius: 0 16px 0 12px;
+            box-shadow: 0 2px 12px #0002;
+            max-width: 80vw;
+            overflow-wrap: break-word;
+            border: none;
+            opacity: 0.97;
+        }
+        .fadidi-modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(30,30,30,0.25);
+            z-index: 99999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .fadidi-modal-box {
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+            padding: 32px 28px 24px 28px;
+            min-width: 320px;
+            max-width: 90vw;
+            text-align: center;
+            position: relative;
+        }
+        .fadidi-modal-box .fadidi-modal-icon {
+            font-size: 2.5rem;
+            color: #ff8c00;
+            margin-bottom: 12px;
+        }
+        .fadidi-modal-box .fadidi-modal-title {
+            font-size: 1.18rem;
+            font-weight: 600;
+            color: #222;
+            margin-bottom: 8px;
+        }
+        .fadidi-modal-box .fadidi-modal-desc {
+            color: #555;
+            font-size: 1rem;
+            margin-bottom: 22px;
+        }
+        .fadidi-modal-box .fadidi-modal-btn {
+            background: #2563eb;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 32px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .fadidi-modal-box .fadidi-modal-btn:hover {
+            background: #1741a6;
+        }
+   
+        body {
+            background: linear-gradient(135deg, #1e1e1e, #3a3a3a);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            color: #222;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        }
+        header {
+            background: #ff8c00;
+            color: white;
+            padding: 30px 0 10px 0;
+            text-align: center;
+            border-radius: 0 0 30px 30px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            letter-spacing: 2px;
+        }
+        .categories {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px 0 10px 0;
+            flex-wrap: wrap;
+        }
+        .category-btn {
+            background: #fff;
+            color: #ff8c00;
+            border: 2px solid #ff8c00;
+            border-radius: 20px;
+            padding: 8px 22px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+        .category-btn.active, .category-btn:hover {
+            background: #ff8c00;
+            color: #fff;
+        }
+        .promo-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            margin: 30px 0;
+        }
+        .promo-card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            width: 230px;
+            padding: 0;
+            text-align: left;
+            transition: all 0.3s ease;
+            position: relative;
+            border: 1px solid #f0f0f0;
+            overflow: hidden;
+        }
+        .promo-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+        .promo-card img {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 12px 12px 0 0;
+            margin-bottom: 0;
+            background: #f8f8f8;
+            cursor: pointer;
+        }
+        .promo-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin: 8px 12px 4px 12px;
+            color: #333;
+            line-height: 1.3;
+            height: 2.6em;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+        .promo-desc {
+            font-size: 1rem;
+            color: #333;
+            margin: 8px 16px 12px 16px;
+            min-height: 2.8em;
+            line-height: 1.5;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
+            -webkit-box-orient: vertical;
+        }
+        .promo-prices {
+            margin: 0 12px 12px 12px;
+        }
+        .old-price {
+            color: #999;
+            text-decoration: line-through;
+            font-size: 0.8rem;
+            margin-right: 6px;
+        }
+        .promo-price {
+            color: #ff6600;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+        .promo-badge {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            background: #ff6600;
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 6px;
+            z-index: 10;
+        }
+        /* STYLES MOBILES - STYLE ALIEXPRESS/JUMIA */
+        @media (max-width: 768px) {
+            .promo-list {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+                padding: 0 8px;
+                margin: 15px auto;
+                max-width: 100%;
+            }
+            
+            .promo-card {
+                width: 100%;
+                max-width: none;
+                border-radius: 8px;
+                background: #fff;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+                border: 1px solid #e5e5e5;
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+            }
+            
+            .promo-card img {
+                height: 120px;
+                border-radius: 8px 8px 0 0;
+                object-fit: cover;
+            }
+            
+            .promo-title {
+                font-size: 0.8rem;
+                margin: 6px 8px 3px 8px;
+                line-height: 1.2;
+                height: 2.4em;
+                font-weight: 500;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                line-clamp: 2;
+                box-orient: vertical;
+                overflow: hidden;
+            }
+            
+            .promo-desc {
+                font-size: 0.7rem;
+                margin: 0 8px 4px 8px;
+                color: #777;
+                height: 1.4em;
+                display: -webkit-box;
+                -webkit-line-clamp: 1;
+                -webkit-box-orient: vertical;
+                line-clamp: 1;
+                box-orient: vertical;
+                overflow: hidden;
+            }
+            
+            .promo-prices {
+                margin: 0 8px 8px 8px;
+                display: flex;
+                align-items: center;
+                gap: 4px;
+            }
+            
+            .old-price {
+                font-size: 0.7rem;
+                margin-right: 4px;
+            }
+            
+            .promo-price {
+                font-size: 0.85rem;
+                color: #ff6600;
+                font-weight: 700;
+            }
+            
+            .promo-badge {
+                top: 4px;
+                left: 4px;
+                font-size: 0.65rem;
+                padding: 1px 6px;
+                border-radius: 4px;
+            }
+            
+            /* Bouton d'achat mobile style AliExpress */
+            .promo-card button {
+                width: calc(100% - 16px);
+                margin: 0 8px 8px 8px;
+                background: linear-gradient(135deg, #ff6600, #ff8800);
+                color: white;
+                border: none;
+                padding: 8px 12px;
+                border-radius: 6px;
+                font-size: 0.75rem;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+            
+            .promo-card button:hover {
+                background: linear-gradient(135deg, #ff5500, #ff7700);
+                transform: scale(0.98);
+            }
+        }
+        
+        /* STYLES POUR TRÈS PETITS ÉCRANS */
+        @media (max-width: 480px) {
+            .promo-list {
+                gap: 6px;
+                padding: 0 6px;
+            }
+            
+            .promo-card img {
+                height: 100px;
+            }
+            
+            .promo-title {
+                font-size: 0.75rem;
+                height: 2.25em;
+            }
+            
+            .promo-desc {
+                font-size: 0.65rem;
+            }
+            
+            .promo-price {
+                font-size: 0.8rem;
+            }
+            
+            .promo-card button {
+                font-size: 0.7rem;
+                padding: 6px 10px;
+            }
+        }
+
+ @keyframes flash {
+      0% { color: #100f02; text-shadow: 0 0 18px #fff700, 0 0 32px #0f0901; }
+        100% { color: #0e0202; text-shadow: 0 0 8px #fff, 0 0 16px #ff8c00; }
+      }
+
+
+        /* HEADER MOBILE */
+        @media (max-width: 768px) {
+            header h1 { 
+                font-size: 2.2rem !important; 
+                letter-spacing: 1px !important;
+            }
+            header p { 
+                font-size: 1.1rem !important; 
+                margin: 12px 0 0 0 !important;
+            }
+            
+            /* CATÉGORIES MOBILE STYLE ALIEXPRESS */
+            .categories {
+                padding: 0 8px;
+                margin: 15px 0 10px 0;
+                overflow-x: auto;
+                flex-wrap: nowrap;
+                gap: 8px;
+                /* Scroll fluide sur mobile (sans propriétés obsolètes) */
+                 scroll-behavior: smooth;
+                 -ms-overflow-style: none; /* IE/Edge */
+            }
+            
+            /* Masquer scrollbar sur Webkit */
+            .categories::-webkit-scrollbar {
+                display: none;
+            }
+            
+            .category-btn {
+                flex-shrink: 0;
+                font-size: 0.8rem;
+                padding: 6px 12px;
+                border-radius: 15px;
+                white-space: nowrap;
+                width: auto; /* Largeur automatique compatible */
+                min-width: 60px; /* Largeur minimum fixe */
+                border: 1px solid #ddd;
+                background: #fff;
+                color: #333;
+                box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            }
+            
+            .category-btn.active {
+                background: #ff6600;
+                color: #fff;
+                border-color: #ff6600;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            header h1 { font-size: 1.8rem !important; }
+            header p { font-size: 0.95rem !important; }
+            
+            .category-btn {
+                font-size: 0.75rem;
+                padding: 5px 10px;
+            }
+        }
+                    
+          
+/* Conteneur général pour les widgets */
+.custom-widget-container {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 9999;
+    /* Tu peux adapter la position selon le widget */
+}
+
+/* Widget animé avec rotation 3D */
+ 
+        /* Animation pour devenir vendeur */
+        .become-seller-widget {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 200px;
+            perspective: 1000px;
+            z-index: 999;
+            font-family: 'Arial', sans-serif;
+            filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.3));
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+    
+        .become-seller-widget:hover {
+            transform: scale(1.05);
+        }
+    
+        .widget-content {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            transform-style: preserve-3d;
+            animation: rotateWidget 15s infinite linear;
+        }
+    
+        .widget-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 15px;
+            box-sizing: border-box;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            background-image: linear-gradient(135deg, #ff8c00, #ff6600);
+            color: white;
+        }
+    
+        .widget-face:nth-child(2) {
+            transform: rotateY(180deg);
+            background-image: linear-gradient(135deg, #ff6600, #ff3300);
+        }
+    
+        .widget-icon {
+            font-size: 38px;
+            margin-bottom: 10px;
+            animation: pulse 2s infinite;
+        }
+    
+        .widget-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+    
+        .widget-text {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+    
+        .coin-icon {
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            background: #ffcc00;
+            color: #ff6600;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            animation: coinBounce 2s infinite;
+        }
+    
+        .particle-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+    
+        .particle {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            width: 6px;
+            height: 6px;
+            animation: particleFloat 3s infinite;
+        }
+    
+        /* Raccourci */
+        .cta-button {
+            padding: 8px 15px;
+            margin-top: 15px;
+            background-color: white;
+            color: #ff6600;
+            border: none;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+    
+        .cta-button:hover {
+            background-color: #ffcc00;
+            transform: scale(1.1);
+        }
+    
+        /* Animations */
+        @keyframes rotateWidget {
+            0%, 45% { transform: rotateY(0); }
+            50%, 95% { transform: rotateY(180deg); }
+            100% { transform: rotateY(360deg); }
+        }
+    
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+    
+        @keyframes coinBounce {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(10deg); }
+        }
+    
+        @keyframes particleFloat {
+            0% { transform: translate(0, 0); opacity: 0; }
+            50% { transform: translate(var(--x), var(--y)); opacity: 0.8; }
+            100% { transform: translate(calc(var(--x) * 2), calc(var(--y) * 2)); opacity: 0; }
+        }
+    
+        /* Animation spéciale pour petits écrans */
+        @media (max-width: 768px) {
+            .become-seller-widget {
+                bottom: 20px;
+                right: 20px;
+                width: 150px;
+            }
+            
+            .widget-content {
+                height: 150px;
+            }
+            
+            .widget-title {
+                font-size: 16px;
+            }
+            
+            .widget-text {
+                font-size: 12px;
+            }
+        }
+
+@keyframes fadeInText {
+    0% { opacity: 0.7; transform: scale(1);}
+    100% { opacity: 1; transform: scale(1.05);}
+}
+
+
+
+  #rotation-message {
+    display: none;
+    background: #ff8c00;
+    color: #fff;
+    text-align: center;
+    font-size: 1em;
+    font-weight: bold;
+    padding: 10px 8px 8px 8px;
+    border-radius: 0 0 16px 16px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    z-index: 10000;
+    box-shadow: 0 2px 12px #0005;
+}
+@media (max-width: 900px) and (orientation: portrait) {
+    #rotation-message {
+        display: block;
+    }
+}
+
+
+
+/* Déplacé depuis l'attribut style inline du badge EXCLUSIF */
+.exclusif-badge {
+    display: inline-block;
+    background: linear-gradient(90deg,#e53935,#ff8c00);
+    color: #fff;
+    font-weight: 900;
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+    padding: 4px 22px;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px #e5393550;
+    text-shadow: 0 2px 8px #0003;
+    transform: skew(-8deg);
+}
+
+/* Déplacé depuis l'attribut style inline du conteneur header-inner */
+.header-inner-container {
+    position: relative;
+    padding-bottom: 10px;
+}
+
+/* Déplacé depuis l'attribut style inline du conteneur du badge EXCLUSIF */
+.header-exclusif-badge-container {
+    position: absolute;
+    top: -32px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+}
+
+/* Déplacé depuis l'attribut style inline de l'icône fa-bolt dans le titre */
+.promo-header-bolt {
+    animation: flash 1.2s infinite alternate;
+    margin-right: 10px;
+    filter: drop-shadow(0 0 10px #fff700);
+}
+/* Déplacé depuis l'attribut style inline du span "Exclusives" dans le titre */
+.promo-header-exclusives {
+    background: linear-gradient(90deg,#130f01,#110b04);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Déplacé depuis l'attribut style inline du paragraphe sous le titre */
+.promo-header-desc {
+    font-size: 1.35rem;
+    margin: 18px 0 0 0;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-shadow: 0 2px 12px #0004;
+    position: relative;
+    z-index: 3;
+}
+/* Déplacé depuis l'attribut style inline du span "offres spéciales" */
+.promo-header-special-offer {
+    color: #222;
+    background: rgba(255,255,255,0.22);
+    padding: 3px 14px;
+    border-radius: 10px;
+    font-weight: 700;
+    box-shadow: 0 2px 8px #fff3;
+}
+/* Déplacé depuis l'attribut style inline du décoratif sous le header */
+.promo-header-decorative-bar {
+    position: absolute;
+    bottom: -18px;
+    left: 0;
+    width: 100%;
+    height: 18px;
+    background: linear-gradient(180deg,rgba(255,255,255,0.18),rgba(255,255,255,0));
+    border-radius: 0 0 38px 38px;
+}
+
+/* Déplacé depuis l'attribut style inline du conteneur compteur panier */
+.cart-counter-container {
+    text-align: center;
+    margin: 10px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: transparent;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    padding: 10px;
+    border-radius: 15px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* Déplacé depuis l'attribut style inline du #cart-counter */
+.cart-counter {
+    display: inline-flex;
+    align-items: center;
+    gap: 15px;
+    background: linear-gradient(135deg, #ff8c00, #ff6600);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(255,140,0,0.3);
+    cursor: pointer;
+}
+/* Ajouté depuis l'attribut style inline du #cart-total-display */
+.cart-total-display {
+    font-size: 0.9em;
+    opacity: 0.9;
+}
+
+/* Ajouté depuis l'attribut style inline du conteneur des boutons d'action panier */
+.cart-action-buttons {
+    margin-top: 10px;
+    display: none;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Ajouté depuis les attributs style inline des boutons d'action panier */
+.cart-action-btn {
+    border: none;
+    padding: 8px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9em;
+    color: white;
+}
+.cart-action-btn-view {
+    background: #28a745;
+}
+.cart-action-btn-clear {
+    background: #dc3545;
+}
+.cart-action-btn-order {
+    background: #007bff;
+}
+
+/* Ajouté depuis l'attribut style inline du #cart-modal */
+#cart-modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.8);
+    align-items: center;
+    justify-content: center;
+}
+
+/* Ajouté depuis l'attribut style inline du #image-modal */
+#image-modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.8);
+    align-items: center;
+    justify-content: center;
+}
+
+/* Ajouté depuis l'attribut style inline du bouton de fermeture du modal image */
+.image-modal-close {
+    position: absolute;
+    top: 30px;
+    right: 50px;
+    font-size: 2.5rem;
+    color: #fff;
+    cursor: pointer;
+}
+
+/* Ajouté depuis l'attribut style inline du conteneur d'image du modal */
+.image-modal-img-container {
+    position: relative;
+    display: inline-block;
+}
+
+/* Ajouté depuis l'attribut style inline de l'image du modal */
+#modal-img {
+    max-width: 90vw;
+    max-height: 80vh;
+    border-radius: 18px;
+    box-shadow: 0 8px 32px #0008;
+    display: block;
+}
+        /* Ajouté depuis l'attribut style inline du conteneur du bouton retour */
+.retour-boutique-container {
+    text-align: center;
+    margin: 18px 0;
+}
+
+        /* Animation pour les messages d'information */
+        @keyframes fadeInScale {
+            0% { 
+                opacity: 0; 
+                transform: scale(0.9);
+            }
+            100% { 
+                opacity: 1; 
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+     <div id="rotation-message">Pour une meilleure expérience, faites pivoter votre appareil en mode paysage .</div>
+    <!-- Modal Professionnel Panier Vide -->
+    <div id="empty-cart-modal" class="fadidi-modal-overlay">
+        <div class="fadidi-modal-box">
+            <div class="fadidi-modal-icon"><i class="fas fa-shopping-cart"></i></div>
+            <div class="fadidi-modal-title">Votre panier est vide !</div>
+            <div class="fadidi-modal-desc">Ajoutez des promotions d'abord pour continuer vos achats.</div>
+            <button class="fadidi-modal-btn" onclick="closeEmptyCartModal()">OK</button>
+        </div>
+    </div>
+
+<header>
+ <div class="header-inner-container">
+       <div class="header-exclusif-badge-container">
+       <span class="exclusif-badge">EXCLUSIF</span>
+ </div>
+
+<h1 class="promo-header-title">
+    <i class="fas fa-bolt promo-header-bolt"></i>
+     Promotions <span class="promo-header-exclusives">Exclusives</span> FADIDI
+ </h1>
+   <p class="promo-header-desc">
+    Découvrez nos <span class="promo-header-special-offer">offres spéciales</span>, uniquement ici&nbsp;!
+   </p>
+    <div class="promo-header-decorative-bar"></div>
+ </div>
+ 
+   <div id="promotion-ad-panels" class="mb-3"></div>
+
+ </header>
+    
+    <!-- Compteur de panier -->
+    <div class="cart-counter-container">
+        <div id="cart-counter" class="cart-counter" onclick="toggleCartView()">
+            <i class="fas fa-shopping-cart cart-counter-icon"></i>
+            <span>Panier : <span id="cart-count-display">(0)</span> produit(s)</span>
+            <div id="cart-total-display" class="cart-total-display"></div>
+        </div>
+        
+        <!-- Boutons d'action panier -->
+        <div class="cart-action-buttons">
+            <button onclick="showCartDetails()" class="cart-action-btn cart-action-btn-view">
+                <i class="fas fa-eye"></i> Voir le panier
+            </button>
+            <button onclick="clearAllCart()" class="cart-action-btn cart-action-btn-clear">
+                <i class="fas fa-trash"></i> Vider le panier
+            </button>
+            <button onclick="goToCheckout()" class="cart-action-btn cart-action-btn-order">
+                <i class="fas fa-credit-card"></i> Commander
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal de gestion du panier -->
+    <div id="cart-modal">
+        <div class="cart-modal-content">
+            <div class="cart-modal-header">
+                <h2 class="cart-modal-title">🛒 Gestion du Panier</h2>
+                <span onclick="closeCartModal()" class="cart-modal-close">&times;</span>
+            </div>
+            <div id="cart-items-list" class="cart-modal-items">
+                <!-- Les articles du panier seront affichés ici -->
+            </div>
+            <div id="cart-summary" class="cart-modal-summary">
+                <!-- Résumé du panier -->
+            </div>
+            <div class="cart-modal-actions">
+                <button onclick="closeCartModal()" class="cart-modal-btn cart-modal-btn-close">Fermer</button>
+                <button onclick="goToCheckout()" class="cart-modal-btn cart-modal-btn-checkout">Finaliser la commande</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="categories" id="categories"></div>
+    <div class="promo-list" id="promo-list"></div>
+
+        <!-- Ajoute ce modal juste avant </body> -->
+    <div id="image-modal">
+        <span onclick="closeImageModal()" class="image-modal-close">&times;</span>
+        <div class="image-modal-img-container">
+            <img id="modal-img" src="" alt="Aperçu">
+            <div id="modal-title" class="image-modal-title"></div>
+        </div>
+    </div>
+
+    <!-- Retour à la boutique -->
+<div class="retour-boutique-container">
+    <a href="boutique.html" class="btn-retour-boutique">
+        <span>⬅</span>
+        Retour à la boutique FADIDI
+    </a>
+</div>
+
+    <script>
+    // Affiche le modal professionnel "panier vide"
+    function showEmptyCartModal() {
+        document.getElementById('empty-cart-modal').style.display = 'flex';
+    }
+    function closeEmptyCartModal() {
+        document.getElementById('empty-cart-modal').style.display = 'none';
+    }
+    // Configuration de l'API
+    const API_BASE_URL = 'http://localhost:3000/api';
+    
+    // Variables globales
+    let promos = [];
+    let allCategories = [];
+    let selectedCategory = 'Tout';
+    
+    // Vérifier si une catégorie spécifique est demandée dans l'URL
+    function getSelectedCategoryFromURL() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const categoryFromURL = urlParams.get('category');
+        if (categoryFromURL) {
+            selectedCategory = decodeURIComponent(categoryFromURL);
+            console.log(`🏷️ Catégorie sélectionnée depuis l'URL: ${selectedCategory}`);
+            
+            // Optionnel : nettoyer l'URL après récupération du paramètre
+            // window.history.replaceState({}, '', window.location.pathname);
+        }
+        return selectedCategory;
+    }
+    
+    // Fonction utilitaire pour les URLs d'images
+    function getPromotionImageUrl(imageUrl) {
+        if (!imageUrl) {
+            return 'placeholder.jpg';
+        }
+        
+        // Si l'URL commence déjà par http, la retourner telle quelle
+        if (imageUrl.startsWith('http')) {
+            return imageUrl;
+        }
+        
+        // Si l'URL commence par /uploads, construire l'URL complète
+        if (imageUrl.startsWith('/uploads')) {
+            return `${API_BASE_URL.replace('/api', '')}${imageUrl}`;
+        }
+        
+        // Sinon, supposer que c'est juste le nom de fichier
+        return `${API_BASE_URL.replace('/api', '')}/uploads/${imageUrl}`;
+    }
+    
+    const categoriesDiv = document.getElementById('categories');
+    const promoListDiv = document.getElementById('promo-list');
+    
+    // Charger les promotions depuis l'API
+    async function loadPromotions() {
+        try {
+            // Vérifier d'abord si une catégorie est spécifiée dans l'URL
+            getSelectedCategoryFromURL();
+            
+            const response = await fetch(`${API_BASE_URL}/promotions?status=active`);
+            if (response.ok) {
+                const promotions = await response.json();
+                
+                // Adapter les données de l'API au format attendu
+                promos = promotions.map(p => ({
+                    id: p.id,
+                    title: p.title,
+                    description: p.description || '',
+                    image: p.image || 'placeholder.jpg',
+                    category: p.category ? p.category.name : 'Général',
+                    oldPrice: p.originalPrice,
+                    promoPrice: p.promotionPrice,
+                    startDate: p.startDate,
+                    endDate: p.endDate,
+                    discountPercentage: p.discountPercentage,
+                    daysRemaining: calculateDaysRemaining(p.endDate)
+                }));
+                
+                // Extraire les catégories uniques
+                allCategories = [...new Set(promos.map(p => p.category))];
+                
+                // Filtrer les promotions expirées
+                const now = new Date();
+                promos = promos.filter(p => {
+                    const endDate = new Date(p.endDate);
+                    return endDate >= now;
+                });
+                
+                // Vérifier si la catégorie sélectionnée existe
+                if (selectedCategory !== 'Tout' && !allCategories.includes(selectedCategory)) {
+                    console.warn(`⚠️ Catégorie "${selectedCategory}" non trouvée, retour à "Tout"`);
+                    selectedCategory = 'Tout';
+                }
+                
+                // Afficher les promotions
+                renderCategories();
+                renderPromos();
+                
+                // Faire défiler automatiquement vers les promotions si une catégorie spécifique est sélectionnée
+                if (selectedCategory !== 'Tout') {
+                    setTimeout(() => {
+                        const promoListElement = document.getElementById('promo-list');
+                        if (promoListElement) {
+                            promoListElement.scrollIntoView({ 
+                                behavior: 'smooth', 
+                                block: 'start' 
+                            });
+                        }
+                    }, 500);
+                }
+                
+            } else {
+                console.error('Erreur lors du chargement des promotions');
+                promoListDiv.innerHTML = '<p style="text-align:center; color:#888;">Erreur lors du chargement des promotions.</p>';
+            }
+        } catch (error) {
+            console.error('Erreur:', error);
+            promoListDiv.innerHTML = '<p style="text-align:center; color:#888;">Erreur de connexion à l\'API.</p>';
+        }
+    }
+    
+    function calculateDaysRemaining(endDate) {
+        const now = new Date();
+        const end = new Date(endDate);
+        const diffTime = end - now;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        return Math.max(0, diffDays);
+    }
+    
+    function renderCategories() {
+        categoriesDiv.innerHTML = '';
+        
+        // Bouton "Tout"
+        const allBtn = document.createElement('button');
+        allBtn.textContent = 'Tout';
+        allBtn.className = 'category-btn' + (selectedCategory === 'Tout' ? ' active' : '');
+        allBtn.onclick = () => {
+            selectedCategory = 'Tout';
+            renderPromos();
+            renderCategories();
+            // Mettre à jour l'URL
+            updateURLWithCategory('Tout');
+        };
+        categoriesDiv.appendChild(allBtn);
+    
+        // Boutons de catégories
+        allCategories.forEach(cat => {
+            const btn = document.createElement('button');
+            btn.textContent = cat;
+            btn.className = 'category-btn' + (selectedCategory === cat ? ' active' : '');
+            btn.onclick = () => {
+                selectedCategory = cat;
+                renderPromos();
+                renderCategories();
+                // Mettre à jour l'URL
+                updateURLWithCategory(cat);
+            };
+            categoriesDiv.appendChild(btn);
+        });
+    }
+    
+    // Fonction pour mettre à jour l'URL avec la catégorie
+    function updateURLWithCategory(category) {
+        const url = new URL(window.location);
+        if (category === 'Tout') {
+            url.searchParams.delete('category');
+        } else {
+            url.searchParams.set('category', encodeURIComponent(category));
+        }
+        window.history.replaceState({}, '', url);
+    }
+    
+    function renderPromos() {
+        promoListDiv.innerHTML = '';
+        let filtered = selectedCategory === 'Tout' ? promos : promos.filter(p => p.category === selectedCategory);
+        
+        if (filtered.length === 0) {
+            promoListDiv.innerHTML = '<p style="text-align:center; color:#888; font-size:1.2rem; margin:50px 0;">Aucune promotion active dans cette catégorie.</p>';
+            return;
+        }
+        
+        filtered.forEach((p, idx) => {
+            // Calcul de la barre de progression du temps restant
+            let progressBar = '';
+            if (p.startDate && p.endDate) {
+                const now = new Date();
+                const start = new Date(p.startDate);
+                const end = new Date(p.endDate);
+                const total = end - start;
+                const remaining = end - now;
+                
+                let percent = 0;
+                if (total > 0 && remaining > 0) {
+                    percent = Math.max(0, Math.min(100, Math.round((remaining / total) * 100)));
+                }
+                
+                const daysLeft = Math.max(0, Math.ceil(remaining / (1000 * 60 * 60 * 24)));
+                
+                progressBar = `
+                    <div style="margin-top:10px;">
+                        <div style="background:#eee;height:8px;border-radius:5px;overflow:hidden;">
+                            <div style="background:#ff8c00;height:8px;width:${percent}%;transition:width 0.5s;"></div>
+                        </div>
+                        <small style="color:#888;">
+                            ${daysLeft > 0 ? `${daysLeft} jour${daysLeft > 1 ? 's' : ''} restant${daysLeft > 1 ? 's' : ''}` : 'Se termine bientôt!'}
+                        </small>
+                    </div>
+                `;
+            }
+            
+            // Créer la carte de promotion
+            const promoCard = document.createElement('div');
+            promoCard.className = 'promo-card';
+            const imageUrl = getPromotionImageUrl(p.image);
+            promoCard.innerHTML = `
+                <span class="promo-badge">-${p.discountPercentage}%</span>
+                <img src="${imageUrl}" alt="${p.title}" style="cursor:pointer;" onclick="showImageModal('${imageUrl}','${p.title}')">
+                <div class="promo-title">${p.title}</div>
+                <div class="promo-desc">${p.description}</div>
+                <div class="promo-prices">
+                    <span class="old-price">${p.oldPrice.toLocaleString()} CFA</span>
+                    <span class="promo-price">${p.promoPrice.toLocaleString()} CFA</span>
+                </div>
+                ${progressBar}
+                <button onclick="addToFadidiCart('${p.id}', '${p.title}', ${p.promoPrice})" style="background:#ff8c00;color:#fff;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:bold;font-size:1rem;margin-top:10px;width:100%;"><i class="fas fa-shopping-cart" style="margin-right:8px;"></i>J'en profite !</button>
+            `;
+            
+            promoListDiv.appendChild(promoCard);
+        });
+    }
+    
+    function showImageModal(src, title) {
+        document.getElementById('modal-img').src = src;
+        document.getElementById('modal-title').textContent = title;
+        document.getElementById('image-modal').style.display = 'flex';
+    }
+    
+    function closeImageModal() {
+        document.getElementById('image-modal').style.display = 'none';
+    }
+    
+    async function addToFadidiCart(promotionId, productName, price) {
+        console.log('🛒 Ajout au panier FADIDI (NestJS):', { promotionId, productName, price });
+        
+        try {
+            // Récupérer l'image du produit
+            const imageUrl = getPromotionImageFromDOM(promotionId, productName);
+            
+            // Préparer les données du produit pour l'API NestJS
+            const productData = {
+                id: promotionId,
+                name: productName,
+                title: productName,
+                price: parseFloat(price),
+                promoPrice: parseFloat(price),
+                promotionPrice: parseFloat(price),
+                image: imageUrl,
+                quantity: 1,
+                promotionId: promotionId,
+                isPromotion: true,
+                category: getPromotionCategory(promotionId, productName),
+                discountPercentage: getPromotionDiscount(promotionId, productName),
+                originalPrice: getPromotionOriginalPrice(promotionId, productName)
+            };
+            
+            // Utiliser le nouveau système de panier NestJS
+            const result = await window.fadidiCartAPI.addToCart(productData);
+            
+            if (result.success) {
+                console.log('✅ Produit ajouté avec succès via NestJS API:', result.product);
+                
+                // Afficher le message de confirmation
+                showAddToCartMessage(productName, promotionId);
+                
+                return result.product;
+            } else {
+                throw new Error('Échec de l\'ajout au panier via NestJS');
+            }
+            
+        } catch (error) {
+            console.error('❌ Erreur ajout panier NestJS:', error);
+            
+            // Fallback: utiliser l'ancien système de synchronisation
+            try {
+                const imageUrl = getPromotionImageFromDOM(promotionId, productName);
+                const product = await window.addPromotionToFadidiCart(promotionId, productName, price, imageUrl);
+                
+                console.log('✅ Produit ajouté via système fallback:', product);
+                showAddToCartMessage(productName, promotionId);
+                
+                return product;
+            } catch (fallbackError) {
+                console.error('❌ Erreur système fallback:', fallbackError);
+                
+                // Dernier recours: localStorage direct
+                const cartProduct = {
+                    id: Date.now() + Math.random(),
+                    name: productName,
+                    price: parseFloat(price),
+                    promotionId: promotionId,
+                    quantity: 1,
+                    image: getPromotionImageFromDOM(promotionId, productName),
+                    isPromotion: true,
+                    addedAt: Date.now()
+                };
+                
+                let localCart = JSON.parse(localStorage.getItem('fadidi_cart_items') || '[]');
+                
+                // Vérifier si le produit existe déjà
+                const existingIndex = localCart.findIndex(item => 
+                    item.name === productName && item.promotionId === promotionId
+                );
+                
+                if (existingIndex > -1) {
+                    localCart[existingIndex].quantity += 1;
+                } else {
+                    localCart.push(cartProduct);
+                }
+                
+                localStorage.setItem('fadidi_cart_items', JSON.stringify(localCart));
+                
+                console.log('⚠️ Ajout localStorage direct réussi');
+                showAddToCartMessage(productName, promotionId);
+                
+                return cartProduct;
+            }
+        }
+    }
+    
+    // Fonction pour récupérer l'image du produit depuis le DOM
+    function getPromotionImageFromDOM(promotionId, productName) {
+        // Rechercher dans les cartes de promotion actuelles
+        const promoCards = document.querySelectorAll('.promo-card');
+        for (const card of promoCards) {
+            const cardTitle = card.querySelector('.promo-title')?.textContent;
+            if (cardTitle === productName) {
+                const img = card.querySelector('img');
+                if (img && img.src) {
+                    return img.src;
+                }
+            }
+        }
+        
+        // Rechercher dans les données de promotions chargées
+        const promotion = promos.find(p => p.id == promotionId || p.title === productName);
+        if (promotion && promotion.image) {
+            return getPromotionImageUrl(promotion.image);
+        }
+        
+        // Image par défaut
+        return 'assets/images/1-.png';
+    }
+
+    // Fonctions helper pour récupérer les informations des promotions
+    function getPromotionCategory(promotionId, productName) {
+        const promotion = promos.find(p => p.id == promotionId || p.title === productName);
+        return promotion ? promotion.category : 'Promotion';
+    }
+
+    function getPromotionDiscount(promotionId, productName) {
+        const promotion = promos.find(p => p.id == promotionId || p.title === productName);
+        return promotion ? promotion.discountPercentage : 0;
+    }
+
+    function getPromotionOriginalPrice(promotionId, productName) {
+        const promotion = promos.find(p => p.id == promotionId || p.title === productName);
+        return promotion ? promotion.oldPrice : 0;
+    }
+    
+    function showAddToCartMessage(productName, promotionId) {
+        let msg = document.getElementById('cart-message');
+        if (!msg) {
+            msg = document.createElement('div');
+            msg.id = 'cart-message';
+            msg.style.cssText = `
+                position: fixed;
+                bottom: 30px;
+                right: 30px;
+                background: linear-gradient(135deg, #28a745, #20c997);
+                color: #fff;
+                padding: 12px 18px;
+                border-radius: 12px;
+                font-size: 0.9rem;
+                box-shadow: 0 6px 24px rgba(0,0,0,0.25);
+                z-index: 99999;
+                max-width: 280px;
+                text-align: center;
+                border: 1px solid rgba(255,255,255,0.3);
+                backdrop-filter: blur(8px);
+                transform: translateX(400px);
+                opacity: 0;
+                transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            `;
+            document.body.appendChild(msg);
+        }
+        
+        msg.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+                <i style="font-size: 18px; color: #ffeb3b; animation: bounce 1s infinite;">✅</i>
+                <div>
+                    <div style="font-weight: bold; font-size: 1rem;">Produit ajouté !</div>
+                    <div style="font-size: 0.75rem; opacity: 0.9;">« ${productName} »</div>
+                </div>
+            </div>
+            <div style="margin-bottom: 10px; font-size: 0.8rem; opacity: 0.95; text-align: center;">
+                🎯 Que souhaitez-vous faire maintenant ?
+            </div>
+            <div style="display: flex; gap: 6px; justify-content: center;">
+                <button id="continue-shopping-btn" style="
+                    background: rgba(255,255,255,0.2);
+                    color: #fff;
+                    border: 1px solid rgba(255,255,255,0.3);
+                    padding: 6px 12px;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    font-size: 0.8rem;
+                    font-weight: 500;
+                    transition: all 0.2s;
+                    backdrop-filter: blur(5px);
+                " onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">
+                    🛍️ Continuer
+                </button>
+                <button id="go-pay-btn" style="
+                    background: #ff8c00;
+                    color: #fff;
+                    border: none;
+                    padding: 6px 14px;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    font-weight: bold;
+                    font-size: 0.8rem;
+                    box-shadow: 0 3px 8px rgba(255,140,0,0.3);
+                    transition: all 0.2s;
+                " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                    🛒 Voir le panier
+                </button>
+            </div>
+        `;
+        
+        // Animation d'apparition
+        msg.style.display = 'block';
+        setTimeout(() => {
+            msg.style.opacity = '1';
+            msg.style.transform = 'translateX(0)';
+        }, 50);
+    
+        // Gestionnaire du bouton "Voir le panier"
+        document.getElementById('go-pay-btn').onclick = function() {
+            hideCartMessage();
+            // Rediriger vers boutique.html avec un indicateur de panier ouvert
+            window.location.href = 'boutique.html?openCart=1';
+        };
+        
+        // Gestionnaire du bouton "Continuer"
+        document.getElementById('continue-shopping-btn').onclick = function() {
+            hideCartMessage();
+        };
+        
+        // Fonction pour masquer le message
+        function hideCartMessage() {
+            msg.style.opacity = '0';
+            msg.style.transform = 'translateX(400px)';
+            setTimeout(() => {
+                if (msg.style.display !== 'none') {
+                    msg.style.display = 'none';
+                }
+            }, 400);
+        }
+    }
+    
+    // Ajouter les styles d'animation
+    const style = document.createElement('style');
+    style.innerHTML = `
+        @keyframes clignote {
+            0% { box-shadow: 0 0 18px #fff700, 0 0 32px #ff8c00; background: linear-gradient(135deg, #28a745, #20c997); }
+            100% { box-shadow: 0 0 8px #fff, 0 0 16px #ff8c00; background: linear-gradient(135deg, #20c997, #28a745); }
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+        @keyframes bounce {
+            0%, 20%, 53%, 80%, 100% { transform: translateY(0); }
+            40%, 43% { transform: translateY(-8px); }
+            70% { transform: translateY(-4px); }
+            90% { transform: translateY(-2px); }
+        }
+        #cart-message { 
+            animation: clignote 1.5s infinite alternate, pulse 2s infinite ease-in-out; 
+            z-index: 99999 !important;
+        }
+        
+        /* Animations pour les messages temporaires */
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes slideOutRight {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+        
+        /* Styles pour le modal du panier */
+        .cart-modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 18px;
+            max-width: 420px;
+            width: 96vw;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+        }
+        .cart-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .cart-modal-title {
+            margin: 0;
+            color: #ff8c00;
+            font-size: 1.2rem;
+        }
+        .cart-modal-close {
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #999;
+        }
+        .cart-modal-items {
+            margin-bottom: 12px;
+        }
+        .cart-modal-summary {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+        }
+        .cart-modal-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .cart-modal-btn {
+            border: none;
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        .cart-modal-btn-close {
+            background: #6c757d;
+            color: white;
+        }
+        .cart-modal-btn-checkout {
+            background: #ff8c00;
+            color: white;
+            font-weight: bold;
+        }
+        @media (max-width: 600px) {
+            .cart-modal-content {
+                max-width: 98vw;
+                padding: 8px;
+            }
+            .cart-modal-title {
+                font-size: 1rem;
+            }
+            .cart-modal-btn {
+                font-size: 0.95rem;
+                padding: 7px 10px;
+            }
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // Fonction pour mettre à jour le compteur de panier
+    function updateCartCounter() {
+        try {
+            // Utiliser le nouveau système de panier NestJS si disponible
+            if (window.fadidiCartAPI) {
+                const stats = window.fadidiCartAPI.getStats();
+                
+                // Mettre à jour l'affichage
+                const countDisplay = document.getElementById('cart-count-display');
+                const totalDisplay = document.getElementById('cart-total-display');
+                
+                if (countDisplay) {
+                    countDisplay.textContent = `(${stats.totalQuantity})`;
+                }
+                
+                if (totalDisplay && stats.total > 0) {
+                    totalDisplay.textContent = `Total: ${stats.total.toLocaleString()} CFA`;
+                    totalDisplay.style.display = 'block';
+                    // Afficher les économies si disponibles
+                    if (stats.totalSavings > 0) {
+                        totalDisplay.innerHTML = `
+                            Total: ${stats.total.toLocaleString()} CFA<br>
+                            <small style="color: #28a745;">Économies: ${stats.totalSavings.toLocaleString()} CFA</small>
+                        `;
+                    }
+                } else if (totalDisplay) {
+                    totalDisplay.textContent = "";
+                    totalDisplay.style.display = 'none';
+                }
+                
+                // Animation du compteur quand il y a des items
+                const cartCounter = document.getElementById('cart-counter');
+                if (cartCounter && stats.totalQuantity > 0) {
+                    cartCounter.style.animation = 'cartPulse 0.6s ease-out';
+                    setTimeout(() => {
+                        cartCounter.style.animation = '';
+                    }, 600);
+                }
+                
+                console.log('📊 Compteur panier mis à jour (NestJS):', stats);
+                return;
+            }
+            
+            // Fallback vers l'ancien système
+            const localCart = JSON.parse(localStorage.getItem('fadidi_cart_items') || '[]');
+            const totalItems = localCart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+            const totalValue = localCart.reduce((sum, item) => sum + ((item.price || 0) * (item.quantity || 1)), 0);
+            
+            // Mettre à jour l'affichage
+            const countDisplay = document.getElementById('cart-count-display');
+            const totalDisplay = document.getElementById('cart-total-display');
+            
+            if (countDisplay) {
+                countDisplay.textContent = `(${totalItems})`;
+            }
+            
+            if (totalDisplay && totalValue > 0) {
+                totalDisplay.textContent = `Total: ${totalValue.toLocaleString()} CFA`;
+                totalDisplay.style.display = 'block';
+            } else if (totalDisplay) {
+                totalDisplay.style.display = 'none';
+            }
+            
+            // Animation du compteur quand il y a des items
+            const cartCounter = document.getElementById('cart-counter');
+            if (cartCounter && totalItems > 0) {
+                cartCounter.style.animation = 'pulse 1s ease-in-out';
+                cartCounter.style.transform = 'scale(1.05)';
+                setTimeout(() => {
+                    cartCounter.style.animation = 'none';
+                    cartCounter.style.transform = 'scale(1)';
+                }, 1000);
+            }
+            
+            console.log('📊 Compteur panier mis à jour (fallback):', { totalItems, totalValue });
+            
+        } catch (error) {
+            console.error('❌ Erreur mise à jour compteur:', error);
+        }
+    }
+    
+    // Fonction pour basculer la vue du panier
+    function toggleCartView() {
+        showCartDetails();
+    }
+
+    // Afficher les détails du panier dans le modal
+    function showCartDetails() {
+
+        if (!window.fadidiCartAPI) {
+            alert('Système de panier en cours de chargement...');
+            return;
+        }
+
+        const cart = window.fadidiCartAPI.cart;
+        const stats = window.fadidiCartAPI.getStats();
+        if (cart.items.length === 0) {
+            showEmptyCartModal();
+            return;
+        }
+
+        // Afficher le modal
+        document.getElementById('cart-modal').style.display = 'flex';
+        
+        // Remplir la liste des articles
+        renderCartItems();
+        
+        // Mettre à jour le résumé
+        renderCartSummary();
+        
+        console.log('📦 Modal panier ouvert avec', cart.items.length, 'articles');
+    }
+
+    // Rendre la liste des articles du panier
+    function renderCartItems() {
+        const cartItemsList = document.getElementById('cart-items-list');
+        const cart = window.fadidiCartAPI.cart;
+        
+        if (cart.items.length === 0) {
+            cartItemsList.innerHTML = '<p style="text-align: center; color: #888;">Aucun article dans le panier</p>';
+            return;
+        }
+        
+        let html = '';
+        cart.items.forEach((item, index) => {
+            const itemTotal = item.price * item.quantity;
+            const savings = item.originalPrice && item.originalPrice > item.price ? 
+                (item.originalPrice - item.price) * item.quantity : 0;
+            
+            html += `
+                <div class="cart-item" data-index="${index}" style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 15px;
+                    margin: 10px 0;
+                    border: 1px solid #e9ecef;
+                    border-radius: 8px;
+                    background: #f8f9fa;
+                ">
+                    <div style="flex: 1; display: flex; align-items: center; gap: 15px;">
+                        <img src="${item.image}" alt="${item.name}" style="
+                            width: 60px;
+                            height: 60px;
+                            object-fit: cover;
+                            border-radius: 8px;
+                            border: 2px solid #ff8c00;
+                        ">
+                        <div>
+                            <div style="font-weight: bold; color: #333; margin-bottom: 5px;">
+                                ${item.name}
+                            </div>
+                            <div style="font-size: 0.9em; color: #666;">
+                                ${item.isPromotion ? 'Ajouté depuis Promotions' : 'Ajouté depuis Boutique'}
+                            </div>
+                            <div style="font-size: 0.9em; color: #ff8c00; font-weight: bold;">
+                                ${item.price.toLocaleString()} CFA × ${item.quantity}
+                            </div>
+                            ${savings > 0 ? `
+                                <div style="font-size: 0.8em; color: #28a745;">
+                                    💰 Économies: ${savings.toLocaleString()} CFA
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div style="display: flex; align-items: center; gap: 5px;">
+                            <button onclick="updateItemQuantity(${index}, ${item.quantity - 1})" 
+                                    style="background: #dc3545; color: white; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-weight: bold;">
+                                −
+                            </button>
+                            <span style="min-width: 30px; text-align: center; font-weight: bold;">
+                                ${item.quantity}
+                            </span>
+                            <button onclick="updateItemQuantity(${index}, ${item.quantity + 1})" 
+                                    style="background: #28a745; color: white; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-weight: bold;">
+                                +
+                            </button>
+                        </div>
+                        
+                        <div style="font-weight: bold; color: #ff8c00; min-width: 100px; text-align: right;">
+                            ${itemTotal.toLocaleString()} CFA
+                        </div>
+                        
+                        <button onclick="removeCartItem(${index})" 
+                                style="background: #dc3545; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer;"
+                                title="Supprimer cet article">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+        });
+        
+        cartItemsList.innerHTML = html;
+    }
+
+    // Rendre le résumé du panier
+    function renderCartSummary() {
+        const cartSummary = document.getElementById('cart-summary');
+        const stats = window.fadidiCartAPI.getStats();
+        if (!stats.totalItems || !stats.totalQuantity) {
+            cartSummary.innerHTML = '<div style="text-align:center;color:#888;font-size:1.1em;">Aucun article dans le panier</div>';
+            return;
+        }
+        let html = `
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div>
+                    <div><strong>Articles:</strong> ${stats.totalItems}</div>
+                    <div><strong>Quantité totale:</strong> ${stats.totalQuantity}</div>
+                    <div><strong>Promotions:</strong> ${stats.promotionItems}</div>
+                </div>
+                <div style="text-align: right;">
+                    <div><strong>Sous-total:</strong> ${stats.subtotal.toLocaleString()} CFA</div>
+                    ${stats.subtotal > 0 ? `<div><strong>Livraison:</strong> 
+                        ${stats.freeDelivery ? 
+                            '<span style="color: #28a745;">GRATUITE!</span>' : 
+                            `${stats.deliveryFee.toLocaleString()} CFA`}
+                    </div>` : ''}
+                    ${stats.totalSavings > 0 ? `
+                        <div style="color: #28a745;"><strong>Économies:</strong> ${stats.totalSavings.toLocaleString()} CFA</div>
+                    ` : ''}
+                    <hr style="margin: 10px 0;">
+                    <div style="font-size: 1.2em; color: #ff8c00;"><strong>TOTAL: ${stats.total.toLocaleString()} CFA</strong></div>
+                </div>
+            </div>
+        `;
+        cartSummary.innerHTML = html;
+    }
+
+    // Mettre à jour la quantité d'un article
+    function updateItemQuantity(itemIndex, newQuantity) {
+        if (newQuantity < 1) {
+            if (confirm('Voulez-vous vraiment supprimer cet article du panier ?')) {
+                removeCartItem(itemIndex);
+            }
+            return;
+        }
+        
+        try {
+            window.fadidiCartAPI.updateQuantity(itemIndex, newQuantity);
+            renderCartItems();
+            renderCartSummary();
+            console.log('📊 Quantité mise à jour pour l\'article', itemIndex, '→', newQuantity);
+        } catch (error) {
+            console.error('❌ Erreur mise à jour quantité:', error);
+            alert('Erreur lors de la mise à jour de la quantité');
+        }
+    }
+
+    // Supprimer un article du panier avec modal personnalisé
+    function removeCartItem(itemIndex) {
+        showDeleteCartItemModal(itemIndex);
+    }
+
+    // Affiche un modal de confirmation stylé pour la suppression d'article
+    function showDeleteCartItemModal(itemIndex) {
+        // Si le modal existe déjà, le supprimer
+        const oldModal = document.getElementById('delete-cartitem-modal');
+        if (oldModal) oldModal.remove();
+
+        const modal = document.createElement('div');
+        modal.id = 'delete-cartitem-modal';
+        modal.style.cssText = `
+            position: fixed; left: 0; top: 0; width: 100vw; height: 100vh;
+            background: rgba(30,30,30,0.55); z-index: 100000;
+            display: flex; align-items: center; justify-content: center;
+        `;
+        modal.innerHTML = `
+            <div style="background: #fff; border-radius: 16px; box-shadow: 0 8px 32px #0005; padding: 32px 28px; min-width: 320px; max-width: 90vw; text-align: center;">
+                <div style='font-size:2.2em; color:#ff8c00; margin-bottom: 10px;'>⚠️</div>
+                <div style='font-size:1.1em; color:#222; margin-bottom: 18px;'>Êtes-vous certain de vouloir retirer cet article de votre panier ?<br><span style='color:#dc3545;font-size:0.98em;'>Cette action est irréversible.</span></div>
+                <div style='display:flex; gap:18px; justify-content:center; margin-top:18px;'>
+                    <button id='delete-cartitem-confirm' style='background:#ff8c00;color:#fff;border:none;padding:10px 28px;border-radius:7px;font-size:1em;font-weight:bold;cursor:pointer;box-shadow:0 2px 8px #ff8c0030;transition:background 0.2s;'>Supprimer</button>
+                    <button id='delete-cartitem-cancel' style='background:#f5f5f5;color:#222;border:1px solid #ccc;padding:10px 22px;border-radius:7px;font-size:1em;cursor:pointer;'>Annuler</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+
+        document.getElementById('delete-cartitem-cancel').onclick = () => modal.remove();
+        document.getElementById('delete-cartitem-confirm').onclick = () => {
+            modal.remove();
+            try {
+                const removedItem = window.fadidiCartAPI.removeFromCart(itemIndex);
+                if (removedItem) {
+                    console.log('🗑️ Article supprimé:', removedItem.name);
+                    renderCartItems();
+                    renderCartSummary();
+                    if (window.fadidiCartAPI.cart.items.length === 0) {
+                        closeCartModal();
+                    }
+                    showTemporaryMessage(`✅ "${removedItem.name}" supprimé du panier`, 'success');
+                }
+            } catch (error) {
+                console.error('❌ Erreur suppression article:', error);
+                alert('Erreur lors de la suppression de l\'article');
+            }
+        };
+    }
+
+    // Vider tout le panier
+    function clearAllCart() {
+        if (!confirm('⚠️ Êtes-vous sûr de vouloir vider complètement le panier ?')) {
+            return;
+        }
+        
+        try {
+            window.fadidiCartAPI.clearCart();
+            closeCartModal();
+            showTemporaryMessage('🧹 Panier vidé complètement', 'info');
+            console.log('🧹 Panier vidé depuis la page promotion');
+        } catch (error) {
+            console.error('❌ Erreur vidage panier:', error);
+            alert('Erreur lors du vidage du panier');
+        }
+    }
+
+    // Fermer le modal du panier
+    function closeCartModal() {
+        document.getElementById('cart-modal').style.display = 'none';
+    }
+
+    // Aller vers la commande/checkout
+    function goToCheckout() {
+
+        const cart = window.fadidiCartAPI?.cart;
+        if (!cart || cart.items.length === 0) {
+            showEmptyCartModal();
+            return;
+        }
+        
+        console.log('🛒 Redirection vers boutique avec panier ouvert pour commande');
+        window.location.href = 'boutique.html?openCart=1&checkout=1';
+    }
+
+    // Afficher un message temporaire
+    function showTemporaryMessage(message, type = 'info') {
+        const messageDiv = document.createElement('div');
+        messageDiv.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            z-index: 99999;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            animation: slideInRight 0.3s ease-out;
+            background: ${type === 'success' ? '#28a745' : type === 'error' ? '#dc3545' : '#007bff'};
+        `;
+        messageDiv.textContent = message;
+        
+        document.body.appendChild(messageDiv);
+        
+        setTimeout(() => {
+            messageDiv.style.animation = 'slideOutRight 0.3s ease-in';
+            setTimeout(() => messageDiv.remove(), 300);
+        }, 3000);
+    }
+
+    // Fonction pour aller au panier (boutique.html) - conservée pour compatibilité
+    function goToCart() {
+        goToCheckout();
+    }
+    
+    // Initialisation au chargement de la page
+    document.addEventListener('DOMContentLoaded', function() {
+        loadPromotions();
+        
+        // Initialiser le compteur de panier
+        updateCartCounter();
+        
+        // Écouter les événements de mise à jour du panier NestJS
+        if (window.fadidiCartAPI) {
+            window.addEventListener('cartUpdated', function(event) {
+                console.log('🔔 Événement cartUpdated reçu:', event.detail);
+                updateCartCounter();
+            });
+        }
+        
+        // Mettre à jour le compteur toutes les 3 secondes (pour synchronisation)
+        setInterval(updateCartCounter, 3000);
+        
+        // Recharger les promotions toutes les 5 minutes pour vérifier les expirations
+        setInterval(loadPromotions, 5 * 60 * 1000);
+        
+        console.log('🎯 Page promotions initialisée avec panier NestJS');
+        
+        // Gestionnaire pour fermer le modal en cliquant à l'extérieur
+        document.getElementById('cart-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeCartModal();
+            }
+        });
+        
+        // Gestionnaire de touche Escape pour fermer le modal
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && document.getElementById('cart-modal').style.display === 'flex') {
+                closeCartModal();
+            }
+        });
+    });
+
+    
+    // SECTION WIDGETS FLOTTANTES
+    document.addEventListener('DOMContentLoaded', function() {
+        const widgets = JSON.parse(localStorage.getItem('fadidiWidgets') || '[]');
+        const page = location.pathname.split('/').pop();
+        
+        widgets.filter(w => w.active && (w.pages === '*' || w.pages.split(',').map(p=>p.trim()).includes(page)))
+            .forEach(widget => {
+                const div = document.createElement('div');
+                div.className = 'custom-widget-container';
+                div.innerHTML = widget.html;
+
+                let pos = widget.position || 'bottom-right';
+                div.style.cssText = `
+                    position: fixed;
+                    z-index: 9999;
+                    margin: 0;
+                    max-width: 95vw;
+                `;
+
+                if (pos === 'bottom-right') {
+                    div.style.right = '30px';
+                    div.style.bottom = '30px';
+                } else if (pos === 'bottom-left') {
+                    div.style.left = '30px';
+                    div.style.bottom = '30px';
+                } else if (pos === 'top-right') {
+                    div.style.right = '30px';
+                    div.style.top = '30px';
+                } else if (pos === 'top-left') {
+                    div.style.left = '30px';
+                    div.style.top = '30px';
+                } else if (pos === 'bottom-center') {
+                    div.style.left = '50%';
+                    div.style.bottom = '30px';
+                    div.style.transform = 'translateX(-50%)';
+                } else if (pos === 'center') {
+                    div.style.left = '50%';
+                    div.style.top = '50%';
+                    div.style.transform = 'translate(-50%, -50%)';
+                }
+
+                document.body.appendChild(div);
+
+                if (widget.css && widget.css.trim()) {
+                    const style = document.createElement('style');
+                    style.innerHTML = widget.css;
+                    document.head.appendChild(style);
+                }
+
+                if (widget.js && widget.js.trim()) {
+                    const script = document.createElement('script');
+                    script.innerHTML = widget.js;
+                    document.body.appendChild(script);
+                }
+            });
+    });
+
+
+
+    // ==================== GESTION ORIENTATION ====================
+// Affichage temporaire du message de rotation (50s max) et masquage si paysage
+document.addEventListener('DOMContentLoaded', function() {
+    var rotationMsg = document.getElementById('rotation-message');
+    var timer = null;
+    function checkOrientation() {
+        if(window.matchMedia('(orientation: landscape)').matches) {
+            if(rotationMsg) rotationMsg.style.display = 'none';
+            if(timer) { clearTimeout(timer); timer = null; }
+        } else {
+            if(rotationMsg) rotationMsg.style.display = '';
+            if(!timer) {
+                timer = setTimeout(function() {
+                    if(rotationMsg) rotationMsg.style.display = 'none';
+                }, 50000); // 50 secondes
+            }
+        }
+    }
+    // Initial check
+    checkOrientation();
+    // Sur changement d'orientation
+    window.addEventListener('orientationchange', checkOrientation);
+    // Sur resize (pour certains navigateurs)
+    window.addEventListener('resize', checkOrientation);
+});
+
+</script>
+</body>
+</html>

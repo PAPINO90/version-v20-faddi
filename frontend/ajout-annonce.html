@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ajouter une annonce spéciale</title>
+  <link rel="stylesheet" href="assets/css/boutique.css">
+  <style>
+    body { background: #222; color: #fff; font-family: Arial, sans-serif; }
+    .form-section { background: #333; padding: 24px; border-radius: 8px; max-width: 700px; margin: 32px auto; }
+    .form-section h2 { color: #ffa500; }
+    .input-row { margin-bottom: 16px; }
+    label { display: block; margin-bottom: 6px; font-weight: bold; }
+    input, select, textarea { width: 100%; padding: 8px; border-radius: 4px; border: none; }
+    .images-list { margin-top: 16px; }
+    .image-card { background: #222; border: 1px solid #444; border-radius: 6px; padding: 12px; margin-bottom: 12px; }
+    .image-preview { max-width: 120px; max-height: 120px; display: block; margin-bottom: 8px; }
+    .btn { background: #ffa500; color: #222; border: none; padding: 10px 18px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+    .btn:hover { background: #ff8800; }
+    /* Styles for image preview in ajout-annonce */
+    #image-preview {
+      display: none;
+      max-width: 220px;
+      margin-top: 10px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px #0008;
+    }
+    #video-preview {
+      display: none;
+      max-width: 220px;
+      margin-top: 10px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px #0008;
+    }
+    #upload-loader {
+      display: none;
+      text-align: center;
+      margin-top: 10px;
+    }
+    #upload-loader span {
+      color: #ffd000;
+      font-weight: bold;
+    }
+    #annonce-status {
+      margin-top: 12px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+
+<body>
+  <div class="form-section">
+    <h2>Ajouter une annonce spéciale</h2>
+    <form id="annonceForm">
+      <div class="input-row">
+    <label for="type">Type d'annonce</label>
+    <select id="type" name="type" required>
+  <option value="promotion">Promotion</option>
+  <option value="nouveau produit">Nouveau produit</option>
+  <option value="evenement">Événement</option>
+  <option value="information">Information</option>
+  <option value="banniere">Bannière publicitaire (affichage en haut de la boutique)</option>
+    </select>
+
+    <label for="position">Position d'affichage de l'annonce</label>
+    <select id="position" name="position" required>
+      <option value="haut droite">Haut droite</option>
+      <option value="haut gauche">Haut gauche</option>
+      <option value="bas droite">Bas droite</option>
+      <option value="bas gauche">Bas gauche</option>
+      <option value="banniere">Bannière (haut de page)</option>
+    </select>
+
+    <label for="titre">Titre de l'annonce</label>
+    <input type="text" id="titre" name="titre" required>
+
+    <label for="description">Description</label>
+    <textarea id="description" name="description" required></textarea>
+
+    <label for="pageCible">Page cible</label>
+    <select id="pageCible" name="pageCible" required>
+      <option value="index">Index</option>
+      <option value="boutique">Boutique</option>
+    </select>
+
+      <label for="redirectionUrl">URL de redirection (optionnel)</label>
+      <input type="text" id="redirectionUrl" name="redirectionUrl" placeholder="URL externe ou page interne (ex: promotion.html ou https://...) (optionnel)">
+
+  <!-- Champ animation -->
+  <label for="animation">Effet d'animation (optionnel)</label>
+  <select id="animation" name="animation">
+    <option value="none">Aucune</option>
+    <option value="slide">Glissement</option>
+    <option value="fade">Fondu</option>
+    <option value="pulse">Pulse</option>
+  </select>
+
+  <!-- Champ image unique -->
+  <label for="image">Image de l'annonce</label>
+  <input type="file" id="image" name="image" accept="image/*">
+  <img id="image-preview" />
+
+  <!-- Champ vidéo -->
+  <label for="video">Vidéo de l'annonce (optionnel)</label>
+  <input type="file" id="video" name="video" accept="video/*">
+  <video id="video-preview" controls></video>
+
+
+  <button type="submit" class="btn">Enregistrer l'annonce</button>
+  <div id="upload-loader"><span>⏳ Enregistrement de la vidéo, veuillez patienter...</span></div>
+<div id="annonce-status"></div>
+    </div>
+    </form>
+  </div>
+  <script>
+    // Affichage de l'aperçu de l'image sélectionnée
+    document.getElementById('image').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      const preview = document.getElementById('image-preview');
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+          preview.src = ev.target.result;
+          preview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      } else {
+        preview.style.display = 'none';
+        preview.src = '';
+      }
+    });
+    // Affichage de l'aperçu de la vidéo sélectionnée
+    document.getElementById('video').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      const preview = document.getElementById('video-preview');
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+          preview.src = ev.target.result;
+          preview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      } else {
+        preview.style.display = 'none';
+        preview.src = '';
+      }
+    });
+    // Code obsolète supprimé : gestion d'images multiples et champs non présents
+    document.getElementById('annonceForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const btn = document.querySelector('button[type="submit"]');
+  btn.disabled = true;
+  btn.textContent = 'Enregistrement...';
+  document.getElementById('upload-loader').style.display = 'block';
+      const statusDiv = document.getElementById('annonce-status');
+      statusDiv.textContent = '';
+      // Vérification simplifiée : bloque seulement si un champ est vide
+      const type = document.getElementById('type')?.value || '';
+      const titre = document.getElementById('titre')?.value || '';
+      const description = document.getElementById('description')?.value || '';
+      const pageCible = document.getElementById('pageCible')?.value || '';
+      const redirectionUrl = document.getElementById('redirectionUrl')?.value || '';
+      const imageInput = document.getElementById('image');
+      const videoInput = document.getElementById('video');
+      if (!type || !titre || !description || !pageCible) {
+        statusDiv.textContent = 'Erreur : veuillez remplir tous les champs obligatoires.';
+        statusDiv.style.color = '#ff2c00';
+        btn.disabled = false;
+        btn.textContent = "Enregistrer l'annonce";
+        return;
+      }
+      // Préparer les médias
+      let imagesArr = [];
+      // Si une image est sélectionnée
+      if (imageInput.files && imageInput.files[0]) {
+        const readerImg = new FileReader();
+        readerImg.onload = async function(ev) {
+          const imageBase64 = ev.target.result;
+          imagesArr.push({
+            imageBase64,
+            titre: titre,
+            description: description,
+            type: 'image'
+          });
+          // Si une vidéo est aussi sélectionnée, lire la vidéo
+          if (videoInput.files && videoInput.files[0]) {
+            const readerVid = new FileReader();
+            readerVid.onload = async function(ev2) {
+              const imageBase64 = ev2.target.result;
+              imagesArr.push({
+                imageBase64,
+                titre: titre,
+                description: description,
+                type: 'video'
+              });
+              await submitAnnonce(imagesArr);
+            };
+            readerVid.readAsDataURL(videoInput.files[0]);
+          } else {
+            await submitAnnonce(imagesArr);
+          }
+        };
+        readerImg.readAsDataURL(imageInput.files[0]);
+      } else if (videoInput.files && videoInput.files[0]) {
+        // Si seulement une vidéo est sélectionnée
+        const readerVid = new FileReader();
+        readerVid.onload = async function(ev2) {
+          const imageBase64 = ev2.target.result;
+          imagesArr.push({
+            imageBase64,
+            titre: titre,
+            description: description,
+            type: 'video'
+          });
+          await submitAnnonce(imagesArr);
+        };
+        readerVid.readAsDataURL(videoInput.files[0]);
+      } else {
+        statusDiv.textContent = 'Veuillez sélectionner une image ou une vidéo.';
+        statusDiv.style.color = '#ff2c00';
+        btn.disabled = false;
+        btn.textContent = "Enregistrer l'annonce";
+        return;
+      }
+
+      async function submitAnnonce(imagesArr) {
+        const data = { type, titre, description, pageCible, redirectionUrl, images: imagesArr };
+        try {
+          const res = await fetch('http://localhost:3000/api/annonces', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+          });
+          document.getElementById('upload-loader').style.display = 'none';
+          if (res.ok) {
+            statusDiv.textContent = '✅ Annonce enregistrée avec succès !';
+            statusDiv.style.color = '#00c800';
+            btn.textContent = 'Enregistré';
+            setTimeout(() => {
+              btn.disabled = false;
+              btn.textContent = "Enregistrer l'annonce";
+              statusDiv.textContent = '';
+            }, 2500);
+          } else {
+            let errorMsg = "Erreur lors de l'enregistrement.";
+            try {
+              const errorData = await res.json();
+              if (errorData && errorData.message) {
+                errorMsg += '\nDétail : ' + errorData.message;
+              }
+            } catch {}
+            statusDiv.textContent = errorMsg;
+            statusDiv.style.color = '#ff2c00';
+            btn.disabled = false;
+            btn.textContent = "Enregistrer l'annonce";
+          }
+        } catch (err) {
+          document.getElementById('upload-loader').style.display = 'none';
+          statusDiv.textContent = 'Erreur réseau. ' + (err.message || err);
+          statusDiv.style.color = '#ff2c00';
+          btn.disabled = false;
+          btn.textContent = "Enregistrer l'annonce";
+        }
+      }
+    });
+
+  
+    // Redirection sur clic image preview si URL renseignée et image affichée
+    document.addEventListener('DOMContentLoaded', function() {
+      var img = document.getElementById('image-preview');
+      img.style.cursor = 'pointer';
+      img.addEventListener('click', function() {
+        // Ne rien faire si l'image n'est pas affichée
+        if (img.style.display === 'none' || !img.src) return;
+        var url = document.getElementById('redirectionUrl').value.trim();
+        if (url) {
+          // Si c'est une URL absolue (http/https), ouvrir dans un nouvel onglet
+          if (/^https?:\/\//.test(url)) {
+            window.open(url, '_blank');
+          } else {
+            // Si l'utilisateur saisit juste "boutique" ou "promotion", rediriger vers la page correspondante
+            if (url === 'boutique') url = 'boutique.html';
+            if (url === 'promotion') url = 'promotion.html';
+            window.location.href = url;
+          }
+        }
+      });
+    });
+
+  </script>
+</body>
+</html>

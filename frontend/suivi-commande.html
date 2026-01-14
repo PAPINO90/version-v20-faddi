@@ -1,0 +1,1456 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suivi de commande - FADIDI</title>
+    <link rel="stylesheet" href="assets/css/boutique.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .mb-15 {
+            margin-bottom: 15px;
+        }
+        :root {
+            --primary-color: #ff8c00;
+            --dark-bg: #121212;
+            --card-bg: #1e1e1e;
+            --card-darker: #2a2a2a;
+            --text-color: #fff;
+            --error-color: #f44336;
+            --success-color: #4CAF50;
+            --pending-color: #ffc107;
+            --processing-color: #17a2b8;
+            --shipped-color: #007bff;
+            --delivered-color: #28a745;
+            --border-color: #444;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--dark-bg);
+            margin: 0;
+            padding: 0;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .tracking-header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        .tracking-header h1 {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            position: relative;
+            display: inline-block;
+        }
+        .tracking-header h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background-color: var(--primary-color);
+            border-radius: 2px;
+        }
+        .tracking-header p {
+            font-size: 1.1rem;
+            color: #aaa;
+            max-width: 600px;
+            margin: 20px auto 0;
+        }
+        .tracking-card {
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            margin-bottom: 30px;
+        }
+        .search-form {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .search-form input {
+            flex: 1;
+            min-width: 200px;
+            padding: 16px 20px;
+            font-size: 16px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-color);
+            border-radius: 30px;
+            color: var(--text-color);
+            transition: all 0.3s;
+        }
+        .search-form input:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px var(--primary-color);
+            border-color: var(--primary-color);
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+        .search-form button {
+            padding: 16px 30px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .search-form button:hover {
+            background-color: #e67e00;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 140, 0, 0.3);
+        }
+        .search-form button:active {
+            transform: translateY(0);
+        }
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+        .action-button {
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .action-button:hover {
+            background-color: #444;
+        }
+        .action-button i {
+            font-size: 16px;
+        }
+        .tracking-result {
+            padding: 0;
+            min-height: 100px;
+        }
+        .tracking-error {
+            background-color: rgba(244, 67, 54, 0.1);
+            border-left: 4px solid var(--error-color);
+            padding: 15px 20px;
+            border-radius: 6px;
+            margin: 20px 0;
+            animation: fadeIn 0.3s ease-out;
+        }
+        .order-status-card {
+            background-color: var(--card-darker);
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 20px;
+            animation: fadeIn 0.4s ease-out;
+        }
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .order-id {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        .order-date {
+            color: #bbb;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+        }
+        .order-status-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .status-pending {
+            background-color: var(--pending-color);
+            color: #000;
+        }
+        .status-processing {
+            background-color: var(--processing-color);
+            color: white;
+        }
+        .status-shipped {
+            background-color: var(--shipped-color);
+            color: white;
+        }
+        .status-delivered {
+            background-color: var(--delivered-color);
+            color: white;
+        }
+        .tracking-steps {
+            display: flex;
+            margin: 40px 0;
+            position: relative;
+        }
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            position: relative;
+            z-index: 2;
+        }
+        .step-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #444;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            margin-bottom: 15px;
+            position: relative;
+            transition: all 0.3s;
+            color: var(--text-color);
+        }
+        .step.active .step-icon {
+            background-color: var(--primary-color);
+            box-shadow: 0 0 20px rgba(255, 140, 0, 0.4);
+            transform: scale(1.1);
+        }
+        .step.done .step-icon {
+            background-color: var(--success-color);
+            box-shadow: 0 0 20px rgba(76, 175, 80, 0.3);
+        }
+        .step-label {
+            font-size: 14px;
+            font-weight: 500;
+            text-align: center;
+            color: #aaa;
+            transition: all 0.3s;
+        }
+        .step.active .step-label, 
+        .step.done .step-label {
+            color: var(--text-color);
+            font-weight: bold;
+        }
+        .step-connector {
+            position: absolute;
+            top: 30px;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background-color: #444;
+            z-index: 1;
+        }
+        .step-progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background-color: var(--success-color);
+            transition: width 0.5s ease;
+        }
+        .order-details-section {
+            margin: 30px 0;
+            border-top: 1px solid var(--border-color);
+            padding-top: 30px;
+        }
+        .order-details-section h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+        .order-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        .info-card {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 20px;
+        }
+        .info-card h4 {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            color: #ddd;
+        }
+        .info-item {
+            margin-bottom: 10px;
+        }
+        .info-item .label {
+            color: #999;
+            font-size: 0.9rem;
+            margin-bottom: 3px;
+        }
+        .info-item .value {
+            color: var(--text-color);
+            font-weight: 500;
+        }
+        .products-list {
+            margin-top: 25px;
+        }
+        .product-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .product-item:last-child {
+            border-bottom: none;
+        }
+        .product-name {
+            flex: 1;
+            padding-right: 20px;
+        }
+        .product-price {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        .order-summary {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 25px;
+        }
+        .summary-card {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 20px;
+            min-width: 250px;
+        }
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .summary-total {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .summary-total .amount {
+            color: var(--primary-color);
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            color: var(--primary-color);
+            text-decoration: none;
+            margin-top: 30px;
+            font-weight: 500;
+            transition: all 0.2s;
+            gap: 8px;
+        }
+        .back-link:hover {
+            color: #e67e00;
+            transform: translateX(-5px);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        @media (max-width: 768px) {
+            .search-form {
+                flex-direction: column;
+            }
+            .search-form button {
+                width: 100%;
+            }
+            .order-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .tracking-steps {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .step {
+                flex-direction: row;
+                gap: 15px;
+            }
+            .step-icon {
+                margin-bottom: 0;
+            }
+            .step-connector {
+                left: 30px;
+                width: 4px;
+                height: 100%;
+                top: 0;
+                transform: none;
+            }
+            .order-info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .pulse {
+            animation: pulse 1s infinite;
+        }
+        .estimated-date {
+            text-align: center;
+            margin: 20px 0 30px;
+            font-size: 1.1rem;
+        }
+        .estimated-date .date {
+            color: var(--primary-color);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        .success-animation {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+        }
+        .success-checkmark {
+            width: 80px;
+            height: 80px;
+            position: relative;
+        }
+        .check-icon {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            border-radius: 50%;
+            box-sizing: content-box;
+            border: 4px solid var(--success-color);
+        }
+        .check-icon::before {
+            top: 48px;
+            left: 25px;
+            width: 25px;
+            transform: rotate(45deg);
+            position: absolute;
+            height: 4px;
+            background-color: var(--success-color);
+            content: '';
+            border-radius: 2px;
+        }
+        .check-icon::after {
+            top: 40px;
+            left: 25px;
+            width: 35px;
+            transform: rotate(-45deg);
+            position: absolute;
+            height: 4px;
+            background-color: var(--success-color);
+            content: '';
+            border-radius: 2px;
+        }
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Modal styles pour les retours clients */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            -webkit-backdrop-filter: blur(5px);
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, var(--card-bg) 0%, var(--card-darker) 100%);
+            border-radius: 20px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+            animation: slideIn 0.3s ease-out;
+            transform: translateY(0);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { 
+                opacity: 0;
+                transform: translateY(-30px) scale(0.95);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .modal-header i {
+            font-size: 24px;
+            margin-right: 15px;
+            color: var(--primary-color);
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            color: var(--text-color);
+            font-size: 1.4rem;
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            color: #aaa;
+            cursor: pointer;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .close:hover {
+            color: var(--primary-color);
+            background-color: rgba(255, 140, 0, 0.1);
+            transform: scale(1.1);
+        }
+
+        .modal-body {
+            margin-bottom: 25px;
+        }
+
+        .modal-body p {
+            margin-bottom: 15px;
+            color: #ccc;
+            line-height: 1.6;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            background-color: var(--card-darker);
+            color: var(--text-color);
+            font-size: 16px;
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+            transition: border-color 0.3s ease;
+        }
+
+        .modal-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 10px rgba(255, 140, 0, 0.2);
+        }
+
+        .modal-input::placeholder {
+            color: #666;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+        }
+
+        .modal-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), #ff7700);
+            color: white;
+        }
+
+        .modal-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 140, 0, 0.4);
+        }
+
+        .modal-btn-secondary {
+            background: var(--card-darker);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .modal-btn-secondary:hover {
+            background: var(--border-color);
+        }
+
+        .success-modal {
+            text-align: center;
+        }
+
+        .success-modal .modal-header i {
+            color: var(--success-color);
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .success-modal .modal-body {
+            font-size: 18px;
+            color: var(--success-color);
+        }
+
+        /* Notification toast */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 10px;
+            color: white;
+            z-index: 10000;
+            max-width: 300px;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .toast.success {
+            background: linear-gradient(135deg, var(--success-color), #45a049);
+        }
+
+        .toast.error {
+            background: linear-gradient(135deg, var(--error-color), #da190b);
+        }
+
+        .toast i {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="tracking-header">
+            <h1>Suivi de commande</h1>
+            <p>Consultez l'état de vos commandes en temps réel en entrant simplement votre numéro de téléphone.</p>
+        </div>
+        <div class="tracking-card">
+            <div class="search-form">
+                <input type="tel" id="phone-number" placeholder="Entrez votre numéro de téléphone (ex: 778539090)" autofocus>
+                <button onclick="trackOrdersByPhone()" id="search-btn">
+                    <i class="fas fa-search"></i> Rechercher mes commandes
+                </button>
+            </div>
+            <div id="tracking-result" class="tracking-result">
+                <!-- Le résultat de la recherche sera affiché ici -->
+            </div>
+            <a href="boutique.html" class="back-link">
+                <i class="fas fa-arrow-left"></i> Retour à la boutique
+            </a>
+        </div>
+    </div>
+    <script>
+        // Fonction pour rechercher des commandes par téléphone
+async function trackOrdersByPhone() {
+    const phoneInput = document.getElementById('phone-number');
+    const phoneNumber = phoneInput.value.trim();
+    const resultDiv = document.getElementById('tracking-result');
+    const searchBtn = document.getElementById('search-btn');
+    
+    if (!phoneNumber) {
+        showError("Veuillez entrer votre numéro de téléphone");
+        return;
+    }
+    
+    searchBtn.innerHTML = '<span class="loading"></span> Recherche...';
+    searchBtn.disabled = true;
+    
+    try {
+        // Recherche toutes les commandes via l'API NestJS (boutique normale + haut de game)
+        const apiOrders = await searchOrdersByPhoneAPI(phoneNumber);
+        if (apiOrders.length > 0) {
+            displayOrdersList(apiOrders);
+        } else {
+            showError("Aucune commande trouvée pour ce numéro de téléphone.");
+        }
+    } catch (error) {
+        console.error('Erreur lors de la recherche:', error);
+        showError("Aucune commande trouvée pour ce numéro de téléphone.");
+    } finally {
+        searchBtn.innerHTML = '<i class="fas fa-search"></i> Rechercher mes commandes';
+        searchBtn.disabled = false;
+    }
+}
+// Fonction pour rechercher des commandes par téléphone dans l'API
+async function searchOrdersByPhoneAPI(phoneNumber) {
+    try {
+        // Appel direct à l'API NestJS pour récupérer TOUTES les commandes (boutique + haut-game)
+        const response = await fetch(`http://localhost:3000/api/orders`);
+        if (!response.ok) throw new Error('API non disponible');
+        const apiResponse = await response.json();
+        const orders = apiResponse.data || apiResponse || [];
+        // Filtrer par numéro de téléphone
+        return orders.filter(order => {
+            const orderPhone = order.customerPhone || '';
+            return orderPhone.includes(phoneNumber) || phoneNumber.includes(orderPhone);
+        });
+    } catch (error) {
+        console.error('Erreur API:', error);
+        throw error;
+    }
+}
+
+// Fonction pour afficher une erreur
+function showError(message) {
+    const resultDiv = document.getElementById('tracking-result');
+    resultDiv.innerHTML = `
+        <div class="tracking-error">
+            <i class="fas fa-exclamation-circle"></i> ${message}
+        </div>
+    `;
+}
+
+// Fonction pour afficher un avertissement
+function showWarning(message) {
+    const resultDiv = document.getElementById('tracking-result');
+    resultDiv.innerHTML = `
+        <div class="tracking-error" style="background-color: rgba(255, 193, 7, 0.1); border-left-color: var(--pending-color);">
+            <i class="fas fa-exclamation-triangle"></i> ${message}
+        </div>
+    ` + resultDiv.innerHTML;
+}
+
+// Fonction pour afficher la liste des commandes
+function displayOrdersList(orders) {
+    const resultDiv = document.getElementById('tracking-result');
+    
+    if (orders.length === 1) {
+        // Si une seule commande, l'afficher directement
+        displayOrderDetails(orders[0]);
+        return;
+    }
+    
+    // Si plusieurs commandes, afficher la liste
+    let ordersHTML = `
+        <div class="order-status-card">
+            <h3 style="color: var(--primary-color); margin-bottom: 20px;">
+                ${orders.length} commande(s) trouvée(s)
+            </h3>
+            <div style="display: grid; gap: 15px;">
+    `;
+    
+    orders.forEach(order => {
+        const orderDate = new Date(order.createdAt).toLocaleDateString('fr-FR');
+        const { statusText, statusClass } = determineOrderStatusAPI(order);
+        
+        ordersHTML += `
+            <div class="info-card" style="cursor: pointer; transition: all 0.2s; border: 1px solid var(--border-color);" 
+                 onclick="displayOrderDetails(${JSON.stringify(order).replace(/"/g, '&quot;')})">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <div style="font-size: 1.1rem; font-weight: bold; color: var(--primary-color);">
+                        Commande #${order.id}
+                    </div>
+                    <div class="order-status-badge ${statusClass}" style="font-size: 0.85rem; padding: 4px 12px;">
+                        ${statusText}
+                    </div>
+                </div>
+                <div style="color: #999; font-size: 0.9rem; margin-bottom: 8px;">
+                    ${orderDate}
+                </div>
+                <div style="font-weight: 500;">
+                    ${Number(order.total).toLocaleString('fr-FR')} CFA
+                </div>
+                <div style="color: #ccc; font-size: 0.85rem; margin-top: 5px;">
+                    Cliquez pour voir les détails
+                </div>
+            </div>
+        `;
+    });
+    
+    ordersHTML += `
+            </div>
+        </div>
+    `;
+    
+    resultDiv.innerHTML = ordersHTML;
+}
+// Fonction pour déterminer le statut des commandes API
+function determineOrderStatusAPI(order) {
+    const status = order.status || 'processing';
+    let statusText, statusClass, progress;
+    
+    switch (status) {
+        case 'pending':
+            statusText = 'En attente';
+            statusClass = 'status-pending';
+            break;
+        case 'processing':
+            statusText = 'En préparation';
+            statusClass = 'status-processing';
+            break;
+        case 'shipped':
+            statusText = 'En livraison';
+            statusClass = 'status-shipped';
+            break;
+        case 'delivered':
+            statusText = 'Livré';
+            statusClass = 'status-delivered';
+            break;
+        default:     
+            statusText = 'En préparation';
+            statusClass = 'status-processing';
+    }
+    
+    return { statusText, statusClass };
+}
+
+// Fonction pour déterminer le statut avec les étapes pour les commandes API
+function determineOrderStatusWithSteps(order) {
+    const status = order.status || 'processing';
+    let statusText, statusClass, progress;
+    const steps = [
+        { label: "Commande reçue", icon: "✅", active: false, done: true },
+        { label: "En préparation", icon: "📦", active: false, done: false },
+        { label: "En livraison", icon: "🚚", active: false, done: false },
+        { label: "Livré", icon: "🏠", active: false, done: false }
+    ];
+    
+    switch (status) {
+        case 'pending':
+            statusText = 'En attente';
+            statusClass = 'status-pending';
+            progress = 0;
+            steps[0].active = true;
+            break;
+        case 'processing':
+            statusText = 'En préparation';
+            statusClass = 'status-processing';
+            progress = 33;
+            steps[1].active = true;
+            steps[1].done = true;
+            break;
+        case 'shipped':
+            statusText = 'En livraison';
+            statusClass = 'status-shipped';
+            progress = 66;
+            steps[1].done = true;
+            steps[2].active = true;
+            steps[2].done = true;
+            break;
+        case 'delivered':
+            statusText = 'Livré';
+            statusClass = 'status-delivered';
+            progress = 100;
+            steps[1].done = true;
+            steps[2].done = true;
+            steps[3].active = true;
+            steps[3].done = true;
+            break;
+        default:     
+            statusText = 'En préparation';
+            statusClass = 'status-processing';
+            progress = 33;
+            steps[1].active = true;
+    }
+    
+    return { statusText, statusClass, progress, steps };
+}
+
+// Fonction pour afficher les détails d'une commande
+function displayOrderDetails(order) {
+    console.log('🔍 Affichage détails commande:', order);
+    console.log('📋 Status de la commande:', order.status);
+    
+    const resultDiv = document.getElementById('tracking-result');
+    
+    // Adapter selon le format (localStorage ou API)
+    const isLocalOrder = order.orderDate !== undefined;
+    const orderDate = new Date(isLocalOrder ? order.orderDate : order.createdAt);
+    
+    const dateOptions = { 
+        day: 'numeric', 
+        month: 'long', 
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    };
+    const formattedDate = orderDate.toLocaleDateString('fr-FR', dateOptions);
+    const estimatedDate = getEstimatedDeliveryDate(orderDate, 3);
+    
+    // Utiliser la bonne fonction selon le format
+    const { statusText, statusClass, progress, steps } = isLocalOrder ? 
+        determineOrderStatus(order) : 
+        determineOrderStatusWithSteps(order);
+    let stepsHTML = `
+        <div class="tracking-steps">
+            <div class="step-connector">
+                <div class="step-progress" style="width: ${progress}%"></div>
+            </div>
+    `;
+    steps.forEach((step, index) => {
+        stepsHTML += `
+            <div class="step ${step.active ? 'active' : ''} ${step.done ? 'done' : ''}">
+                <div class="step-icon">${step.icon}</div>
+                <div class="step-label">${step.label}</div>
+            </div>
+        `;
+    });
+    stepsHTML += `</div>`;
+    // Gérer les articles selon le format (localStorage ou API)
+    let productsHTML = '';
+    let subtotal = 0;
+    
+    if (order.items && Array.isArray(order.items)) {
+        order.items.forEach(item => {
+            let itemPrice, itemName, itemQuantity;
+            
+            if (typeof item === 'string') {
+                // Si l'item est une chaîne (format API parfois), essayer de la parser
+                try {
+                    const parsedItem = JSON.parse(item);
+                    itemName = parsedItem.name || 'Produit sans nom';
+                    itemPrice = Number(parsedItem.price) || 0;
+                    itemQuantity = parsedItem.quantity || 1;
+                } catch (e) {
+                    itemName = item;
+                    itemPrice = 0;
+                    itemQuantity = 1;
+                }
+            } else {
+                // Format objet normal
+                itemName = item.name || 'Produit sans nom';
+                itemPrice = Number(item.price) || 0;
+                itemQuantity = item.quantity || 1;
+            }
+            
+            productsHTML += `
+                <div class="product-item">
+                    <div class="product-name">${itemName} ${itemQuantity > 1 ? `(x${itemQuantity})` : ''}</div>
+                    <div class="product-price">${itemPrice.toLocaleString('fr-FR')} CFA</div>
+                </div>
+            `;
+            subtotal += itemPrice * itemQuantity;
+        });
+    } else if (typeof order.items === 'string') {
+        // Si items est une chaîne, essayer de la parser
+        try {
+            const parsedItems = JSON.parse(order.items);
+            if (Array.isArray(parsedItems)) {
+                parsedItems.forEach(item => {
+                    const itemPrice = Number(item.price) || 0;
+                    const itemQuantity = item.quantity || 1;
+                    productsHTML += `
+                        <div class="product-item">
+                            <div class="product-name">${item.name || 'Produit sans nom'} ${itemQuantity > 1 ? `(x${itemQuantity})` : ''}</div>
+                            <div class="product-price">${itemPrice.toLocaleString('fr-FR')} CFA</div>
+                        </div>
+                    `;
+                    subtotal += itemPrice * itemQuantity;
+                });
+            }
+        } catch (e) {
+            productsHTML = '<p>Détails des articles indisponibles</p>';
+        }
+    } else {
+        productsHTML = '<p>Détails des articles indisponibles</p>';
+    }
+    
+    // Adapter les informations selon le format
+    const totalAmount = isLocalOrder ? 
+        (Number(order.totalAmount) || subtotal) :
+        (Number(order.total) || subtotal);
+    
+    const customerInfo = isLocalOrder ? 
+        (order.customerInfo || {}) : 
+        {
+            name: order.customerName || 'N/A',
+            phone: order.customerPhone || 'N/A',
+            email: order.customerEmail || 'N/A',
+            address: order.deliveryAddress || 'N/A'
+        };
+    
+    // Déterminer l'ID d'affichage AVANT de l'utiliser
+    const displayOrderId = isLocalOrder ? order.orderId : order.id;
+    
+    // === AJOUT DES BOUTONS CLIENT SELON LE STATUT ===
+    let clientActionsHTML = '';
+    console.log('🔧 Vérification du statut pour boutons:', order.status);
+    if (
+        (order.status === 'shipped' || order.status === 'delivered') &&
+        !(order.deliveryNotes && order.deliveryNotes.includes('PROBLÈME SIGNALÉ'))
+    ) {
+        console.log('✅ Boutons de retour client affichés pour statut:', order.status);
+        clientActionsHTML = `
+        <div id="client-actions" class="action-buttons">
+            <button class="action-button" style="background:#28a745;" onclick="confirmReception('${displayOrderId}')">
+                <i class="fas fa-check"></i> J'ai bien reçu ma commande
+            </button>
+            <button class="action-button" style="background:#ffc107;color:#222;" onclick="openDisputeClient('${displayOrderId}')">
+                <i class="fas fa-exclamation-triangle"></i> Signaler un problème
+            </button>
+        </div>
+        `;
+    } else if (order.deliveryNotes && order.deliveryNotes.includes('PROBLÈME SIGNALÉ')) {
+        clientActionsHTML = `<div class="action-buttons"><span class="status status-warning">Litige en cours</span></div>`;
+    } else if (order.status === 'delivered' && order.escrow && !order.escrow.locked) {
+        clientActionsHTML = `<div class="action-buttons"><span class="status status-delivered">Commande confirmée</span></div>`;
+        // Ajout du bouton d'avis de satisfaction
+        clientActionsHTML += `
+            <div class="action-buttons" style="margin-top:10px;">
+                <button class="action-button" style="background:#007bff;" onclick="openFeedbackForm('${displayOrderId}')">
+                    <i class="fas fa-comment-dots"></i> Laisser un avis
+                </button>
+            </div>
+            <div id="feedback-form-container"></div>
+        `;
+    }
+    
+    // Affichage de l'avis si déjà laissé
+    let feedbackHTML = '';
+    if (order.feedback) {
+        feedbackHTML = `
+            <div style="margin:20px 0 0 0;">
+                <div style="background:#222;padding:12px 16px;border-radius:8px;color:#ff8c00;">
+                    <i class="fas fa-comment-dots"></i> <b>Votre avis :</b><br>
+                    <span style="color:#fff;">${order.feedback}</span>
+                </div>
+            </div>
+        `;
+    }
+    const deliveryFee = isLocalOrder ? 
+        (totalAmount - subtotal > 0 ? (totalAmount - subtotal) : 0) :
+        (Number(order.deliveryFee) || 2500);
+    
+    let html = `
+        <div class="order-status-card">
+            <div class="order-header">
+                <div class="order-id">Commande #${displayOrderId}</div>
+                <div class="order-status-badge ${statusClass}">
+                    ${statusClass === 'status-delivered' ? '<i class="fas fa-check-circle"></i>' : 
+                      statusClass === 'status-shipped' ? '<i class="fas fa-shipping-fast"></i>' :
+                      statusClass === 'status-processing' ? '<i class="fas fa-cog fa-spin"></i>' :
+                      '<i class="fas fa-clock"></i>'}
+                    ${statusText}
+                </div>
+            </div>
+            <div class="order-date">
+                Commandé le ${formattedDate}
+            </div>
+            ${stepsHTML}
+            ${statusClass !== 'status-delivered' ? `
+                <div class="estimated-date">
+                    Livraison estimée le <span class="date">${estimatedDate}</span>
+                </div>
+            ` : `
+                <div class="success-animation">
+                    <div class="success-checkmark">
+                        <div class="check-icon"></div>
+                    </div>
+                </div>
+            `}
+            <div class="order-details-section">
+                <div class="order-info-grid">
+                    <div class="info-card">
+                        <h4>Informations client</h4>
+                        <div class="info-item">
+                            <div class="label">Nom</div>
+                            <div class="value">${customerInfo.name || 'Non spécifié'}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="label">Téléphone</div>
+                            <div class="value">${customerInfo.phone || 'Non spécifié'}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="label">Email</div>
+                            <div class="value">${customerInfo.email || 'Non spécifié'}</div>
+                        </div>
+                    </div>
+                    <div class="info-card">
+                        <h4>Adresse de livraison</h4>
+                        <div class="info-item">
+                            <div class="value">${customerInfo.address || 'Non spécifiée'}</div>
+                        </div>
+                    </div>
+                </div>
+                <h3>Articles commandés</h3>
+                <div class="products-list">
+                    ${productsHTML}
+                </div>
+                <div class="order-summary">
+                    <div class="summary-card">
+                        <div class="summary-item">
+                            <div>Sous-total</div>
+                            <div>${subtotal.toLocaleString('fr-FR')} CFA</div>
+                        </div>
+                        <div class="summary-item">
+                            <div>Frais de livraison</div>
+                            <div>${deliveryFee.toLocaleString('fr-FR')} CFA</div>
+                        </div>
+                        <div class="summary-total">
+                            <div>Total</div>
+                            <div class="amount">${totalAmount.toLocaleString('fr-FR')} CFA</div>
+                        </div>
+                        <div class="summary-item" style="margin-top: 10px;">
+                            <div>Méthode de paiement</div>
+                            <div>${order.paymentMethod || 'Non spécifié'}</div>
+                        </div>
+                    </div>
+                </div>
+                ${clientActionsHTML}
+                ${feedbackHTML}
+            </div>
+        </div>
+    `;
+    resultDiv.innerHTML = html;
+}
+// Variables globales pour le modal
+let currentOrderId = null;
+
+// Fonction pour afficher les toasts
+function showToast(message, type = 'success') {
+    const toast = document.getElementById('toast');
+    toast.className = `toast ${type}`;
+    toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>${message}`;
+    toast.classList.add('show');
+    
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, 4000);
+}
+
+// Bouton "J'ai bien reçu ma commande"
+function confirmReception(orderId) {
+    currentOrderId = orderId;
+    document.getElementById('confirmModal').classList.add('show');
+}
+
+async function submitConfirmation() {
+    try {
+        // Utiliser l'endpoint de mise à jour de commande existant
+        const updateData = {
+            status: 'delivered',
+            deliveryNotes: `${new Date().toLocaleString('fr-FR')} - Livraison confirmée par le client via suivi de commande`
+        };
+
+        // Mettre à jour le statut de la commande
+        const response = await fetch(`http://localhost:3000/api/orders/${currentOrderId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updateData)
+        });
+
+        if (response.ok) {
+            closeConfirmModal();
+            showToast("✅ Merci pour votre confirmation ! La livraison a été marquée comme reçue.", 'success');
+            
+            // Recharger les détails de la commande après un délai
+            setTimeout(async () => {
+                const orders = await searchOrdersByPhoneAPI(document.getElementById('phone-number').value);
+                const order = orders.find(o => o.id == currentOrderId);
+                if (order) {
+                    displayOrderDetails(order);
+                }
+            }, 1000);
+        } else {
+            throw new Error('Erreur lors de la mise à jour du statut');
+        }
+    } catch (error) {
+        console.error('🔍 Erreur confirmation réception (nouvelle fonction):', error);
+        showToast("❌ Erreur lors de l'envoi de la confirmation. Veuillez réessayer.", 'error');
+    }
+}
+
+function closeConfirmModal() {
+    document.getElementById('confirmModal').classList.remove('show');
+    currentOrderId = null;
+}
+// Bouton "Signaler un problème"
+function openDisputeClient(orderId) {
+    currentOrderId = orderId;
+    document.getElementById('problemDescription').value = '';
+    document.getElementById('problemModal').classList.add('show');
+}
+
+async function submitProblemReport() {
+    const problemDescription = document.getElementById('problemDescription').value.trim();
+    
+    if (!problemDescription) {
+        showToast("❌ Veuillez décrire le problème avant d'envoyer le rapport.", 'error');
+        return;
+    }
+    try {
+        // Utiliser l'endpoint de mise à jour de commande existant
+        const updateData = {
+            deliveryNotes: `${new Date().toLocaleString('fr-FR')} - PROBLÈME SIGNALÉ: ${problemDescription}`
+        };
+
+        // Mettre à jour le statut de la commande
+        const response = await fetch(`http://localhost:3000/api/orders/${currentOrderId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updateData)
+        });
+
+        if (response.ok) {
+            closeProblemModal();
+            showToast("⚠️ Votre réclamation a été transmise à l'administrateur. Nous vous contacterons rapidement.", 'success');
+            
+            // Recharger les détails de la commande après un délai
+            setTimeout(async () => {
+                const orders = await searchOrdersByPhoneAPI(document.getElementById('phone-number').value);
+                const order = orders.find(o => o.id == currentOrderId);
+                if (order) {
+                    displayOrderDetails(order);
+                }
+            }, 1000);
+        } else {
+            throw new Error('Erreur lors de l\'envoi du problème');
+        }
+    } catch (error) {
+        console.error('Erreur signalement problème:', error);
+        showToast("❌ Erreur lors de l'envoi du signalement. Veuillez réessayer.", 'error');
+    }
+}
+
+function closeProblemModal() {
+    document.getElementById('problemModal').classList.remove('show');
+    document.getElementById('problemDescription').value = '';
+    currentOrderId = null;
+}
+
+// Fonction pour afficher le formulaire d'avis
+function openFeedbackForm(orderId) {
+    const container = document.getElementById('feedback-form-container');
+    container.innerHTML = `
+        <form id="feedback-form" style="margin-top:15px;">
+            <textarea id="feedback-text" rows="3" style="width:100%;border-radius:8px;padding:10px;" placeholder="Votre avis ou réclamation..."></textarea>
+            <div style="margin-top:8px;">
+                <button type="submit" class="action-button" style="background:#28a745;">
+                    <i class="fas fa-paper-plane"></i> Envoyer
+                </button>
+            </div>
+        </form>
+    `;
+    document.getElementById('feedback-form').onsubmit = function(e) {
+        e.preventDefault();
+        submitFeedback(orderId);
+    };
+}
+function submitFeedback(orderId) {
+    const feedback = document.getElementById('feedback-text').value.trim();
+    if (!feedback) {
+        showToast("Merci de saisir un message.", 'error');
+        return;
+    }
+    let orders = JSON.parse(localStorage.getItem('fadidiOrders') || '[]');
+    let order = orders.find(o => o.orderId === orderId);
+    if (!order) return showToast("Commande introuvable.", 'error');
+    order.feedback = feedback;
+    localStorage.setItem('fadidiOrders', JSON.stringify(orders));
+    document.getElementById('feedback-form-container').innerHTML = `<div style="color:#28a745;margin-top:10px;">Merci pour votre retour !</div>`;
+    // Rafraîchir l'affichage pour montrer l'avis
+    displayOrderDetails(order);
+}
+
+// Fonction pour déterminer le statut et l'avancement de la commande
+function determineOrderStatus(order) {
+    const status = order.status || 'processing';
+    let statusText, statusClass, progress;
+    const steps = [
+        { label: "Commande reçue", icon: "✅", active: false, done: true },
+        { label: "En préparation", icon: "📦", active: false, done: false },
+        { label: "En livraison", icon: "🚚", active: false, done: false },
+        { label: "Livré", icon: "🏠", active: false, done: false }
+    ];
+    switch (status) {
+        case 'pending':
+            statusText = 'En attente';
+            statusClass = 'status-pending';
+            progress = 0;
+            steps[0].active = true;
+            break;
+        case 'processing':
+            statusText = 'En préparation';
+            statusClass = 'status-processing';
+            progress = 33;
+            steps[1].active = true;
+            steps[1].done = true;
+            break;
+        case 'shipped':
+            statusText = 'En livraison';
+            statusClass = 'status-shipped';
+            progress = 66;
+            steps[1].done = true;
+            steps[2].active = true;
+            steps[2].done = true;
+            break;
+        case 'delivered':
+            statusText = 'Livré';
+            statusClass = 'status-delivered';
+            progress = 100;
+            steps[1].done = true;
+            steps[2].done = true;
+            steps[3].active = true;
+            steps[3].done = true;
+            break;
+        default:     
+           statusText = 'En préparation';
+            statusClass = 'status-processing';
+            progress = 33;
+            steps[1].active = true;
+    }
+    return { statusText, statusClass, progress, steps };
+}
+// Fonction pour calculer la date estimée de livraison (jours ouvrables)
+function getEstimatedDeliveryDate(orderDate, businessDays) {
+    const result = new Date(orderDate);
+    let addedDays = 0;
+    while (addedDays < businessDays) {
+        result.setDate(result.getDate() + 1);
+        const dayOfWeek = result.getDay();
+        if (dayOfWeek !== 0 && dayOfWeek !== 6) { // Exclure le weekend
+            addedDays++;
+        }
+    }
+   return result.toLocaleDateString('fr-FR', { 
+        day: 'numeric', 
+        month: 'long', 
+        year: 'numeric'
+    });
+}
+// Fonction pour voir une commande spécifique
+function viewOrder(orderId) {
+    document.getElementById('order-id').value = orderId;
+    trackOrder();
+}
+// Vérifier si un téléphone est dans l'URL (pour le lien depuis la confirmation)
+document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const phone = urlParams.get('phone');
+    if (phone) {
+        document.getElementById('phone-number').value = phone;
+        trackOrdersByPhone();
+    }
+});
+// ...existing code...   
+    </script>
+
+    <!-- Modal pour signaler un problème -->
+    <div id="problemModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeProblemModal()">&times;</span>
+            <div class="modal-header">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h3>Signaler un problème</h3>
+            </div>
+            <div class="modal-body">
+                <p>Décrivez le problème que vous avez rencontré avec votre commande :</p>
+                <textarea id="problemDescription" class="modal-input" 
+                          placeholder="Exemple : Le colis était endommagé, un article manquant, problème de livraison, etc."
+                          rows="5"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-secondary" onclick="closeProblemModal()">
+                    <i class="fas fa-times"></i> Annuler
+                </button>
+                <button class="modal-btn modal-btn-primary" onclick="submitProblemReport()">
+                    <i class="fas fa-paper-plane"></i> Envoyer le rapport
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de confirmation -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content success-modal">
+            <span class="close" onclick="closeConfirmModal()">&times;</span>
+            <div class="modal-header">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="modal-body">
+                <h3 class="mb-15">Confirmation de réception</h3>
+                <p>Confirmez-vous avoir bien reçu votre commande en parfait état ?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-secondary" onclick="closeConfirmModal()">
+                    <i class="fas fa-times"></i> Annuler
+                </button>
+                <button class="modal-btn modal-btn-primary" onclick="submitConfirmation()">
+                    <i class="fas fa-check"></i> Oui, j'ai bien reçu
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast notifications -->
+    <div id="toast" class="toast"></div>
+
+</body>
+</html>

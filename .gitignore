@@ -1,0 +1,12 @@
+﻿# Node modules
+frontend/node_modules/
+api-nestjs/node_modules/
+# Build outputs
+frontend/dist/
+api-nestjs/dist/
+# Environment files
+*.env
+.env.*
+# Uploads
+uploads/
+

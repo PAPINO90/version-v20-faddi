@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Produits par Catégorie</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <style>
+        #tracking-result {
+            margin-top: 15px;
+        }
+        .info-text {
+            margin-top: 8px;
+            color: #ffe066;
+            font-size: 0.98em;
+        }
+        .section-center {
+            text-align: center;
+            margin: 18px 0 18px 0;
+        }
+        .btn-retour-boutique {
+            display: inline-block;
+            max-width: 220px;
+        }
+        .section-left {
+            text-align: left;
+            margin-bottom: 18px;
+        }
+        body { background: #181818; color: #fff; font-family: Arial, sans-serif; margin:0; }
+    .main-container { max-width: 1400px; margin: 40px auto; padding: 0 10px; }
+        .category-tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .category-tab {
+            background: #232323;
+            color: #ff8c00;
+            border: none;
+            border-radius: 8px 8px 0 0;
+            padding: 10px 28px;
+            font-size: 1.1em;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s, color 0.2s;
+        }
+        .category-tab.active, .category-tab:hover {
+            background: #ff8c00;
+            color: #232323;
+        }
+        .category-title {
+            text-align: center;
+            font-size: 2em;
+            margin-bottom: 18px;
+            color: #ff8c00;
+            letter-spacing: 1.5px;
+        }
+        .card-grid {
+            display: grid;
+            /* Desktop: 5 items per row */
+            grid-template-columns: repeat(5, 1fr);
+            gap: 22px;
+        }
+        /* Responsive fallbacks */
+        @media (max-width: 1200px) {
+            .card-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+        @media (max-width: 900px) {
+            .card-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (max-width: 600px) {
+            .card-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 380px) {
+            .card-grid { grid-template-columns: 1fr; }
+        }
+        .product-card {
+            background: #232323;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px #0007;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.15s;
+        }
+        .product-card:hover { transform: translateY(-5px) scale(1.02);}
+        .product-image { width: 100%; height: 180px; object-fit: cover; background: #111;}
+        .product-details { padding: 15px 14px 12px 14px; flex: 1;}
+        .product-title { font-size: 1.1em; margin-bottom: 7px; font-weight: bold;}
+        .product-price { color: #ffe066; font-weight: bold; margin-bottom: 7px; }
+        .product-description { font-size: 13px; color: #bbb; margin-bottom: 10px; }
+        .btn-commander {
+            background: #ff8c00;
+            color: #232323;
+            border: none;
+            border-radius: 8px;
+            padding: 7px 0;
+            font-size: 1em;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+            width: 100%;
+        }
+        .btn-commander:hover { background: #ffe066; color: #000; }
+        /* Icône panier identique à la boutique */
+        .btn-commander::after {
+            /* FontAwesome shopping-cart glyph — same as boutique */
+            content: "\f07a";
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900; /* solid */
+            margin-left: 8px;
+            display: inline-block;
+            vertical-align: middle;
+            font-size: 0.95em;
+            color: #232323;
+        }
+        /* Optionnel: icône à gauche (même style que boutique) */
+        .btn-commander.icon-left::before {
+            content: "\f07a";
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            margin-right: 8px;
+            display: inline-block;
+            vertical-align: middle;
+            color: #232323;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0; top: 0; width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.7);
+            align-items: center; justify-content: center;
+        }
+        .modal-content {
+            background: #232323;
+            border-radius: 10px;
+            padding: 25px 20px 20px 20px;
+            min-width: 320px;
+            max-width: 95vw;
+            color: #fff;
+            position: relative;
+            box-shadow: 0 4px 24px #0008;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .close-modal {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.5em;
+            cursor: pointer;
+        }
+        .form-group { margin-bottom: 13px; }
+        .form-group label { display: block; margin-bottom: 4px; }
+        .form-control {
+            width: 100%;
+            padding: 7px 10px;
+            border-radius: 5px;
+            border: 1px solid #444;
+            background: #181818;
+            color: #fff;
+            font-size: 1em;
+        }
+        .form-control:focus { outline: 2px solid #ff8c00; }
+        .success-message {
+            color: #4caf50;
+            text-align: center;
+            margin-top: 10px;
+            display: none;
+        }
+        @media (max-width: 600px) {
+            .main-container { padding: 0 2px;}
+            .category-title { font-size: 1.2em;}
+        }
+
+
+               
+        /* ...tes autres styles... */
+        .modal-body {
+            max-height: 65vh;
+            overflow-y: auto;
+        }
+
+               
+        /* ... styles...BUTON RETOUR BOUTIQUE */
+        a.btn-commander {
+            text-decoration: none !important;
+            background: transparent;
+            color: #ff8c00;
+            margin-top: 0px;
+        }
+
+
+           #rotation-message {
+    display: none;
+    background: #ff8c00;
+    color: #fff;
+    text-align: center;
+    font-size: 1em;
+    font-weight: bold;
+    padding: 10px 8px 8px 8px;
+    border-radius: 0 0 16px 16px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    z-index: 10000;
+    box-shadow: 0 2px 12px #0005;
+}
+@media (max-width: 900px) and (orientation: portrait) {
+    #rotation-message {
+        display: block;
+    }
+}
+      
+    </style>
+</head>
+<body>
+
+ <div id="rotation-message">Pour une meilleure expérience, faites pivoter votre appareil en mode paysage .</div>
+       <div class="main-container">
+        <div class="category-title">HAUT DE GAME</div>
+
+                <div class="section-left">
+            <a href="boutique.html" class="btn-commander btn-retour-boutique">
+                &larr; Retour à la boutique
+            </a>
+        </div>
+    <div class="section-center">
+            <button class="btn-commander" onclick="openTrackingModal()">Suivre ma commande</button>
+            <div class="info-text">
+                <i class="fas fa-info-circle"></i>
+                Vous pouvez suivre l’état de votre commande à tout moment en cliquant ici.
+            </div>
+        </div>
+        <div class="category-tabs" id="category-tabs"></div>
+        <div id="products-grid" class="card-grid"></div>
+    </div>
+    
+    <!-- Modal Commande -->
+    <div class="modal" id="order-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Commander ce produit</h3>
+          <button class="close-modal" onclick="closeModal('order-modal')">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form id="order-form">
+            <input type="hidden" id="order-product-id">
+            <div class="form-group">
+              <label>Nom complet</label>
+              <input type="text" id="order-name" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label>Téléphone</label>
+              <input type="tel" id="order-phone" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label>Adresse</label>
+              <input type="text" id="order-address" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label>Quantité</label>
+              <input type="number" id="order-qty" class="form-control" value="1" min="1" required>
+            </div>
+            <button type="submit" class="btn-commander">Valider la commande</button>
+          </form>
+          <div id="order-success" class="success-message"></div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Modal Suivi Commande -->
+    <div class="modal" id="tracking-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Suivi de commande</h3>
+          <button class="close-modal" onclick="closeModal('tracking-modal')">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form id="tracking-form">
+            <div class="form-group">
+              <label>Téléphone utilisé lors de la commande</label>
+              <input type="tel" id="tracking-phone" class="form-control" required>
+            </div>
+            <button type="submit" class="btn-commander">Voir mes commandes</button>
+          </form>
+          <div id="tracking-result"></div>
+        </div>
+      </div>
+    </div>
+    <script>
+// --- Affichage dynamique des produits depuis l'API ---
+const API_BASE_URL = 'http://localhost:3000/api';
+let allProducts = [];
+let categories = [];
+
+async function fetchProducts() {
+    try {
+        const res = await fetch(`${API_BASE_URL}/products/published`);
+        if (!res.ok) throw new Error('Erreur API');
+        const data = await res.json();
+        allProducts = data || [];
+        categories = Array.from(new Set(allProducts.map(p => (p.category && (p.category.name || p.category)) || 'Autre')));
+        renderCategoryTabs();
+        renderAllCategories();
+    } catch (e) {
+        document.getElementById('products-grid').innerHTML = '<p style="text-align:center;">Erreur de chargement des produits.</p>';
+    }
+}
+
+function renderCategoryTabs() {
+    const tabs = document.getElementById('category-tabs');
+    tabs.innerHTML = '';
+    const allBtn = document.createElement('button');
+    allBtn.className = 'category-tab active';
+    allBtn.innerText = 'Tout';
+    allBtn.onclick = () => selectCategory('ALL', allBtn);
+    tabs.appendChild(allBtn);
+    categories.forEach(cat => {
+        const btn = document.createElement('button');
+        btn.className = 'category-tab';
+        btn.innerText = cat;
+        btn.onclick = () => selectCategory(cat, btn);
+        tabs.appendChild(btn);
+    });
+}
+
+function renderProducts(category) {
+    const grid = document.getElementById('products-grid');
+    const products = allProducts.filter(p => ((p.category && (p.category.name || p.category)) || 'Autre') === category);
+    if (products.length === 0) {
+        grid.innerHTML = '<p style="text-align:center;">Aucun produit trouvé dans cette catégorie.</p>';
+        return;
+    }
+    grid.innerHTML = products.map(product => {
+        let imgSrc = 'https://via.placeholder.com/200x150?text=Produit';
+        if (product.images && product.images[0]) {
+            let val = product.images[0];
+            if (val.startsWith('http')) {
+                imgSrc = val;
+            } else if (val.startsWith('uploads/')) {
+                imgSrc = `${API_BASE_URL.replace('/api','')}/${val}`;
+            } else {
+                imgSrc = `${API_BASE_URL.replace('/api','')}/uploads/${val.replace(/^\/+/, '')}`;
+            }
+        }
+        let imgLarge = 'https://via.placeholder.com/600x400?text=Produit';
+        if (product.images && product.images[0]) {
+            let val = product.images[0];
+            if (val.startsWith('http')) {
+                imgLarge = val;
+            } else if (val.startsWith('uploads/')) {
+                imgLarge = `${API_BASE_URL.replace('/api','')}/${val}`;
+            } else {
+                imgLarge = `${API_BASE_URL.replace('/api','')}/uploads/${val.replace(/^\/+/, '')}`;
+            }
+        }
+        return `
+        <div class="product-card">
+            <img 
+                src="${imgSrc}" 
+                class="product-image" 
+                alt="${product.name}"
+                style="cursor:zoom-in;"
+                onclick="showImageModal('${imgLarge}')"
+            >
+            <div class="product-details">
+                <div class="product-title">${product.name}</div>
+                <div class="product-price">${Number(product.price).toLocaleString('fr-FR')} CFA</div>
+                <div class="product-description">${product.description || ''}</div>
+                <button class="btn-commander" onclick="openOrderModal('${product.id}', '${product.name.replace(/'/g,"\\'")}');event.stopPropagation();">Commander</button>
+            </div>
+        </div>
+        `;
+    }).join('');
+}
+
+function renderAllCategories() {
+    const grid = document.getElementById('products-grid');
+    const shownIds = new Set();
+    const productsToShow = [];
+    categories.forEach(cat => {
+        const prod = allProducts.find(p => ((p.category && (p.category.name || p.category)) || 'Autre') === cat && !shownIds.has(p.id));
+        if (prod) {
+            shownIds.add(prod.id);
+            productsToShow.push(prod);
+        }
+    });
+    if (productsToShow.length === 0) {
+        grid.innerHTML = '<p style="text-align:center;">Aucun produit trouvé.</p>';
+        return;
+    }
+    grid.innerHTML = productsToShow.map(product => {
+        let imgSrc = 'https://via.placeholder.com/200x150?text=Produit';
+        if (product.images && product.images[0]) {
+            let val = product.images[0];
+            if (val.startsWith('http')) {
+                imgSrc = val;
+            } else if (val.startsWith('uploads/')) {
+                imgSrc = `${API_BASE_URL.replace('/api','')}/${val}`;
+            } else {
+                imgSrc = `${API_BASE_URL.replace('/api','')}/uploads/${val.replace(/^\/+/, '')}`;
+            }
+        }
+        let imgLarge = 'https://via.placeholder.com/600x400?text=Produit';
+        if (product.images && product.images[0]) {
+            let val = product.images[0];
+            if (val.startsWith('http')) {
+                imgLarge = val;
+            } else if (val.startsWith('uploads/')) {
+                imgLarge = `${API_BASE_URL.replace('/api','')}/${val}`;
+            } else {
+                imgLarge = `${API_BASE_URL.replace('/api','')}/uploads/${val.replace(/^\/+/, '')}`;
+            }
+        }
+        return `
+        <div class="product-card">
+            <img 
+                src="${imgSrc}" 
+                class="product-image" 
+                alt="${product.name}"
+                style="cursor:zoom-in;"
+                onclick="showImageModal('${imgLarge}')"
+            >
+            <div class="product-details">
+                <div class="product-title">${product.name}</div>
+                <div class="product-price">${Number(product.price).toLocaleString('fr-FR')} CFA</div>
+                <div class="product-description">${product.description || ''}</div>
+                <button class="btn-commander" onclick="openOrderModal('${product.id}', '${product.name.replace(/'/g,"\\'")}');event.stopPropagation();">Commander</button>
+            </div>
+        </div>
+        `;
+    }).join('');
+}
+
+function selectCategory(cat, btn) {
+    document.querySelectorAll('.category-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    if (cat === 'ALL') {
+        renderAllCategories();
+    } else {
+        renderProducts(cat);
+    }
+}
+
+// Initialisation : fetch produits
+fetchProducts();
+            
+            // Modal JS
+            function openOrderModal(productId, productName) {
+                document.getElementById('order-product-id').value = productId;
+                document.getElementById('order-form').reset();
+                document.getElementById('order-success').style.display = 'none';
+                document.getElementById('order-modal').style.display = 'flex';
+            }
+            function closeModal(id) {
+                document.getElementById(id).style.display = 'none';
+            }
+            // Aperçu image produit (modal)
+            function showImageModal(imgUrl) {
+                let modal = document.getElementById('image-modal');
+                if (!modal) {
+                    modal = document.createElement('div');
+                    modal.className = 'modal';
+                    modal.id = 'image-modal';
+                    modal.innerHTML = `
+                        <div class="modal-content" style="max-width:600px;padding:0;overflow:hidden;">
+                            <span class="close-modal" style="position:absolute;top:10px;right:18px;font-size:2em;cursor:pointer;color:#fff;" onclick="closeModal('image-modal')">&times;</span>
+                            <img id="modal-image" src="" alt="Aperçu produit" style="width:100%;display:block;">
+                        </div>
+                    `;
+                    document.body.appendChild(modal);
+                }
+                document.getElementById('modal-image').src = imgUrl;
+                modal.style.display = 'flex';
+            }
+            // Gestion du formulaire de commande
+                       document.getElementById('order-form').onsubmit = function(e) {
+                e.preventDefault();
+                const productId = document.getElementById('order-product-id').value;
+                const name = document.getElementById('order-name').value.trim();
+                const phone = document.getElementById('order-phone').value.trim();
+                const address = document.getElementById('order-address').value.trim();
+                const qty = Number(document.getElementById('order-qty').value) || 1;
+                const product = allProducts.find(p => p.id == productId);
+                if (!product) {
+                    alert('Produit introuvable.');
+                    return;
+                }
+                // Construction de la commande pour l'API
+                const orderPayload = {
+                    customerName: name,
+                    customerPhone: phone,
+                    deliveryAddress: address,
+                    deliveryCity: '', // à adapter si besoin
+                    items: [{
+                        name: product.name,
+                        price: product.price,
+                        quantity: qty,
+                        total: product.price * qty
+                    }],
+                    subtotal: product.price * qty,
+                    deliveryFee: 0,
+                    total: product.price * qty,
+                    paymentMethod: 'wave', // doit être 'wave', 'orange', 'card' ou 'promotion'
+                    status: 'pending',
+                    source: 'haut-game'
+                };
+                fetch(`${API_BASE_URL}/orders`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(orderPayload)
+                })
+                .then(async res => {
+                    if (res.ok) {
+                        document.getElementById('order-success').innerText = "Commande envoyée avec succès !";
+                        document.getElementById('order-success').style.display = 'block';
+                        setTimeout(() => {
+                            closeModal('order-modal');
+                        }, 1800);
+                    } else {
+                        let msg = 'Erreur lors de l\'envoi de la commande.';
+                        try {
+                            const err = await res.json();
+                            if (err && err.message) msg += '\n' + (Array.isArray(err.message) ? err.message.join('\n') : err.message);
+                        } catch(e) {}
+                        alert(msg);
+                    }
+                })
+                .catch(() => {
+                    alert('Erreur réseau ou serveur.');
+                });
+            };
+            // Fermer la modal si on clique en dehors
+            window.onclick = function(event) {
+                const modal = document.getElementById('order-modal');
+                if (event.target === modal) {
+                    closeModal('order-modal');
+                }
+                const imgModal = document.getElementById('image-modal');
+                if (imgModal && event.target === imgModal) {
+                    closeModal('image-modal');
+                }
+            };
+            // SUIVI DE COMMANDE DEBUT
+            function openTrackingModal() {
+                document.getElementById('tracking-form').reset();
+                document.getElementById('tracking-result').innerHTML = '';
+                document.getElementById('tracking-modal').style.display = 'flex';
+            }
+            
+            document.getElementById('tracking-form').onsubmit = async function(e) {
+                e.preventDefault();
+                const phone = document.getElementById('tracking-phone').value.trim();
+                const resultDiv = document.getElementById('tracking-result');
+                resultDiv.innerHTML = '<span style="color:#ff8c00;">Recherche...</span>';
+                try {
+                    const res = await fetch(`${API_BASE_URL}/orders?source=haut-game`);
+                    if (!res.ok) throw new Error('Erreur API');
+                    const apiResponse = await res.json();
+                    const orders = apiResponse.data || apiResponse || [];
+                    const userOrders = orders.filter(order => {
+                        const orderPhone = order.customerPhone || order.phone || '';
+                        return orderPhone.includes(phone) || phone.includes(orderPhone);
+                    });
+                    if (userOrders.length === 0) {
+                        resultDiv.innerHTML = '<p style="color:#ff8c00;">Aucune commande trouvée pour ce numéro.</p>';
+                        return;
+                    }
+                    resultDiv.innerHTML = userOrders.map(order => `
+                        <div style="border:1px solid #444;padding:10px;margin-bottom:10px;border-radius:8px;">
+                            <b>Produit :</b> ${order.items && order.items[0] ? (order.items[0].name || order.items[0].productName || 'Produit') : 'Produit'}<br>
+                            <b>Date :</b> ${order.createdAt ? new Date(order.createdAt).toLocaleString('fr-FR') : ''}<br>
+                            <b>Quantité :</b> ${order.items && order.items[0] ? (order.items[0].quantity || order.items[0].qty || 1) : 1}<br>
+                            <b>Statut :</b> ${getStatusText(order.status)}
+                        </div>
+                    `).join('');
+                } catch (err) {
+                    resultDiv.innerHTML = '<p style="color:#ff8c00;">Erreur lors de la récupération des commandes.</p>';
+                }
+            };
+            
+          function getStatusText(status) {
+    switch (status) {
+        case 'processing': return 'En traitement';
+        case 'shipped': return 'En livraison';
+        case 'delivered': return 'Livrée';
+        default: return 'En traitement';
+    }
+}
+// SUIVI DE COMMANDE FIN
+
+
+// ==================== GESTION ORIENTATION ====================
+// Affichage temporaire du message de rotation (50s max) et masquage si paysage
+document.addEventListener('DOMContentLoaded', function() {
+    var rotationMsg = document.getElementById('rotation-message');
+    var timer = null;
+    function checkOrientation() {
+        if(window.matchMedia('(orientation: landscape)').matches) {
+            if(rotationMsg) rotationMsg.style.display = 'none';
+            if(timer) { clearTimeout(timer); timer = null; }
+        } else {
+            if(rotationMsg) rotationMsg.style.display = '';
+            if(!timer) {
+                timer = setTimeout(function() {
+                    if(rotationMsg) rotationMsg.style.display = 'none';
+                }, 50000); // 50 secondes
+            }
+        }
+    }
+    // Initial check
+    checkOrientation();
+    // Sur changement d'orientation
+    window.addEventListener('orientationchange', checkOrientation);
+    // Sur resize (pour certains navigateurs)
+    window.addEventListener('resize', checkOrientation);
+});
+    </script>
+</body>

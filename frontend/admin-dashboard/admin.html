@@ -1,0 +1,1569 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin - FADIDI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/admin-dashboard.css">
+    <link rel="stylesheet" href="../assets/css/feedbacks.css">
+    <link rel="stylesheet" href="../assets/css/header-buttons.css">
+    <link rel="stylesheet" href="../assets/css/floating-ads.css">
+    
+</head>
+<body>
+    <div id="logout-modal" class="modal">
+    <div class="modal-content logout-modal-content">
+            <div class="modal-header">
+                <h3>Déconnexion</h3>
+                <button class="close-modal" id="close-logout-modal">&times;</button>
+            </div>
+            <p>Êtes-vous sûr de vouloir vous déconnecter ?</p>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancel-logout">Annuler</button>
+                <button class="btn btn-primary" id="confirm-logout">OK</button>
+            </div>
+        </div>
+    </div>
+    <div class="admin-container">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <img src="../assets/images/logos/fadidinew.png" alt="Logo FADIDI" class="sidebar-logo">
+                <h1><i class="fas fa-tachometer-alt"></i> FADIDI Admin</h1>
+                <p>Dashboard de gestion</p>
+            </div>
+            
+            <div class="sidebar-nav">
+                <ul>
+                    <li><a href="#dashboard" class="menu-item active" data-section="dashboard">
+                        <i class="fas fa-tachometer-alt"></i> Tableau de bord
+                    </a></li>
+                  
+                    <!-- Bouton déplacé dans la section paramètres -->
+                    <li><a href="#products" class="menu-item" data-section="products">
+                        <i class="fas fa-box"></i> Produits
+                    </a></li>
+                    <li><a href="#categories" class="menu-item" data-section="categories">
+                        <i class="fas fa-tags"></i> Catégories
+                    </a></li>
+                    <li><a href="#orders" class="menu-item" data-section="orders">
+                        <i class="fas fa-shopping-cart"></i> Commandes
+                    </a></li>
+                    <li><a href="#hautgame-orders" class="menu-item" data-section="hautgame-orders">
+                        <i class="fas fa-gem"></i> Commandes haut de game
+                    </a></li>
+                    <li><a href="#feedbacks" class="menu-item" data-section="feedbacks">
+                        <i class="fas fa-comments"></i> Retours clients
+                    </a></li>
+                    <li><a href="#promotions" class="menu-item" data-section="promotions">
+                        <i class="fas fa-percentage"></i> Promotions
+                    </a></li>
+                    <li><a href="#floating-ads" class="menu-item" data-section="floating-ads">
+                        <i class="fas fa-ad"></i> Publicités flottantes
+                    </a></li>
+                    <li><a href="#header-banners" class="menu-item" data-section="header-banners">
+                        <i class="fas fa-image"></i> Bannières Header
+                    </a></li>
+                    <li><a href="#subscribers" class="menu-item" data-section="subscribers">
+                        <i class="fas fa-bell"></i> Abonnés notifications
+                    </a></li>
+                    <li><a href="../gestion-annonces.html" class="menu-item sidebar-link-annonces" id="gestion-annonces-link">
+                        <i class="fas fa-bullhorn"></i> Gestion annonces
+                    </a></li>
+         
+                    <li><a href="../boutique.html" class="menu-item sidebar-link-boutique" id="boutique-link">
+                        <i class="fas fa-store"></i> Aller à la Boutique
+                    </a></li>
+                    <li><a href="#banner" class="menu-item" data-section="banner">
+                        <i class="fas fa-bullhorn"></i> Bannière Boutique
+                    </a></li>
+                    <li><a href="#settings" class="menu-item" data-section="settings">
+                        <i class="fas fa-cog"></i> Paramètres
+                    </a></li>
+  
+                   <li><a href="#" class="menu-item" id="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i> Déconnexion
+                    </a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <main class="main-content" id="main-content">
+            <!-- Section Codes d'autorisation -->
+            <div id="auth-codes-section" class="content-section hidden">
+                <div class="section-header">
+                    <h2>Générer un code d'autorisation</h2>
+                </div>
+                <form id="generate-auth-code-form" class="admin-card">
+                    <div class="form-group">
+                        <label for="code-label">Label (optionnel)</label>
+                        <input type="text" id="code-label" class="form-control" placeholder="Ex: Pour nouvel admin">
+                    </div>
+                    <div class="form-group">
+                        <label for="code-expiry">Expiration</label>
+                        <input type="datetime-local" id="code-expiry" class="form-control" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-magic"></i> Générer le code</button>
+                    </div>
+                </form>
+                <div id="auth-code-result"></div>
+            </div>
+            <!-- Section Commandes haut de game -->
+            <div id="hautgame-orders-section" class="content-section hidden">
+                <div class="section-header">
+                    <h2>Commandes haut de game</h2>
+                    <button class="btn btn-secondary" onclick="loadHautGameOrders()">
+                        <i class="fas fa-sync"></i> Actualiser
+                    </button>
+                    <button class="btn btn-danger hidden" id="delete-selected-hautgame-orders" onclick="deleteSelectedHautGameOrders()">
+                        <i class="fas fa-trash"></i> Supprimer sélectionnées (<span id="selected-hautgame-orders-count">0</span>)
+                    </button>
+                </div>
+                <div class="loading" id="hautgame-orders-loading">
+                    <div class="spinner"></div>
+                </div>
+                <table class="products-table table-hidden" id="hautgame-orders-table">
+                    <thead>
+                        <tr>
+                            <th>
+                                <input type="checkbox" id="select-all-hautgame-orders" title="Tout sélectionner les commandes haut de game" onchange="toggleAllHautGameOrders(this.checked)">
+                                <label for="select-all-hautgame-orders" class="hautgame-select-all-label">Tout sélectionner</label>
+                            </th>
+                            <th>ID Commande</th>
+                            <th>Client</th>
+                            <th>Produits</th>
+                            <th>Total</th>
+                            <th>Date</th>
+                            <th>Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody id="hautgame-orders-tbody">
+                        <!-- Les commandes haut de game seront chargées ici -->
+                    </tbody>
+                </table>
+            </div>
+            <!-- Section Tableau de bord -->
+            <div id="dashboard-section" class="content-section">
+                <div class="section-header">
+                    <h2>Tableau de bord</h2>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon products">
+                            <i class="fas fa-box"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="stat-products">0</h3>
+                            <p>Produits</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon categories">
+                            <i class="fas fa-tags"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="stat-categories">0</h3>
+                            <p>Catégories</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon users">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="stat-orders">0</h3>
+                            <p>Commandes</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon revenue">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="stat-revenue">0 CFA</h3>
+                            <p>Chiffre d'affaires</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon stat-icon-subscribers">
+                            <i class="fas fa-bell"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="stat-subscribers">0</h3>
+                            <p>Abonnés notifications</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+               <!-- Section Gestion des abonnés -->
+            <div id="subscribers-section" class="content-section hidden">
+                <div class="section-header">
+                    <h2>Gestion des abonnés notifications</h2>
+                    <button class="btn btn-secondary" onclick="loadSubscribers()">
+                        <i class="fas fa-sync"></i> Actualiser
+                    </button>
+                </div>
+                <div class="loading" id="subscribers-loading">
+                    <div class="spinner"></div>
+                </div>
+                <div class="subscribers-actions-bar">
+                    <button type="button" class="btn btn-danger hide-by-default" id="delete-selected-subscribers" onclick="deleteSelectedSubscribers()">
+                        <i class="fas fa-trash"></i> Supprimer sélectionnés (<span id="selected-subscribers-count">0</span>)
+                    </button>
+                    <button type="button" class="btn btn-warning hide-by-default" id="block-selected-subscribers" onclick="blockSelectedSubscribers()">
+                        <i class="fas fa-ban"></i> Désactiver sélectionnés
+                    </button>
+                </div>
+                <table class="products-table" id="subscribers-table">
+                    <thead>
+                        <tr>
+                            <th>
+                                <input type="checkbox" id="select-all-subscribers" title="Tout sélectionner les abonnés" onclick="toggleAllSubscribers(this.checked)">
+                                <label for="select-all-subscribers" class="subscribers-select-all-label">Tout sélectionner</label>
+                            </th>
+                            <th>Email</th>
+                            <th>Téléphone</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="subscribers-tbody">
+                        <!-- Les abonnés seront chargés ici -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Section Produits -->
+            <div id="products-section" class="content-section hidden">
+                <div class="section-header">
+                    <h2>Gestion des produits</h2>
+                    <div class="admin-flex-gap">
+                        <button class="btn btn-success" onclick="openMultiProductModal()">
+                            <i class="fas fa-layer-group"></i> Ajouter plusieurs produits
+                        </button>
+                        <button class="btn btn-danger hide-by-default" id="delete-selected-products" onclick="deleteSelectedProducts()">
+                            <i class="fas fa-trash"></i> Supprimer sélectionnés (<span id="selected-products-count">0</span>)
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="loading" id="products-loading">
+                    <div class="spinner"></div>
+                </div>
+                
+                <table class="products-table table-hidden" id="products-table">
+                    <thead>
+                        <tr>
+                            <th>
+                                <input type="checkbox" id="select-all-products" title="Tout sélectionner les produits" onchange="toggleAllProducts(this.checked)">
+                                <label for="select-all-products" class="products-select-all-label">Tout sélectionner</label>
+                            </th>
+                            <th>Image</th>
+                            <th>Nom</th>
+                            <th>Prix</th>
+                            <th>Stock</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="products-tbody">
+                        <!-- Les produits seront chargés ici -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Section Catégories -->
+            <div id="categories-section" class="content-section hidden">
+                <div class="section-header">
+                    <h2>Gestion des catégories</h2>
+                    <button class="btn btn-primary" onclick="openCategoryModal()">
+                        <i class="fas fa-plus"></i> Nouvelle catégorie
+                    </button>
+                    <button class="btn btn-danger hide-by-default" id="delete-selected-categories" onclick="deleteSelectedCategories()">
+                        <i class="fas fa-trash"></i> Supprimer sélectionnées (<span id="selected-categories-count">0</span>)
+                    </button>
+                </div>
+                
+                <div class="loading" id="categories-loading">
+                    <div class="spinner"></div>
+                </div>
+                
+                <table class="products-table table-hidden" id="categories-table">
+                    <thead>
+                        <tr>
+                            <th>
+                                <input type="checkbox" id="select-all-categories" title="Tout sélectionner les catégories" onchange="toggleAllCategories(this.checked)">
+                                <label for="select-all-categories" class="categories-select-all-label">Tout sélectionner</label>
+                            </th>
+                            <th>Image</th>
+                            <th>Nom</th>
+                            <th>Description</th>
+                            <th>Produits</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="categories-tbody">
+                        <!-- Les catégories seront chargées ici -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Section Commandes -->
+            <div id="orders-section" class="content-section hidden">
+                <div class="section-header">
+                    <h2>Gestion des commandes</h2>
+                    <button class="btn btn-danger hidden" id="delete-selected-orders" onclick="deleteSelectedOrders()">
+                        <i class="fas fa-trash"></i> Supprimer sélectionnées (<span id="selected-count">0</span>)
+                    </button>
+                    <div class="orders-actions">
+                        <div class="bulk-actions">
+                            <button class="btn btn-warning hidden" id="deliver-selected-orders" onclick="deliverSelectedOrders()">
+                                <i class="fas fa-check-circle"></i> Marquer comme livrées (<span id="deliver-count">0</span>)
+                            </button>
+                        </div>
+                        <div class="order-filters">
+                            <label for="status-filter">Filtrer par statut:</label>
+                            <select id="status-filter" class="form-control" onchange="filterOrdersByStatus(this.value)">
+                                <option value="">Tous les statuts</option>
+                                <option value="delivered">Livrés</option>
+                                <option value="shipped">Expédiés</option>
+                                <option value="processing">En cours</option>
+                                <option value="pending">En attente</option>
+                                <option value="cancelled">Annulés</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="loading" id="orders-loading">
+                    <div class="spinner"></div>
+                </div>
+                <table class="products-table table-hidden" id="orders-table">
+                    <thead>
+                        <tr>
+                            <th>
+                                <input type="checkbox" id="select-all-orders" onchange="toggleAllOrders(this.checked)">
+                                <label for="select-all-orders">Tout sélectionner</label>
+                            </th>
+                            <th>ID Commande</th>
+                            <th>Client</th>
+                            <th>Produits</th>
+                            <th>Total</th>
+                            <th>Date</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orders-tbody">
+                        <!-- Les commandes seront chargées ici -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Section Retours clients -->
+            <div id="feedbacks-section" class="content-section hidden">
+                <div class="section-header">
+                    <h2>Retours clients</h2>
+                    <button class="btn btn-secondary" onclick="refreshFeedbacks()">
+                        <i class="fas fa-sync"></i> Actualiser
+                    </button>
+                </div>
+                
+                <div class="loading" id="feedbacks-loading">
+                    <div class="spinner"></div>
+                </div>
+                
+                <div class="feedbacks-stats">
+                    <div class="stat-card">
+                        <h4 id="total-feedbacks">0</h4>
+                        <p>Total retours</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4 id="confirmed-orders">0</h4>
+                        <p>Livraisons confirmées</p>
+                    </div>
+                    <div class="stat-card stat-card-danger">
+                        <h4 id="dispute-orders">0</h4>
+                        <p>Problèmes signalés</p>
+                    </div>
+                </div>
+                
+                <div class="feedbacks-filters">
+                    <label for="feedback-filter">Filtrer les retours :</label>
+                    <select id="feedback-filter" onchange="filterFeedbacks()" title="Filtrer les retours clients par type">
+                        <option value="all">Tous les retours</option>
+                        <option value="confirmation">Confirmations</option>
+                        <option value="problem">Problèmes</option>
+                    </select>
+                </div>
+
+                <!-- Contrôles de sélection groupée -->
+                <div class="bulk-actions hide-by-default feedbacks-bulk-actions" id="bulk-actions">
+                    <div class="bulk-controls feedbacks-bulk-controls">
+                        <div class="feedbacks-bulk-checkbox-group">
+                            <input type="checkbox" id="select-all-feedbacks" onchange="toggleAllFeedbacks()" class="feedbacks-select-all-checkbox">
+                            <label for="select-all-feedbacks" class="feedbacks-select-all-label">Tout sélectionner</label>
+                        </div>
+                        
+                        <span id="selected-count" class="feedbacks-selected-count">0 sélectionné(s)</span>
+                        
+                        <div class="feedbacks-bulk-actions-btns">
+                            <button class="btn btn-warning feedbacks-bulk-action-btn" onclick="markSelectedAsResolved()">
+                                <i class="fas fa-check-circle"></i> Marquer comme traité
+                            </button>
+                            <button class="btn btn-danger feedbacks-bulk-action-btn" onclick="deleteSelectedFeedbacks()">
+                                <i class="fas fa-trash"></i> Supprimer sélectionnés
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="feedbacks-list" id="feedbacks-list">
+                    <!-- Les retours seront chargés ici -->
+                </div>
+            </div>
+
+            <!-- Section Promotions -->
+            <div id="promotions-section" class="content-section hidden">
+                <div class="section-header">
+                    <h2>Gestion des promotions</h2>
+                    <div class="header-buttons">
+                        <button class="btn btn-secondary" onclick="refreshPromotionStats()" title="Actualiser les statistiques">
+                            <i class="fas fa-sync"></i> Actualiser
+                        </button>
+                        <button class="btn btn-primary" onclick="openPromotionModal()">
+                            <i class="fas fa-plus"></i> Nouvelle promotion
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="loading" id="promotions-loading">
+                    <div class="spinner"></div>
+                </div>
+                
+                <div class="promotions-stats">
+                    <div class="stat-card">
+                        <h4 id="active-promotions">0</h4>
+                        <p>Promotions actives</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4 id="total-promotions">0</h4>
+                        <p>Total promotions</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4 id="expired-promotions">0</h4>
+                        <p>Promotions expirées</p>
+                    </div>
+                </div>
+                
+                <div class="promotions-actions-bar">
+                    <button id="delete-selected-promotions" class="btn btn-danger hide-by-default" onclick="deleteSelectedPromotions()">
+                        <i class="fas fa-trash"></i> Supprimer la sélection (<span id="selected-promotions-count">0</span>)
+                    </button>
+                </div>
+                
+                <table class="products-table table-hidden" id="promotions-table">
+                    <thead>
+                        <tr>
+                            <th>
+                                <input type="checkbox" id="select-all-promotions" title="Tout sélectionner les promotions" onclick="toggleAllPromotions(this.checked)">
+                                <label for="select-all-promotions" class="visually-hidden">Tout sélectionner les promotions</label>
+                            </th>
+                            <th>Image</th>
+                            <th>Titre</th>
+                            <th>Catégorie</th>
+                            <th>Prix original</th>
+                            <th>Prix promo</th>
+                            <th>Réduction</th>
+                            <th>Période</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="promotions-tbody">
+                        <!-- Les promotions seront chargées ici -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Section Publicités flottantes -->
+            <div id="floating-ads-section" class="content-section hidden">
+                <div class="section-header">
+                    <h2>Gestion des publicités flottantes</h2>
+                    <div class="header-buttons">
+                        <div class="auto-refresh-status" id="auto-refresh-status" title="Rechargement automatique toutes les 30s">
+                            <i class="fas fa-circle text-success"></i>
+                            <small>Auto-refresh</small>
+                        </div>
+                        <button class="btn btn-secondary" onclick="refreshFloatingAdsStats()" title="Actualiser les statistiques">
+                            <i class="fas fa-sync"></i> Actualiser
+                        </button>
+                        <button class="btn btn-danger" onclick="deleteAllTestAds()" title="Supprimer toutes les publicités">
+                            <i class="fas fa-trash-alt"></i> Tout supprimer
+                        </button>
+                        <button class="btn btn-primary" onclick="openFloatingAdModal()">
+                            <i class="fas fa-plus"></i> Nouvelle publicité
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="loading" id="floating-ads-loading">
+                    <div class="spinner"></div>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon products">
+                            <i class="fas fa-bullhorn"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="stat-floating-ads-total">0</h3>
+                            <p>Total publicités</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon categories">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="stat-floating-ads-active">0</h3>
+                            <p>Publicités actives</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon users">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="stat-floating-ads-views">0</h3>
+                            <p>Vues totales</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon revenue">
+                            <i class="fas fa-mouse-pointer"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="stat-floating-ads-clicks">0</h3>
+                            <p>Clics totaux</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <table class="products-table table-hidden" id="floating-ads-table">
+                    <thead>
+                        <tr>
+                            <th>Titre</th>
+                            <th>Mode d'affichage</th>
+                            <th>Position</th>
+                            <th>Pages cibles</th>
+                            <th>Période</th>
+                            <th>Statut</th>
+                            <th>Statistiques</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="floating-ads-tbody">
+                        <!-- Les publicités seront chargées ici -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Section Bannières Header -->
+            <div id="header-banners-section" class="content-section hidden">
+                <div class="section-header">
+                    <h2>Gestion des bannières header</h2>
+                    <div class="header-buttons">
+                        <button class="btn btn-secondary" onclick="refreshHeaderBanners()" title="Actualiser">
+                            <i class="fas fa-sync"></i> Actualiser
+                        </button>
+                        <button class="btn btn-primary" onclick="openHeaderBannerModal()">
+                            <i class="fas fa-plus"></i> Nouvelle bannière
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Information :</strong> Les bannières actives remplacent le header normal de la boutique et défilent automatiquement.
+                </div>
+                
+                <div class="loading" id="header-banners-loading">
+                    <div class="spinner"></div>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon products">
+                            <i class="fas fa-image"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="stat-header-banners-total">0</h3>
+                            <p>Total bannières</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon categories">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="stat-header-banners-active">0</h3>
+                            <p>Bannières actives</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon users">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="stat-header-banners-views">0</h3>
+                            <p>Vues totales</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon revenue">
+                            <i class="fas fa-mouse-pointer"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="stat-header-banners-clicks">0</h3>
+                            <p>Clics totaux</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <table class="products-table" id="header-banners-table">
+                    <thead>
+                        <tr>
+                            <th>Aperçu</th>
+                            <th>Titre</th>
+                            <th>Description</th>
+                            <th>Position</th>
+                            <th>Ordre</th>
+                            <th>Durée (ms)</th>
+                            <th>Statut</th>
+                            <th>Statistiques</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="header-banners-tbody">
+                        <!-- Les bannières seront chargées ici -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Section Bannière Boutique -->
+            <div id="banner-section" class="content-section">
+                <div class="section-header">
+                    <h2>Bannière Boutique (Accueil)</h2>
+                </div>
+                <form id="banner-form" class="admin-card">
+                    <div class="form-group">
+                        <label for="banner-title">Texte principal *</label>
+                        <input type="text" id="banner-title" class="form-control" required placeholder="Ex: Livraison offerte sur tout FADIDI !">
+                    </div>
+                    <div class="form-group">
+                        <label for="banner-description">Description</label>
+                        <textarea id="banner-description" class="form-control" rows="2" placeholder="Phrase complémentaire"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="banner-icon">Icône/Emoji</label>
+                        <select id="banner-icon" class="form-control">
+                            <option value="">Aucune</option>
+                            <option value="🚀">🚀 Fusée</option>
+                            <option value="🔥">🔥 Flamme</option>
+                            <option value="🎉">🎉 Fête</option>
+                            <option value="💎">💎 Diamant</option>
+                            <option value="⭐">⭐ Étoile</option>
+                            <option value="🛒">🛒 Panier</option>
+                            <option value="fa fa-bolt">⚡ (FontAwesome)</option>
+                            <option value="fa fa-gift">🎁 (FontAwesome)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="banner-animation">Animation</label>
+                        <select id="banner-animation" class="form-control">
+                            <option value="">Aucune</option>
+                            <option value="fade">Apparition (fade)</option>
+                            <option value="slide">Glissement (slide)</option>
+                            <option value="bounce">Rebond (bounce)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="banner-color">Couleur du texte</label>
+                        <div class="banner-color-group">
+                            <input type="color" id="banner-color" class="form-control banner-color-input" value="#ff9900">
+                            <input type="text" id="banner-color-text" class="form-control banner-color-text-input" value="#ff9900" placeholder="#ff9900 ou rgb(255,153,0)">
+                        </div>
+                        <small>Vous pouvez coller un code couleur personnalisé (ex: #ff9900, #F80, rgb(255,153,0), etc.)</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="banner-font">Police</label>
+                        <select id="banner-font" class="form-control">
+                            <option value="inherit">Défaut</option>
+                            <option value="'Montserrat', sans-serif">Montserrat</option>
+                            <option value="'Arial Black', Arial, sans-serif">Arial Black</option>
+                            <option value="'Impact', Charcoal, sans-serif">Impact</option>
+                            <option value="'Comic Sans MS', cursive, sans-serif">Comic Sans</option>
+                            <option value="'Times New Roman', serif">Times New Roman</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="banner-fontsize">Taille du texte</label>
+                        <input type="number" id="banner-fontsize" class="form-control" min="10" max="80" value="32"> px
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="banner-image">Image de la bannière</label>
+                        <input type="file" id="banner-image" accept="image/*" class="form-control">
+                        <div id="banner-image-preview" class="banner-image-preview"></div>
+                        <input type="hidden" id="banner-image-base64">
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-primary" onclick="saveBanner()">
+                            <i class="fas fa-save"></i> Enregistrer
+                        </button>
+                    </div>
+                    <div id="banner-form-result"></div>
+                </form>
+            </div>
+            <!-- Section Paramètres -->
+            <div id="settings-section" class="content-section hidden">
+    
+                <div class="section-header">
+                    <h2>Paramètres administrateur</h2>
+                    <div class="settings-header-actions">
+                        <button class="btn btn-secondary" id="show-auth-codes">
+                            <i class="fas fa-key"></i> Codes d'autorisation
+                        </button>
+                        <button class="btn btn-primary" id="add-admin" type="button">
+                            <i class="fas fa-user-plus"></i> Nouveau compte administrateur
+                        </button>
+                    </div>
+                </div>
+                <div id="alert-container"></div>
+                
+                <!-- Section Sécurité et Code d'Accès -->
+                <div class="admin-card security-card">
+                    <h3><i class="fas fa-shield-alt"></i> Sécurité et Code d'Accès</h3>
+                    <div class="security-section">
+                        <div class="security-info">
+                            <div class="info-item">
+                                <span class="info-label">Code d'accès maître actuel:</span>
+                                <span class="info-value" id="current-master-status">Chargement...</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Dernière modification:</span>
+                                <span class="info-value" id="last-update-date">Chargement...</span>
+                            </div>
+                        </div>
+                        
+                        <div class="security-actions">
+                            <button class="btn btn-warning" id="change-master-code">
+                                <i class="fas fa-key"></i> Changer le code d'accès maître
+                            </button>
+                            <button class="btn btn-danger" id="change-superadmin-password">
+                                <i class="fas fa-lock"></i> Changer le mot de passe Superadmin
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-card">
+                    <h3>Gestion des administrateurs</h3>
+                </div>
+                <div class="admin-card">
+                    <h3>Liste des administrateurs</h3>
+                    <table class="products-table">
+                        <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Email</th>
+                                <th>Rôle</th>
+                                <th>Date d'ajout</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admins-table">
+                            <!-- Les administrateurs seront chargés ici -->
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Modale suppression -->
+                <div id="delete-modal" class="modal modal-hidden">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>Confirmer la suppression</h3>
+                            <button class="close-modal">&times;</button>
+                        </div>
+                        <p>Êtes-vous sûr de vouloir supprimer cet administrateur ? Cette action est irréversible.</p>
+                        <div class="modal-footer">
+                            <button class="cancel-btn" id="cancel-delete">Annuler</button>
+                            <button class="btn btn-danger" id="confirm-delete"><i class="fas fa-trash"></i> Supprimer</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modale édition -->
+                <div id="edit-modal" class="modal modal-hidden">
+                    <div class="modal-content modal-content-400">
+                        <div class="modal-header">
+                            <h3>Modifier administrateur</h3>
+                            <button class="close-modal" id="close-edit-admin">&times;</button>
+                        </div>
+                        <form id="edit-admin-form">
+                            <div class="form-group">
+                                <label for="edit-name">Nom complet</label>
+                                <input type="text" id="edit-name" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit-email">Adresse e-mail</label>
+                                <input type="email" id="edit-email" class="form-control" required readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit-role">Rôle</label>
+                                <select id="edit-role" class="form-control">
+                                    <option value="admin">Administrateur</option>
+                                    <option value="superadmin">Super Administrateur</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit-status">Statut</label>
+                                <select id="edit-status" class="form-control">
+                                    <option value="active">Actif</option>
+                                    <option value="inactive">Inactif</option>
+                                </select>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="cancel-btn" id="cancel-edit-admin">Annuler</button>
+                                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Enregistrer</button>
+                            </div>
+                        </form>
+                        <div id="edit-admin-result" class="modal-result-margin"></div>
+                    </div>
+                </div>
+                <!-- Modale changement mot de passe superadmin -->
+                <div id="change-superadmin-password-modal" class="modal modal-hidden">
+                    <div class="modal-content modal-content-400">
+                        <div class="modal-header">
+                            <h3>Changer le mot de passe Superadmin</h3>
+                            <button class="close-modal" id="close-superadmin-password-modal">&times;</button>
+                        </div>
+                        <form id="change-superadmin-password-form">
+                            <div class="form-group">
+                                <label for="superadmin-email">Email du superadmin</label>
+                                <select id="superadmin-email" class="form-control" required>
+                                    <option value="">Sélectionner...</option>
+                                    <option value="admin@fadidi.com">admin@fadidi.com</option>
+                                    <option value="superadmin@fadidi.com">superadmin@fadidi.com</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="current-superadmin-password">Mot de passe actuel</label>
+                                <input type="password" id="current-superadmin-password" class="form-control" required placeholder="Mot de passe actuel">
+                            </div>
+                            <div class="form-group">
+                                <label for="new-superadmin-password">Nouveau mot de passe</label>
+                                <input type="password" id="new-superadmin-password" class="form-control" required placeholder="Nouveau mot de passe">
+                            </div>
+                            <div class="form-group">
+                                <label for="confirm-superadmin-password">Confirmer le nouveau mot de passe</label>
+                                <input type="password" id="confirm-superadmin-password" class="form-control" required placeholder="Confirmer le nouveau mot de passe">
+                            </div>
+                            <div id="superadmin-password-error" class="error-message superadmin-password-error"></div>
+                            <div class="modal-footer">
+                                <button type="button" class="cancel-btn" id="cancel-superadmin-password">Annuler</button>
+                                <button type="submit" class="btn btn-danger"><i class="fas fa-save"></i> Sauvegarder</button>
+                            </div>
+                        </form>
+                        <div id="superadmin-password-result" class="modal-result-margin"></div>
+                    </div>
+                </div>
+                <!-- Modale ajout admin -->
+                <div id="add-admin-modal" class="modal modal-hidden">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>Ajouter un administrateur</h3>
+                            <button class="close-modal" id="close-add-admin">&times;</button>
+                        </div>
+                        <form id="add-admin-form">
+                            <div class="form-group">
+                                <label for="new-admin-name">Nom complet</label>
+                                <input type="text" id="new-admin-name" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="new-admin-email">Adresse e-mail</label>
+                                <input type="email" id="new-admin-email" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="new-admin-role">Rôle</label>
+                                <select id="new-admin-role" class="form-control">
+                                    <option value="admin">Administrateur</option>
+                                    <option value="superadmin">Super Administrateur</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="new-admin-password">Mot de passe</label>
+                                <input type="password" id="new-admin-password" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="new-admin-code">Code d'autorisation</label>
+                                <input type="text" id="new-admin-code" class="form-control" required placeholder="Entrer le code généré pour valider">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="cancel-btn" id="cancel-add-admin">Annuler</button>
+                                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Ajouter</button>
+                            </div>
+                        </form>
+                        <div id="add-admin-result" class="modal-result-margin"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Produit -->
+    <!-- Modal Ajout Multiple de Produits -->
+    <div id="multi-product-modal" class="modal hidden">
+        <div class="modal-content modal-content-900">
+            <div class="modal-header">
+                <h3>Ajouter plusieurs produits</h3>
+                <button class="close-btn" onclick="closeMultiProductModal()">&times;</button>
+            </div>
+            <form id="multi-product-form">
+                <div class="overflow-x-auto">
+                <table class="products-table min-width-1100" id="multi-products-table">
+                    <thead>
+                        <tr>
+                            <th>Nom *</th>
+                            <th>Description</th>
+                            <th>Prix (CFA) *</th>
+                            <th>Stock</th>
+                            <th>Catégorie</th>
+                            <th>Statut</th>
+                            <th>Image</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="multi-products-tbody">
+                        <!-- Lignes dynamiques (avec image) -->
+                    </tbody>
+                </table>
+                </div>
+                <div class="margin-y-10">
+                    <button type="button" class="btn btn-secondary" onclick="addMultiProductRow()">
+                        <i class="fas fa-plus"></i> Ajouter une ligne
+                    </button>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-success" onclick="saveMultiProducts()">
+                        <i class="fas fa-save"></i> Enregistrer tous
+                    </button>
+                    <button type="button" class="btn" onclick="closeMultiProductModal()">Annuler</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="product-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="product-modal-title">Ajouter un produit</h3>
+                <button class="close-btn" onclick="closeProductModal()">&times;</button>
+            </div>
+            
+            <form id="product-form" class="form-grid">
+                <div class="form-group">
+                    <label for="product-name">Nom du produit *</label>
+                    <input type="text" id="product-name" class="form-control" required placeholder="Entrez le nom du produit" title="Nom du produit">
+                </div>
+                
+                <div class="form-group">
+                    <label for="product-description">Description</label>
+                    <textarea id="product-description" class="form-control" rows="4" placeholder="Décrivez le produit..." title="Description du produit"></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="product-price">Prix (CFA) *</label>
+                        <input type="number" id="product-price" class="form-control" min="0" required placeholder="0" title="Prix du produit en CFA">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="product-stock">Stock</label>
+                        <input type="number" id="product-stock" class="form-control" min="0" value="0" placeholder="0" title="Quantité en stock">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="product-category">Catégorie</label>
+                    <select id="product-category" class="form-control" title="Sélectionnez une catégorie pour ce produit">
+                        <option value="">Aucune catégorie</option>
+                        <!-- Les catégories seront chargées ici -->
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="product-images">Images du produit</label>
+                    <div class="file-upload" onclick="document.getElementById('product-images').click()">
+                        <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                        <p>Cliquez pour sélectionner des images</p>
+                        <input type="file" id="product-images" multiple accept="image/*,.jpg,.jpeg,.png,.gif,.webp,.bmp,.svg,.tiff,.tif,.ico,.avif,.heic,.heif" class="hidden-input" title="Sélectionner des images pour le produit" aria-label="Sélectionner des images pour le produit">
+                    </div>
+                    <div id="image-preview" class="image-preview"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="product-status">Statut</label>
+                    <select id="product-status" class="form-control" title="Sélectionnez le statut du produit">
+                        <option value="draft">Brouillon</option>
+                        <option value="published">Publié</option>
+                        <option value="archived">Archivé</option>
+                    </select>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-primary" onclick="saveProduct()">
+                        <i class="fas fa-save"></i> Enregistrer
+                    </button>
+                    <button type="button" class="btn" onclick="closeProductModal()">Annuler</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Catégorie -->
+    <div id="category-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="category-modal-title">Ajouter une catégorie</h3>
+                <button class="close-btn" onclick="closeCategoryModal()">&times;</button>
+            </div>
+            
+            <form id="category-form" class="form-grid">
+                <div class="form-group">
+                    <label for="category-name">Nom de la catégorie *</label>
+                    <input type="text" id="category-name" class="form-control" required placeholder="Entrez le nom de la catégorie" title="Nom de la catégorie">
+                </div>
+                
+                <div class="form-group">
+                    <label for="category-description">Description</label>
+                    <textarea id="category-description" class="form-control" rows="3" placeholder="Décrivez cette catégorie..." title="Description de la catégorie"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="category-image">Image de la catégorie</label>
+                    <div class="file-upload" onclick="document.getElementById('category-image').click()">
+                        <i class="fas fa-image upload-icon"></i>
+                        <p>Cliquez pour sélectionner une image</p>
+                        <input type="file" id="category-image" accept="image/*,.jpg,.jpeg,.png,.gif,.webp,.bmp,.svg,.tiff,.tif,.ico,.avif,.heic,.heif" class="hidden-input" title="Sélectionner une image pour la catégorie" aria-label="Sélectionner une image pour la catégorie">
+                    </div>
+                    <div id="category-image-preview" class="image-preview"></div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-primary" onclick="saveCategory()">
+                        <i class="fas fa-save"></i> Enregistrer
+                    </button>
+                    <button type="button" class="btn" onclick="closeCategoryModal()">Annuler</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Promotion -->
+    <div id="promotion-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="promotion-modal-title">Ajouter une promotion</h3>
+                <button class="close-btn" onclick="closePromotionModal()">&times;</button>
+            </div>
+            
+            <form id="promotion-form" class="form-grid">
+                <div class="form-group">
+                    <label for="promotion-title">Titre de la promotion *</label>
+                    <input type="text" id="promotion-title" class="form-control" required placeholder="Entrez le titre de la promotion" title="Titre de la promotion">
+                </div>
+                
+                <div class="form-group">
+                    <label for="promotion-description">Description</label>
+                    <textarea id="promotion-description" class="form-control" rows="3" placeholder="Décrivez cette promotion..." title="Description de la promotion"></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="promotion-original-price">Prix original (CFA) *</label>
+                        <input type="number" id="promotion-original-price" class="form-control" required min="0" step="0.01" placeholder="0" onchange="calculateDiscount()">
+                    </div>
+                    <div class="form-group">
+                        <label for="promotion-price">Prix promotionnel (CFA) *</label>
+                        <input type="number" id="promotion-price" class="form-control" required min="0" step="0.01" placeholder="0" onchange="calculateDiscount()">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="promotion-discount">Pourcentage de réduction</label>
+                    <input type="number" id="promotion-discount" class="form-control" readonly placeholder="Calculé automatiquement">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="promotion-start-date">Date de début *</label>
+                        <input type="datetime-local" id="promotion-start-date" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="promotion-end-date">Date de fin *</label>
+                        <input type="datetime-local" id="promotion-end-date" class="form-control" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="promotion-category">Catégorie</label>
+                    <select id="promotion-category" class="form-control" title="Sélectionnez une catégorie pour cette promotion">
+                        <option value="">Aucune catégorie</option>
+                        <!-- Les catégories seront chargées ici -->
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="promotion-product">Produit lié (optionnel)</label>
+                    <select id="promotion-product" class="form-control" title="Sélectionnez un produit existant">
+                        <option value="">Aucun produit</option>
+                        <!-- Les produits seront chargés ici -->
+                    </select>
+                </div>
+                
+                    <div class="form-group">
+                        <label for="promotion-image">Image de la promotion</label>
+                        <div class="file-upload" onclick="document.getElementById('promotion-image').click()">
+                            <i class="fas fa-image upload-icon"></i>
+                            <p>Cliquez pour sélectionner une image</p>
+                            <input type="file" id="promotion-image" accept="image/*" class="hidden-input" title="Sélectionner une image pour la promotion">
+                        </div>
+                        <div id="promotion-image-preview" class="image-preview"></div>
+                    </div>                <div class="form-row">
+                    <div class="form-group">
+                        <label for="promotion-max-quantity">Quantité maximale (0 = illimité)</label>
+                        <input type="number" id="promotion-max-quantity" class="form-control" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="promotion-status">Statut</label>
+                        <select id="promotion-status" class="form-control">
+                            <option value="draft">Brouillon</option>
+                            <option value="active">Actif</option>
+                            <option value="paused">En pause</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="promotion-featured"> Mettre en avant cette promotion
+                    </label>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-primary" onclick="savePromotion()">
+                        <i class="fas fa-save"></i> Enregistrer
+                    </button>
+                    <button type="button" class="btn" onclick="closePromotionModal()">Annuler</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modale d'accès restreint pour les paramètres -->
+    <div id="access-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Accès restreint aux paramètres</h3>
+                <button class="close-modal" onclick="closeAccessModal()">&times;</button>
+            </div>
+            <div class="form-group">
+                <label for="access-code">Code d'accès administrateur</label>
+                <input type="password" id="access-code" class="form-control" placeholder="Entrez le code d'accès">
+                <div id="access-error" class="error-message hidden"></div>
+                <div id="access-loading" class="loading-message hidden">Vérification en cours...</div>
+            </div>
+            <div class="modal-footer">
+                <button class="cancel-btn" onclick="closeAccessModal()">Annuler</button>
+                <button class="action-btn" onclick="validateAccessCode()">Confirmer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modale pour changer le code d'accès maître -->
+    <div id="change-master-code-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-key"></i> Changer le Code d'Accès Maître</h3>
+                <button class="close-modal" onclick="closeMasterCodeModal()">&times;</button>
+            </div>
+            
+            <form id="change-master-code-form">
+                <div class="form-group">
+                    <label for="current-master-code">Code d'accès actuel</label>
+                    <input type="password" id="current-master-code" class="form-control" 
+                           placeholder="Entrez le code actuel" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="new-master-code">Nouveau code d'accès</label>
+                    <input type="password" id="new-master-code" class="form-control" 
+                           placeholder="Minimum 6 caractères" required minlength="6">
+                    <small class="form-text">Le code doit contenir au moins 6 caractères</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirm-master-code">Confirmer le nouveau code</label>
+                    <input type="password" id="confirm-master-code" class="form-control" 
+                           placeholder="Retapez le nouveau code" required>
+                </div>
+                
+                <div id="master-code-error" class="error-message"></div>
+                <div id="master-code-loading" class="loading-message">Mise à jour en cours...</div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="cancel-btn" onclick="closeMasterCodeModal()">Annuler</button>
+                    <button type="submit" class="action-btn" id="save-master-code">
+                        <i class="fas fa-save"></i> Sauvegarder
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Publicité flottante -->
+    <div id="floating-ad-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="floating-ad-modal-title">Ajouter une publicité flottante</h3>
+                <button class="close-btn" onclick="closeFloatingAdModal()">&times;</button>
+            </div>
+            
+            <form id="floating-ad-form" class="form-grid">
+                <input type="hidden" id="floating-ad-id">
+                
+                <div class="form-group">
+                    <label for="floating-ad-title">Titre de la publicité *</label>
+                    <input type="text" id="floating-ad-title" class="form-control" required placeholder="Entrez le titre de la publicité">
+                </div>
+                
+                <div class="form-group">
+                    <label for="floating-ad-content">Contenu *</label>
+                    <textarea id="floating-ad-content" class="form-control" rows="3" placeholder="Contenu de la publicité..."></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="floating-ad-display-mode">Mode d'affichage *</label>
+                        <select id="floating-ad-display-mode" class="form-control" required onchange="updateDisplayModeFields()">
+                            <option value="toast">Toast (notification)</option>
+                            <option value="popup">Popup (fenêtre modale)</option>
+                            <option value="banner">Bannière</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="floating-ad-position">Position *</label>
+                        <select id="floating-ad-position" class="form-control" required>
+                            <option value="top-left">Haut à gauche</option>
+                            <option value="top-right">Haut à droite</option>
+                            <option value="top-center">Haut au centre</option>
+                            <option value="bottom-left">Bas à gauche</option>
+                            <option value="bottom-right">Bas à droite</option>
+                            <option value="bottom-center">Bas au centre</option>
+                            <option value="center">Centre</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="floating-ad-width">Largeur</label>
+                        <input type="text" id="floating-ad-width" class="form-control" placeholder="300px" value="300px">
+                    </div>
+                    <div class="form-group">
+                        <label for="floating-ad-height">Hauteur</label>
+                        <input type="text" id="floating-ad-height" class="form-control" placeholder="200px" value="200px">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="floating-ad-duration">Durée d'affichage (ms)</label>
+                    <input type="number" id="floating-ad-duration" class="form-control" min="1000" max="60000" value="5000" placeholder="5000">
+                    <small>Entre 1000ms (1s) et 60000ms (60s)</small>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="floating-ad-bg-color">Couleur de fond</label>
+                        <div class="floating-ad-bg-color-row">
+                            <input type="color" id="floating-ad-bg-color" class="form-control floating-ad-bg-color-input" value="#ffffff">
+                            <select id="floating-ad-bg-color-select" class="floating-ad-bg-color-select" title="Choisissez le type de fond">
+                                <option value="color">Couleur</option>
+                                <option value="transparent">Transparent</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="floating-ad-fixed">Type d'ancrage *</label>
+                        <select id="floating-ad-fixed" class="form-control" required>
+                            <option value="floating">Flottant (suit le scroll ou disparaît)</option>
+                            <option value="fixed">Fixe (toujours visible à l'endroit choisi)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="floating-ad-text-color">Couleur du texte</label>
+                        <input type="color" id="floating-ad-text-color" class="form-control" value="#000000">
+                    </div>
+                </div>
+
+                <!-- Pages cibles avec cases à cocher -->
+                <div class="form-group">
+                    <label>Pages cibles *</label>
+                    <div class="checkbox-group" id="target-pages-group">
+                        <div class="checkbox-item">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="target-all-pages" onchange="toggleAllPages(this)">
+                                <span class="checkmark"></span>
+                                <strong>Toutes les pages</strong>
+                            </label>
+                        </div>
+                        
+                        <div class="pages-list" id="individual-pages">
+                            <div class="checkbox-item">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="target-page" value="index.html">
+                                    <span class="checkmark"></span>
+                                    🏠 Accueil (index.html)
+                                </label>
+                            </div>
+                            <div class="checkbox-item">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="target-page" value="boutique.html">
+                                    <span class="checkmark"></span>
+                                    🛒 Boutique (boutique.html)
+                                </label>
+                            </div>
+                            <div class="checkbox-item">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="target-page" value="promotion.html">
+                                    <span class="checkmark"></span>
+                                    🎉 Promotions (promotion.html)
+                                </label>
+                            </div>
+                            <div class="checkbox-item">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="target-page" value="vehicules.html">
+                                    <span class="checkmark"></span>
+                                    🚗 Véhicules (vehicules.html)
+                                </label>
+                            </div>
+                            <div class="checkbox-item">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="target-page" value="suivi-commande.html">
+                                    <span class="checkmark"></span>
+                                    📦 Suivi commande (suivi-commande.html)
+                                </label>
+                            </div>
+                            <div class="checkbox-item">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="target-page" value="haut-game.html">
+                                    <span class="checkmark"></span>
+                                    🎮 Jeux (haut-game.html)
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <small class="form-text text-muted">
+                        <strong>💡 Comment ça marche :</strong><br>
+                        • Cochez <strong>"Toutes les pages"</strong> pour afficher partout<br>
+                        • OU cochez les pages spécifiques de votre choix<br>
+                        • Vous devez sélectionner au moins une option
+                    </small>
+                    
+                    <!-- Indicateur de statut de sélection -->
+                    <div id="selection-status" class="selection-indicator warning">
+                        ⚠️ Aucune page sélectionnée - Veuillez choisir au moins une option
+                    </div>
+                </div>
+
+                <!-- Redirection avec sélection facilitée -->
+                <div class="form-group">
+                    <label>URL de redirection (optionnel)</label>
+                    <div class="redirect-options">
+                        <div class="redirect-type-selector">
+                            <label class="radio-label">
+                                <input type="radio" name="redirect-type" value="none" checked onchange="updateRedirectFields(this.value)">
+                                <span class="radio-checkmark"></span>
+                                Aucune redirection
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="redirect-type" value="internal" onchange="updateRedirectFields(this.value)">
+                                <span class="radio-checkmark"></span>
+                                Page interne
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="redirect-type" value="external" onchange="updateRedirectFields(this.value)">
+                                <span class="radio-checkmark"></span>
+                                Site externe
+                            </label>
+                        </div>
+                        
+                        <!-- Sélection page interne -->
+                        <div id="internal-redirect-select" class="redirect-field hidden">
+                            <select id="floating-ad-internal-redirect" class="form-control" title="Sélectionnez une page de redirection interne">
+                                <option value="">Sélectionnez une page...</option>
+                                <option value="index.html">🏠 Accueil</option>
+                                <option value="boutique.html">🛒 Boutique</option>
+                                <option value="promotion.html">🎉 Promotions</option>
+                                <option value="vehicules.html">🚗 Véhicules</option>
+                                <option value="suivi-commande.html">📦 Suivi commande</option>
+                                <option value="haut-game.html">🎮 Jeux</option>
+                            </select>
+                        </div>
+                        
+                        <!-- URL externe -->
+                        <div id="external-redirect-input" class="redirect-field hidden">
+                            <input type="url" id="floating-ad-external-redirect" class="form-control" placeholder="https://exemple.com">
+                        </div>
+                    </div>
+                    <small class="form-text text-muted">Choisissez où rediriger l'utilisateur quand il clique sur la publicité</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="floating-ad-image">Image (optionnel)</label>
+                    <div class="file-upload" onclick="document.getElementById('floating-ad-image').click()">
+                        <i class="fas fa-image upload-icon"></i>
+                        <p>Cliquez pour sélectionner une image</p>
+                        <input type="file" id="floating-ad-image" accept="image/*" class="hidden-input">
+                    </div>
+                    <div id="floating-ad-image-preview" class="image-preview"></div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="floating-ad-start-date">Date de début</label>
+                        <input type="datetime-local" id="floating-ad-start-date" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="floating-ad-end-date">Date de fin</label>
+                        <input type="datetime-local" id="floating-ad-end-date" class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="floating-ad-active" checked> Publicité active
+                    </label>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-primary" onclick="saveFloatingAd()">
+                        <i class="fas fa-save"></i> Enregistrer
+                    </button>
+                    <button type="button" class="btn" onclick="closeFloatingAdModal()">Annuler</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Bannière Header -->
+    <div id="header-banner-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="header-banner-modal-title">Ajouter une bannière header</h3>
+                <button class="close-btn" onclick="closeHeaderBannerModal()">&times;</button>
+            </div>
+            
+            <form id="header-banner-form" class="form-grid">
+                <input type="hidden" id="header-banner-id">
+                
+                <div class="form-group">
+                    <label for="header-banner-title">Titre de la bannière *</label>
+                    <input type="text" id="header-banner-title" class="form-control" required placeholder="Ex: Promotion Black Friday">
+                </div>
+                
+                <div class="form-group">
+                    <label for="header-banner-description">Description</label>
+                    <textarea id="header-banner-description" class="form-control" rows="2" placeholder="Ex: Samsung Galaxy A15 à partir de 51900 FCFA - Boutique officielle"></textarea>
+                    <small class="form-help">💡 Astuce: Incluez le prix (ex: "51900 FCFA") pour un affichage produit optimal</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="header-banner-image">Image de la bannière *</label>
+                    <div class="file-upload" onclick="document.getElementById('header-banner-image').click()">
+                        <i class="fas fa-image upload-icon"></i>
+                        <p>Cliquez pour sélectionner une image (recommandé: 1200x150px)</p>
+                        <input type="file" id="header-banner-image" accept="image/*" class="hidden-input" required>
+                    </div>
+                    <div id="header-banner-image-preview" class="image-preview"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="header-banner-link">Lien de redirection</label>
+                    <input type="url" id="header-banner-link" class="form-control" placeholder="https://exemple.com">
+                    <small>URL vers laquelle rediriger lors du clic (optionnel)</small>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="header-banner-order">Ordre d'affichage</label>
+                        <input type="number" id="header-banner-order" class="form-control" min="0" value="0" placeholder="0">
+                        <small>Plus le chiffre est bas, plus la bannière s'affiche en premier</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="header-banner-duration">Durée d'affichage (ms)</label>
+                        <input type="number" id="header-banner-duration" class="form-control" min="1000" max="30000" value="5000" placeholder="5000">
+                        <small>Temps d'affichage avant passage à la suivante (1000-30000ms)</small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="header-banner-styles">Styles CSS personnalisés</label>
+                    <textarea id="header-banner-styles" class="form-control" rows="4" placeholder="background: #1e1e1e; border: 2px solid #ff8c00; border-radius: 15px; box-shadow: 0 4px 20px rgba(255,140,0,0.3);"></textarea>
+                    <small class="form-help">
+                        🎨 <strong>Exemples de styles :</strong><br>
+                        • <code>background: #1e1e1e;</code> (fond noir)<br>
+                        • <code>border: 2px solid #ff8c00;</code> (bordure orange)<br>
+                        • <code>border-radius: 15px;</code> (coins arrondis)<br>
+                        • <code>box-shadow: 0 4px 20px rgba(0,0,0,0.5);</code> (ombre)
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label for="header-banner-position">Position de l'image</label>
+                    <select id="header-banner-position" class="form-control">
+                        <option value="center">🏠 Centre (par défaut)</option>
+                        <option value="left">⬅️ Gauche</option>
+                        <option value="right">➡️ Droite</option>
+                    </select>
+                    <small class="form-help">
+                        📐 Choisissez où positionner l'image dans la bannière
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="header-banner-active" checked> Bannière active
+                    </label>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-primary" onclick="saveHeaderBanner()">
+                        <i class="fas fa-save"></i> Enregistrer
+                    </button>
+                    <button type="button" class="btn" onclick="closeHeaderBannerModal()">Annuler</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts principaux -->
+    <script src="../assets/js/admin-dashboard.js"></script>
+    <script src="../assets/js/floating-ads-admin.js"></script>
+    <script src="../assets/js/header-banners-admin.js"></script>
+    
+</body>
+</html>

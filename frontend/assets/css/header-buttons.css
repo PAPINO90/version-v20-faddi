@@ -1,0 +1,74 @@
+/* Style pour les boutons dans le header des paramètres */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.section-header h2 {
+    margin: 0;
+    color: #ff9900 !important;
+    font-size: 2.2rem;
+    font-weight: 800;
+}
+
+.section-header > div {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.section-header .btn {
+    white-space: nowrap;
+    font-size: 14px;
+    padding: 10px 16px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.section-header .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.section-header .btn i {
+    font-size: 16px;
+}
+
+/* Responsive pour mobile */
+@media (max-width: 768px) {
+    .section-header {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+    }
+    
+    .section-header > div {
+        justify-content: center;
+        width: 100%;
+    }
+    
+    .section-header .btn {
+        flex: 1;
+        min-width: 200px;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .section-header > div {
+        flex-direction: column;
+    }
+    
+    .section-header .btn {
+        width: 100%;
+    }
+}

@@ -1,0 +1,221 @@
+/* =========================================
+   STYLES OPTIMISÉS SAMSUNG INTERNET
+   Compatible Samsung Internet 5.0+
+   ========================================= */
+
+/* CORRECTIFS POUR SAMSUNG INTERNET */
+
+@media (max-width: 768px) {
+    /* Fix pour les boutons de catégorie */
+    .category-btn {
+        width: auto !important;
+        min-width: 60px !important; /* Largeur minimum fixe compatible */
+        display: inline-block !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* Alternative pour Samsung Internet - largeur fixe si fit-content échoue */
+    @supports not (min-width: fit-content) {
+        .category-btn {
+            min-width: 80px !important;
+            width: auto !important;
+        }
+    }
+    
+    /* Support des line-clamp pour Samsung Internet */
+    .promo-title {
+        /* Méthode compatible Samsung Internet */
+        overflow: hidden !important;
+        display: block !important;
+        height: 2.4em !important;
+        line-height: 1.2 !important;
+    }
+    
+    .promo-desc {
+        overflow: hidden !important;
+        display: block !important;
+        height: 1.4em !important;
+        line-height: 1.4 !important;
+        white-space: nowrap !important;
+        text-overflow: ellipsis !important;
+    }
+    
+    /* Grille compatible Samsung Internet */
+    .promo-list {
+        display: -ms-grid !important; /* IE/Edge legacy */
+        display: grid !important;
+        -ms-grid-columns: 1fr 8px 1fr !important; /* IE Grid */
+        grid-template-columns: 1fr 1fr !important;
+        grid-gap: 8px !important;
+        gap: 8px !important;
+    }
+    
+    /* Flexbox fallback pour Samsung Internet ancien */
+    @supports not (display: grid) {
+        .promo-list {
+            display: -webkit-flex !important;
+            display: flex !important;
+            -webkit-flex-wrap: wrap !important;
+            flex-wrap: wrap !important;
+        }
+        
+        .promo-card {
+            -webkit-flex: 0 0 calc(50% - 4px) !important;
+            flex: 0 0 calc(50% - 4px) !important;
+            width: calc(50% - 4px) !important;
+        }
+    }
+    
+    /* Transitions compatibles */
+    .promo-card {
+        -webkit-transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+        -moz-transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+        -o-transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+        transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+    }
+    
+    .promo-card button {
+        -webkit-transition: background-color 0.2s ease !important;
+        -moz-transition: background-color 0.2s ease !important;
+        -o-transition: background-color 0.2s ease !important;
+        transition: background-color 0.2s ease !important;
+    }
+    
+    /* Gradients compatibles Samsung Internet */
+    .promo-card button {
+        background: #ff6600 !important; /* Fallback couleur unie */
+        background: -webkit-linear-gradient(135deg, #ff6600, #ff8800) !important;
+        background: -moz-linear-gradient(135deg, #ff6600, #ff8800) !important;
+        background: -o-linear-gradient(135deg, #ff6600, #ff8800) !important;
+        background: linear-gradient(135deg, #ff6600, #ff8800) !important;
+    }
+    
+    .promo-card button:hover,
+    .promo-card button:active {
+        background: #ff5500 !important; /* Fallback couleur unie */
+        background: -webkit-linear-gradient(135deg, #ff5500, #ff7700) !important;
+        background: -moz-linear-gradient(135deg, #ff5500, #ff7700) !important;
+        background: -o-linear-gradient(135deg, #ff5500, #ff7700) !important;
+        background: linear-gradient(135deg, #ff5500, #ff7700) !important;
+    }
+    
+    /* Object-fit fallback pour Samsung Internet ancien */
+    @supports not (object-fit: cover) {
+        .promo-card img {
+            width: 100% !important;
+            height: 120px !important;
+            /* Centrer l'image si object-fit non supporté */
+            object-position: center !important;
+            background-size: cover !important;
+            background-position: center !important;
+        }
+    }
+    
+    /* Border-radius sécurisé */
+    .promo-card {
+        -webkit-border-radius: 8px !important;
+        -moz-border-radius: 8px !important;
+        border-radius: 8px !important;
+    }
+    
+    .promo-card img {
+        -webkit-border-radius: 8px 8px 0 0 !important;
+        -moz-border-radius: 8px 8px 0 0 !important;
+        border-radius: 8px 8px 0 0 !important;
+    }
+    
+    .promo-card button {
+        -webkit-border-radius: 6px !important;
+        -moz-border-radius: 6px !important;
+        border-radius: 6px !important;
+    }
+    
+    /* Box-shadow compatible */
+    .promo-card {
+        -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+        -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+    }
+    
+    /* Transform sécurisé */
+    .promo-card:hover {
+        -webkit-transform: translateY(-1px) !important;
+        -moz-transform: translateY(-1px) !important;
+        -ms-transform: translateY(-1px) !important;
+        -o-transform: translateY(-1px) !important;
+        transform: translateY(-1px) !important;
+    }
+}
+
+/* DÉTECTION SAMSUNG INTERNET */
+@supports (-webkit-appearance: none) {
+    /* Styles spécifiques Samsung Internet */
+    .promo-card {
+        border: 1px solid #e5e5e5 !important;
+    }
+    
+    .category-btn {
+        border: 1px solid #ddd !important;
+        min-width: 60px !important;
+    }
+}
+
+/* FALLBACKS POUR NAVIGATEURS TRÈS ANCIENS */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+    .promo-list {
+        display: -webkit-flex !important;
+        display: flex !important;
+        -webkit-flex-wrap: wrap !important;
+        flex-wrap: wrap !important;
+        -webkit-justify-content: space-between !important;
+        justify-content: space-between !important;
+    }
+    
+    .promo-card {
+        -webkit-flex: 0 0 48% !important;
+        flex: 0 0 48% !important;
+        width: 48% !important;
+        margin-bottom: 8px !important;
+    }
+}
+
+/* MEDIA QUERIES SPÉCIFIQUES SAMSUNG */
+@media screen and (max-device-width: 480px) and (-webkit-device-pixel-ratio: 2) {
+    /* Samsung Galaxy S series */
+    .promo-card img {
+        height: 100px !important;
+    }
+    
+    .promo-title {
+        font-size: 0.75rem !important;
+    }
+    
+    .promo-price {
+        font-size: 0.8rem !important;
+    }
+}
+
+@media screen and (max-device-width: 414px) and (-webkit-device-pixel-ratio: 3) {
+    /* Samsung Galaxy avec écran haute résolution */
+    .promo-card {
+        border-width: 0.5px !important;
+    }
+    
+    .promo-badge {
+        font-size: 0.6rem !important;
+        padding: 1px 5px !important;
+    }
+}
+
+/* MESSAGE DE DEBUG POUR SAMSUNG INTERNET */
+body::before {
+    content: "";
+    display: none;
+}
+
+/* Si Samsung Internet détecté, afficher un message en console */
+@supports (-webkit-appearance: none) {
+    body::before {
+        content: "Samsung Internet détecté - Styles optimisés chargés";
+    }
+}

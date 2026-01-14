@@ -1,0 +1,406 @@
+/* ========================================
+   FADIDI - STYLES SYSTÈME DE CATÉGORIES
+   ======================================== */
+
+/* Grille principale des catégories */
+#categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+@media (max-width: 600px) {
+    #categories-grid {
+        grid-template-columns: 1fr;
+        gap: 6vw;
+        padding-left: 0;
+        padding-right: 0;
+        box-sizing: border-box;
+        place-items: stretch;
+        margin: 0;
+        width: 100%;
+    }
+    .category-card {
+        min-width: 0;
+        max-width: 130%;
+        width: 130%;
+        box-sizing: border-box;
+    }
+}
+    gap: 20px;
+    padding: 20px 0;
+    margin: 0 auto;
+    max-width: 1200px;
+}
+
+.category-card {
+    background: transparent;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+/* Effet hover sur les cartes de catégorie */
+.clickable-category {
+    cursor: pointer;
+}
+
+.clickable-category:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(255, 128, 0, 0.4);
+    border-color: #ff8000;
+}
+
+/* Container d'image de catégorie */
+.category-image-container {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+}
+
+.category-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.clickable-category:hover .category-image {
+    transform: scale(1.05);
+}
+
+/* Overlay au hover */
+.category-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(255, 128, 0, 0.9), rgba(0, 0, 0, 0.7));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.clickable-category:hover .category-overlay {
+    opacity: 1;
+}
+
+.category-click-hint {
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    padding: 15px;
+    font-size: 1.1em;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Informations de la catégorie */
+.category-info {
+    padding: 20px;
+}
+
+.category-name {
+    margin: 0 0 10px 0;
+    color: #ff8000;
+    font-size: 1.3em;
+    font-weight: bold;
+}
+
+.category-description {
+    margin: 0 0 15px 0;
+    color: #666;
+    font-size: 0.95em;
+    line-height: 1.5;
+}
+
+.category-product-count {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #ff8000;
+    font-size: 0.9em;
+    font-weight: bold;
+    background: rgba(255, 128, 0, 0.1);
+    padding: 8px 12px;
+    border-radius: 20px;
+    width: fit-content;
+}
+
+.category-product-count i {
+    font-size: 1em;
+}
+
+/* Badge sur les produits filtrés */
+.category-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: linear-gradient(45deg, #ff8000, #ff6600);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 0.75em;
+    font-weight: bold;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Messages vides */
+.no-categories,
+.no-products-message {
+    text-align: center;
+    padding: 60px 20px;
+    color: #666;
+    grid-column: 1 / -1;
+    background: #f9f9f9;
+    border-radius: 12px;
+    border: 2px dashed #ddd;
+}
+
+.no-products-message h3 {
+    color: #ff8000;
+    margin-bottom: 15px;
+    font-size: 1.4em;
+}
+
+.no-products-message p {
+    margin-bottom: 20px;
+    font-size: 1.1em;
+}
+
+/* Contrôles de filtre */
+.filter-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin: 20px 0;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    flex-wrap: wrap;
+}
+
+#category-filter-info {
+    color: #ff8000;
+    font-weight: bold;
+    font-size: 0.95em;
+}
+
+.filter-btn {
+    background: #ff8000;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.filter-btn:hover {
+    background: #e6700a;
+    transform: translateY(-2px);
+}
+
+.filter-btn.active {
+    background: #28a745;
+}
+
+.filter-btn.secondary {
+    background: #6c757d;
+}
+
+.filter-btn.secondary:hover {
+    background: #545b62;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Section des produits filtrés */
+#filtered-products-section {
+    margin-top: 20px;
+}
+
+#filtered-products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px 0;
+    margin: 0 auto;
+    max-width: 1200px;
+}
+
+/* Navigation des résultats filtrés */
+.filter-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0;
+    padding: 15px;
+    background: #f1f3f4;
+    border-radius: 8px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.filter-navigation h4 {
+    color: #ff8000;
+    margin: 0;
+    font-size: 1.1em;
+}
+
+/* Compteur de catégories */
+.categories-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #ff8000;
+}
+
+.categories-count {
+    color: #ff8000;
+    font-weight: bold;
+    font-size: 0.9em;
+    background: rgba(255, 128, 0, 0.1);
+    padding: 5px 12px;
+    border-radius: 15px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    #categories-grid {
+        grid-template-columns: repeat(2, 1fr);
+        padding-left: 4vw;
+        padding-right: 4vw;
+        padding-top: 15px;
+        padding-bottom: 15px;
+        gap: 15px;
+        justify-items: center;
+        max-width: 100vw;
+        box-sizing: border-box;
+    }
+    .category-card {
+        margin: 0;
+        min-width: 0;
+        max-width: 100%;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .category-image-container {
+        height: 200px;
+    }
+    .category-info {
+        padding: 18px;
+    }
+    
+    .category-name {
+        font-size: 1.3em;
+    }
+    
+    .category-description {
+        font-size: 1em;
+    }
+    
+    .filter-controls {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+    
+    .filter-btn {
+        width: 100%;
+        text-align: center;
+    }
+    
+    #filtered-products-grid {
+        grid-template-columns: 1fr;
+        padding: 15px;
+        gap: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .category-image-container {
+        height: 140px;
+    }
+    
+    .category-info {
+        padding: 12px;
+    }
+    
+    .category-name {
+        font-size: 1.1em;
+    }
+    
+    .category-click-hint {
+        font-size: 1em;
+        padding: 12px;
+    }
+}
+
+/* Animation pour les éléments qui apparaissent */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.category-card {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+.category-card:nth-child(1) { animation-delay: 0.1s; }
+.category-card:nth-child(2) { animation-delay: 0.2s; }
+.category-card:nth-child(3) { animation-delay: 0.3s; }
+.category-card:nth-child(4) { animation-delay: 0.4s; }
+
+/* Centrage spécifique pour la barre des produits filtrés */
+.filtered-header-centered {
+    text-align: center !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 15px !important;
+}
+
+.filtered-header-centered #filtered-section-title {
+    flex: 1;
+    text-align: center;
+}
+
+.filtered-header-centered .arrow-blink {
+    position: absolute;
+    right: 20px;
+}
+
+/* États de chargement */
+.loading-categories {
+    text-align: center;
+    padding: 40px;
+    color: #ff8000;
+    font-size: 1.1em;
+}
+
+.loading-categories::after {
+    content: "⏳";
+    display: inline-block;
+    margin-left: 10px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
